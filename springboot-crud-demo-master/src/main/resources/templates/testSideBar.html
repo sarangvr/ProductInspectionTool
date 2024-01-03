@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/styles.css">
+    <title>Product Inspection Tool</title>
+	<style>
+	        body {
+        	background-color: #d3f9d8;
+        	/* Light Green */
+        	margin: 20px;
+        }
+
+        .container {
+        	background-color: white;
+        	padding: 20px;
+        	margin-top: 20px;
+        	border-radius: 10px;
+        }
+
+        h2 {
+        	color: #008000;
+        	/* Dark Green */
+        }
+
+        #productForm {
+        	display: none;
+        }
+
+        /* Add color styles based on the quality level */
+        .quality-LOW {
+        	color: red;
+        }
+
+        .quality-MEDIUM {
+        	color: #FFD700;
+        }
+
+        .quality-HIGH {
+        	color: green;
+        }
+
+        /* breadcrumb */
+        .breadcrumb {
+        	background-color: #f8f9fa;
+        	padding: 8px;
+        	border-radius: 4px;
+        	display: flex;
+        	flex-wrap: nowrap;
+        	align-items: center;
+        	/* Align items vertically */
+        }
+
+        .breadcrumb-item+.breadcrumb-item::before {
+        	content: '>';
+        	margin: 0 5px;
+        }
+
+        .notification-icon,
+        .settings-icon {
+        	font-size: 24px;
+        	cursor: pointer;
+        	transition: color 0.3s ease;
+        }
+
+        .settings-icon:hover {
+        	color: #007bff;
+        }
+
+        .dropdown-menu-right {
+        	right: 0;
+        	left: auto;
+        }
+
+        .breadcrumb {
+        	position: relative;
+        }
+
+        .breadcrumb-icons {
+        	position: absolute;
+        	top: 50%;
+        	right: 50px;
+        	transform: translateY(-50%);
+        }
+	</style>
+</head>
+
+<body>
+	
+    <div class="container">
+        <h2>Product Inspection Tool</h2>
+        
+        <!-- breadcrumb START -->
+	        <div class="container">
+        <!-- Breadcrumb with Tabs -->
+        <nav aria-label="breadcrumb" class="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item active" aria-current="page">Products</li>
+                <li class="breadcrumb-item"><a th:href="@{/inspection}">Inspection</a></li>
+                <li class="breadcrumb-item"><a th:href="@{/reports}">Reports</a></li>
+            </ol>
+            <!-- Notification and Settings Icons -->
+            <div class="breadcrumb-icons">
+                <!-- Logout Button -->
+			    <div class="notification-icon" style="top: 20px; right: 20px;">
+			        <form th:action="@{/logout}" method="post">
+			            <button type="submit" class="btn btn-danger">Logout</button>
+			        </form>
+			    </div>
+            </div>
+        </nav>
+    </div>
+	
+	    <!-- Bootstrap JS and Popper.js -->
+	    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+	    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+	    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+		
+		<!-- breadcrumb END -->
+		
+        <h4>Product List</h4>
+
+        <!-- Product List Table -->
+        <table class="table">
+            <thead>
+                <tr>
+                    <!--<th scope="col"><input type="checkbox"></th>-->
+                    <th scope="col"><input type="checkbox" id="selectAll" onclick="toggleAllCheckboxes()" disabled></th>
+                    <th scope="col">Product Id</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Manuf Date</th>
+                    <th scope="col">Expiry Date</th>
+                    <th scope="col">Category</th>
+                    <th scope="col">Weight</th>
+                    <th scope="col">Colour</th>
+                    <th scope="col">Quality</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Use Thymeleaf to iterate over the list of products -->
+                <tr th:each="product : ${products}">
+                    <!--<td><input type="checkbox"></td>-->
+                    <td><input type="checkbox" class="productCheckbox" onclick="toggleCheckbox(this)"></td>
+                    <td th:text="${product.id}"></td>
+                    <td th:text="${product.name}"></td>
+                    <td th:text="${product.description}"></td>
+                    <td th:text="${product.price}"></td>
+                    <td th:text="${product.quantity}"></td>
+                    <td th:text="${product.manufacturingDate}"></td>
+                    <td th:text="${product.expiryDate}"></td>
+                    <td th:text="${product.category}"></td>
+                    <td th:text="${product.weight}"></td>
+                    <td th:text="${product.colour}"></td>
+                    <!--<td th:text="${product.quality}"></td>-->
+                    <td th:class="${'quality-' + product.quality}" th:text="${product.quality}"></td>
+                </tr>
+            </tbody>
+        </table>
+        <!-- Buttons -->
+        <button class="btn btn-primary" onclick="showProductForm('add')">Add</button>
+        <button class="btn btn-warning" onclick="showProductForm('edit')">Edit</button>
+        <button class="btn btn-danger" onclick="deleteSelected()">Delete</button>
+
+        <!-- Product Form -->
+    <!--<form id="productForm">-->
+    <form th:action="@{/register}" method="post" id="productForm">
+	<!--<form th:action="${#strings.endsWith(action, 'add') ? '/register' : '/edit'}" method="post" id="productForm">-->
+      <h6>Add/Edit Product</h6>
+
+      <div class="form-row">
+        <!-- Product Id -->
+        <div class="form-group col-md-4">
+          <label for="id">Product Id:</label>
+          <input type="text" class="form-control" id="id" name="id" required>
+        </div>
+
+        <!-- Name -->
+        <div class="form-group col-md-4">
+          <label for="name">Name:</label>
+          <input type="text" class="form-control" id="name" name="name" >
+        </div>
+
+        <!-- Description -->
+        <div class="form-group col-md-4">
+          <label for="description">Description:</label>
+          <input type="text" class="form-control" id="description" name="description" >
+        </div>
+      </div>
+
+      <div class="form-row">
+        <!-- Quantity -->
+        <div class="form-group col-md-4">
+          <label for="quantity">Quantity:</label>
+          <input type="text" class="form-control" id="quantity" name="quantity" >
+        </div>
+
+        <!-- Price -->
+        <div class="form-group col-md-4">
+          <label for="price">Price:</label>
+          <input type="text" class="form-control" id="price" name="price" >
+        </div>
+
+        <!-- Category Dropdown -->
+        <div class="form-group col-md-4">
+          <label for="category">Category:</label>
+          <select class="form-control" id="category" name="category" >
+            <option value="FRUITS">FRUITS</option>
+            <option value="VEGETABLES">VEGETABLES</option>
+            <option value="GRAINS">GRAINS</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <!-- Colour -->
+        <div class="form-group col-md-4">
+          <label for="colour">Colour:</label>
+          <input type="text" class="form-control" id="colour" name="colour" >
+        </div>
+
+        <!-- Expiry Date -->
+        <div class="form-group col-md-4">
+          <label for="expiryDate">Expiry Date:</label>
+          <input type="date" class="form-control" id="expiryDate" name="expiryDate" >
+        </div>
+
+        <!-- Manufacturing Date -->
+        <div class="form-group col-md-4">
+          <label for="manufacturingDate">Manufacturing Date:</label>
+          <input type="date" class="form-control" id="manufacturingDate" name="manufacturingDate" >
+        </div>
+      </div>
+
+      <div class="form-row">
+        <!-- Quality -->
+        <div class="form-group col-md-4">
+          <label for="quality">Quality:</label>
+          <select class="form-control" id="quality" name="quality" >
+            <option value="LOW">LOW</option>
+            <option value="MEDIUM">MEDIUM</option>
+            <option value="HIGH">HIGH</option>
+          </select>
+        </div>
+
+        <!-- Weight -->
+        <div class="form-group col-md-4">
+          <label for="weight">Weight:</label>
+          <input type="text" class="form-control" id="weight" name="weight" >
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+		<button type="submit" class="btn btn-success">Submit</button>
+      <!-- Cancel Button -->
+		<button type="button" class="btn btn-secondary" onclick="cancelProductForm()">Cancel</button>
+    </form>
+
+
+    </div>
+
+    <!-- JavaScript to toggle visibility of the form -->
+    <!-- Include Axios via CDN in your HTML file -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script>
+        function showProductForm(action) {
+				var form = document.getElementById('productForm');
+				if (action === 'add') {
+					// Show the form
+					form.style.display = 'block';
+
+					// Enable the form elements
+					enableFormElements(form);
+
+					// Add an event listener to the form submission
+					form.addEventListener('submit', function (event) {
+						event.preventDefault(); // Prevent the default form submission
+
+						// Collect data from form fields
+						var productId = document.getElementById('id').value;
+						var productName = document.getElementById('name').value;
+						var productDescription = document.getElementById('description').value;
+						var productPrice = document.getElementById('price').value;
+						var productQuantity = document.getElementById('quantity').value;
+						var productManufacturingDate = document.getElementById('manufacturingDate').value;
+						var productExpiryDate = document.getElementById('expiryDate').value;
+						var productCategory = document.getElementById('category').value;
+						var productWeight = document.getElementById('weight').value;
+						var productColour = document.getElementById('colour').value;
+						var productQuality = document.getElementById('quality').value;
+
+						// Collect other fields as needed...
+
+						// Create a JavaScript object with the collected data
+						var productData = {
+							id: productId,
+							name: productName,
+							description: productDescription,
+							price: productPrice,
+							quantity: productQuantity,
+							manufacturingDate: productManufacturingDate,
+							expiryDate: productExpiryDate,
+							category: productCategory,
+							weight: productWeight,
+							colour: productColour,
+							quality: productQuality,
+							mode: action,
+							// Add other fields...
+						};
+
+						// Use Axios to make the POST request
+						axios.post('/register', productData, {
+							headers: {
+								'Content-Type': 'application/json',
+							},
+						})
+							.then(response => {
+								console.log('Success:', response.data);
+								// Disable the form elements after submission
+								disableFormElements(form);
+								// Reload the page after successful form submission
+								location.reload(true);
+							})
+							.catch(error => {
+								console.error('Error:', error);
+							});
+					});
+				} else if (action === 'edit') {
+					// Hide the form initially
+					form.style.display = 'none';
+					// Find the selected product in the table
+					var selectedProduct = document.querySelector('input[type="checkbox"]:checked').closest('tr');
+					if (selectedProduct) {
+						// Show the form
+						form.style.display = 'block';
+
+						// Disable the form elements initially for editing
+						enableFormElements(form);
+
+						// Populate form fields with selected product data
+						document.getElementById('id').value = selectedProduct.querySelector('td:nth-child(2)').innerText;
+						document.getElementById('name').value = selectedProduct.querySelector('td:nth-child(3)').innerText;
+						document.getElementById('description').value = selectedProduct.querySelector('td:nth-child(4)').innerText;
+						document.getElementById('price').value = selectedProduct.querySelector('td:nth-child(5)').innerText;
+						document.getElementById('quantity').value = selectedProduct.querySelector('td:nth-child(6)').innerText;
+
+						var productIdInput = document.getElementById('id');
+						// Disable Product Id input field
+						productIdInput.disabled = true;
+
+						var manufacturingDateCell = selectedProduct.querySelector('td:nth-child(7)');
+						var expiryDateCell = selectedProduct.querySelector('td:nth-child(8)');
+						var manufacturingDate = isValidDate(manufacturingDateCell.innerText) ? manufacturingDateCell.innerText : '';
+						var expiryDate = isValidDate(expiryDateCell.innerText) ? expiryDateCell.innerText : '';
+
+
+						document.getElementById('manufacturingDate').value = manufacturingDate;
+						document.getElementById('expiryDate').value = expiryDate;
+						document.getElementById('category').value = selectedProduct.querySelector('td:nth-child(9)').innerText;
+						document.getElementById('weight').value = selectedProduct.querySelector('td:nth-child(10)').innerText;
+						document.getElementById('colour').value = selectedProduct.querySelector('td:nth-child(11)').innerText;
+						document.getElementById('quality').value = selectedProduct.querySelector('td:nth-child(12)').innerText;
+						// Populate other fields as needed...
+						// Add an event listener to the form submission
+						form.addEventListener('submit', function (event) {
+							event.preventDefault(); // Prevent the default form submission
+							// Collect data from form fields
+							var productId = document.getElementById('id').value;
+							var productName = document.getElementById('name').value;
+							var productDescription = document.getElementById('description').value;
+							var productPrice = document.getElementById('price').value;
+							var productQuantity = document.getElementById('quantity').value;
+							var productManufacturingDate = document.getElementById('manufacturingDate').value;
+							var productExpiryDate = document.getElementById('expiryDate').value;
+							var productCategory = document.getElementById('category').value;
+							var productWeight = document.getElementById('weight').value;
+							var productColour = document.getElementById('colour').value;
+							var productQuality = document.getElementById('quality').value;
+							// Collect other fields as needed...
+
+							// Create a JavaScript object with the collected data
+							var productData = {
+								id: productId,
+								name: productName,
+								description: productDescription,
+								price: productPrice,
+								quantity: productQuantity,
+								manufacturingDate: productManufacturingDate,
+								expiryDate: productExpiryDate,
+								category: productCategory,
+								weight: productWeight,
+								colour: productColour,
+								quality: productQuality,
+								mode: action,
+								// Add other fields...
+							};
+
+
+							// Use Axios to make the POST request
+							axios.post('/register', productData, {
+								headers: {
+									'Content-Type': 'application/json',
+								},
+							})
+								.then(response => {
+									console.log('Success:', response.data);
+									// Disable the form elements after submission
+									disableFormElements(form);
+									// Reload the page after successful form submission
+									location.reload(true);
+								})
+								.catch(error => {
+									console.error('Error:', error);
+								});
+						});
+					} else {
+						alert('Please select at least one product to edit.');
+					}
+
+				}
+			}
+
+        function disableFormElements(form) {
+            var formElements = form.elements;
+            for (var i = 0; i < formElements.length; i++) {
+                formElements[i].disabled = true;
+            }
+        }
+
+        function enableFormElements(form) {
+            var formElements = form.elements;
+            for (var i = 0; i < formElements.length; i++) {
+                formElements[i].disabled = false;
+            }
+        }
+
+        function deleteSelected() {
+        // Find all checkboxes that are checked
+        var checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+
+        // Create an array to store the selected product IDs
+        var selectedProductIds = [];
+
+        // Loop through the checked checkboxes and extract the product IDs
+        checkboxes.forEach(function (checkbox) {
+            var productId = checkbox.closest('tr').querySelector('td:nth-child(2)').innerText;
+            selectedProductIds.push(productId);
+        });
+
+        // Check if any checkboxes are selected
+        if (selectedProductIds.length > 0) {
+            // Confirm with the user before deleting
+            if (confirm('Are you sure you want to delete the selected products?')) {
+                // Use Axios to make the DELETE request
+		            axios.delete('/delete/' + selectedProductIds)
+		            .then(response => {
+		                console.log('Success:', response.data);
+		                // Reload the page after successful deletion
+		                location.reload(true);
+		            })
+		            .catch(error => {
+		                console.error('Error:', error);
+		            });
+            }
+        } else {
+            alert('Please select at least one product to delete.');
+        }
+    }
+    
+    function isValidDate(dateString) {
+		  var regex = /^\d{4}-\d{2}-\d{2}$/;
+		  return dateString.match(regex) !== null;
+		}
+	
+	    function toggleCheckbox(checkbox) {
+        var checkboxes = document.getElementsByClassName('productCheckbox');
+        for (var i = 0; i < checkboxes.length; i++) {
+            if (checkboxes[i] !== checkbox) {
+                checkboxes[i].checked = false;
+            }
+        }
+    }
+
+    function toggleAllCheckboxes() {
+        var selectAllCheckbox = document.getElementById('selectAll');
+        var checkboxes = document.getElementsByClassName('productCheckbox');
+        for (var i = 0; i < checkboxes.length; i++) {
+            checkboxes[i].checked = selectAllCheckbox.checked;
+        }
+    }
+    
+    function cancelProductForm() {
+	    var form = document.getElementById('productForm');
+	    
+	    // Hide the form
+	    form.style.display = 'none';
+	
+	    // Clear form fields
+	    form.reset();
+	
+	    // Disable form elements
+	    disableFormElements(form);
+	}
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/styles.css">
+    <title>Product Inspection Tool</title>
+</head>
+
+<body>
+
+    <div class="container">
+        <h2>Product Inspection Tool</h2>
+
+        <!-- breadcrumb START -->
+        <div class="container">
+            <!-- Breadcrumb with Tabs -->
+            <nav aria-label="breadcrumb" class="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a th:href="@{/products}">Products</a></li>
+                    <li class="breadcrumb-item"><a th:href="@{/inspection}">Inspection</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Reports</li>
+                </ol>
+                <!-- Notification and Settings Icons -->
+                <div class="breadcrumb-icons">
+                    <!-- Logout Button -->
+                    <div class="notification-icon" style="top: 20px; right: 20px;">
+                        <form th:action="@{/logout}" method="post">
+                            <button type="submit" class="btn btn-danger">Logout</button>
+                        </form>
+                    </div>
+                </div>
+            </nav>
+        </div>
+
+        <!-- Bootstrap JS and Popper.js -->
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+        <!-- breadcrumb END -->
+
+        <h4>Product Reports</h4>
+
+        <p>This webpage provides reports on product inspections.</p>
+
+        <!-- Pie Chart -->
+        <div id="pieChartContainer" style="height: 300px;"></div>
+
+    </div>
+
+    <!-- JavaScript to draw the hardcoded pie chart -->
+    <!-- JavaScript to draw the hardcoded pie chart -->
+	<!-- JavaScript to draw the hardcoded pie chart -->
+<!-- JavaScript to draw the hardcoded pie chart -->
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Hardcoded pie chart values (PASS is 75%, FAIL is 15%)
+        var pieChartOptions = {
+            series: [75, 15],
+            labels: ['PASS', 'FAIL'],
+            colors: ['#28a745', '#dc3545'],
+            chart: {
+                type: 'donut',
+                width: 600, // Set the width of the chart (double the existing size)
+                height: 200, // Set the height of the chart (double the existing size)
+            },
+            responsive: [{
+                breakpoint: 480,
+                options: {
+                    chart: {
+                        width: 400,
+                        height: 160 // Adjust the height for smaller screens
+                    },
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }]
+        };
+
+        // Create the pie chart
+        var pieChart = new ApexCharts(document.querySelector("#pieChartContainer"), pieChartOptions);
+        pieChart.render();
+    });
+</script>
+
+
+
+
+</body>
+
+</html>

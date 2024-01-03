@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #d3f9d8;
+        }
+
+        .container {
+            margin-top: 5rem;
+        }
+
+        .card {
+            background-color: #88be68;
+        }
+
+        .login-heading {
+            text-align: center;
+            font-size: 2rem;
+            color: #1a1a1a; /* Choose a suitable text color */
+            margin-bottom: 2rem;
+        }
+
+        .company-logo {
+            width: 50px; /* Adjust the size as needed */
+            height: 50px; /* Adjust the size as needed */
+            margin-right: 10px;
+        }
+
+        .welcome-heading {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #1a1a1a; /* Choose a suitable text color */
+            margin-bottom: 1rem;
+        }
+
+        .product-note {
+            text-align: center;
+            color: #333; /* Choose a suitable text color */
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="login-heading">
+                            <!--<img th:src="@{/images/logo.jpg}" alt="" class="company-logo">-->
+                            Product Inspection Tool
+                        </div>
+                        <h2 class="welcome-heading">Welcome</h2>
+                        <p class="product-note">Experience the power of our advanced Product Inspection Tool for precise and efficient quality control.</p>
+                        <form th:action="@{/}" method="post" class="login-background">
+                            <p th:if="${error}" class="text-danger">User name or Password Incorrect</p>
+                            <div class="mb-3">
+                                <input type="text" name="username" class="form-control" placeholder="Username" required="required">
+                            </div>
+                            <div class="mb-3">
+                                <input type="password" name="password" class="form-control" placeholder="Password" required="required">
+                            </div>
+                            <div class="mb-3">
+                                <button type="submit" value="Login" class="btn btn-primary w-100">Login</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
