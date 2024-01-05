@@ -901,7 +901,6 @@
         // Loop through the checked checkboxes and extract the product IDs
         checkboxes.forEach(function (checkbox) {
             var productId = checkbox.closest('tr').querySelector('td:nth-child(2)').innerText;
-            alert("productId: "+productId);
             selectedProductIds.push(productId);
         });
 

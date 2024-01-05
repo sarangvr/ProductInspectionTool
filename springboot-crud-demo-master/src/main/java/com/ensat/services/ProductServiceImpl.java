@@ -2,6 +2,7 @@ package com.ensat.services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
@@ -20,11 +21,13 @@ import com.ensat.model.ProductDetailsDTO;
 import com.ensat.repositories.InspectionDtlsRepository;
 import com.ensat.repositories.ProductRepository;
 import com.ensat.repositories.QualityMetricRepository;
+import com.ensat.utility.Constants;
+import com.ensat.utility.Utility;
 /**
  * Product service implement.
  */
 @Service
-public class ProductServiceImpl implements ProductService {
+public class ProductServiceImpl implements ProductService, Constants {
 	private static final Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
      @Autowired
      private ProductRepository productRepository;
@@ -142,9 +145,16 @@ public class ProductServiceImpl implements ProductService {
     @Override
 	public boolean deleteProduct(Long id) {
 		try {
-			inspectionDtlsRepository.deleteByProduct_Id(id);;
-			qualityMetricRepository.deleteByProduct_Id(id);
-			productRepository.deleteByProductId(id);
+			List<Inspection_DTLS> inspDtlsList =  inspectionDtlsRepository.findAll();
+			long inspectionId = Utility.findInspectionIdByProductId(inspDtlsList, id);
+			inspectionDtlsRepository.deleteById(inspectionId);
+			
+			List<QualityMetric> qualityList = qualityMetricRepository.findAll();
+			long qualityId = Utility.findQualityMetricIdByProductId(qualityList, id);
+			qualityMetricRepository.deleteById(qualityId);
+			
+			productRepository.deleteById(id);
+			System.out.println("Delete Successful");
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("Error createProductNew: " + e.getMessage());
@@ -163,13 +173,27 @@ public class ProductServiceImpl implements ProductService {
 			product.setPrice(productDetails.getPrice());
 			product.setQuantity(productDetails.getQuantity());
 			product = productRepository.save(product);
-			QualityMetric qualityMetric = qualityMetricRepository.findFirstByProduct_Id(productDetails.getProductId()).get();
+			
+			List<QualityMetric> qualityList = qualityMetricRepository.findAll();
+			long qualityId = Utility.findQualityMetricIdByProductId(qualityList, productDetails.getProductId());
+			QualityMetric qualityMetric = qualityMetricRepository.findById(qualityId).get();
 			qualityMetric.setColour(productDetails.getColour());
 			qualityMetric.setExpiryDate(productDetails.getExpiryDate());
 			qualityMetric.setManufacturingDate(productDetails.getManufacturingDate());
 			qualityMetric.setQuality(productDetails.getQuality());
 			qualityMetric.setWeight(productDetails.getWeight());
 			qualityMetricRepository.save(qualityMetric);
+			
+			List<Inspection_DTLS> inspDtlsList =  inspectionDtlsRepository.findAll();
+			long inspectionId = Utility.findInspectionIdByProductId(inspDtlsList, productDetails.getProductId());
+			Inspection_DTLS inspectionDtls = inspectionDtlsRepository.findById(inspectionId).get();
+				inspectionDtls.setProduct(product);
+				inspectionDtls.setCategory(productDetails.getCategory());
+				inspectionDtls.setDate(productDetails.getExpiryDate());
+				inspectionDtls.setInspector("Insp_1");
+				inspectionDtls.setProductName(productDetails.getName());
+				inspectionDtls.setResult("PENDING");
+				inspectionDtlsRepository.save(inspectionDtls);
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("Error createProductNew: " + e.getMessage());

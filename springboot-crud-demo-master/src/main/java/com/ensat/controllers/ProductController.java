@@ -70,7 +70,6 @@ public class ProductController {
     @PostMapping("/register")
     public String addEditProduct(@RequestBody String json, Model model) {
         System.out.println("createProductNew : " + json);
-        boolean delete;
         try {
         	ObjectMapper objectMapper = CustomObjectMapper.getObjectMapper();
             ProductDetails productDetails = objectMapper.readValue(json, ProductDetails.class);

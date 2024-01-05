@@ -38,7 +38,7 @@ public class QualityMetric {
 	    @Column
 	    private LocalDate expiryDate;
 	    @ManyToOne
-	    @JoinColumn(name = "product_id") 
+	    @JoinColumn(name = "product_id", referencedColumnName = "product_id")
 	    private Product product;
 		
 }
