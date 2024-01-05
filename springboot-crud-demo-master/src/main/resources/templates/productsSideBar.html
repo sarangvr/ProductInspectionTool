@@ -336,7 +336,7 @@
                 <tr th:each="product : ${products}">
                     <!--<td><input type="checkbox"></td>-->
                     <td><input type="checkbox" class="productCheckbox" onclick="toggleCheckbox(this)"></td>
-                    <td th:text="${product.id}"></td>
+                    <td th:text="${product.productId}"></td>
                     <td th:text="${product.name}"></td>
                     <td th:text="${product.description}"></td>
                     <td th:text="${product.price}"></td>
@@ -365,8 +365,8 @@
       <div class="form-row">
         <!-- Product Id -->
         <div class="form-group col-md-4">
-          <label for="id">Product Id:</label>
-          <input type="text" class="form-control" id="id" name="id" required>
+          <label for="productId">Product Id:</label>
+          <input type="text" class="form-control" id="productId" name="productId" required>
         </div>
 
         <!-- Name -->
@@ -675,7 +675,7 @@
 						event.preventDefault(); // Prevent the default form submission
 
 						// Collect data from form fields
-						var productId = document.getElementById('id').value;
+						var productIdInput = document.getElementById('productId').value;
 						var productName = document.getElementById('name').value;
 						var productDescription = document.getElementById('description').value;
 						var productPrice = document.getElementById('price').value;
@@ -725,7 +725,7 @@
 
 						// Create a JavaScript object with the collected data
 						var productData = {
-							id: productId,
+							productId: productIdInput,
 							name: productName,
 							description: productDescription,
 							price: productPrice,
@@ -795,13 +795,13 @@
 						enableFormElements(form);
 
 						// Populate form fields with selected product data
-						document.getElementById('id').value = selectedProduct.querySelector('td:nth-child(2)').innerText;
+						document.getElementById('productId').value = selectedProduct.querySelector('td:nth-child(2)').innerText;
 						document.getElementById('name').value = selectedProduct.querySelector('td:nth-child(3)').innerText;
 						document.getElementById('description').value = selectedProduct.querySelector('td:nth-child(4)').innerText;
 						document.getElementById('price').value = selectedProduct.querySelector('td:nth-child(5)').innerText;
 						document.getElementById('quantity').value = selectedProduct.querySelector('td:nth-child(6)').innerText;
 
-						var productIdInput = document.getElementById('id');
+						var productIdInput = document.getElementById('productId');
 						// Disable Product Id input field
 						productIdInput.disabled = true;
 
@@ -822,7 +822,7 @@
 						form.addEventListener('submit', function (event) {
 							event.preventDefault(); // Prevent the default form submission
 							// Collect data from form fields
-							var productId = document.getElementById('id').value;
+							var productIdInputForEdit = document.getElementById('productId').value;
 							var productName = document.getElementById('name').value;
 							var productDescription = document.getElementById('description').value;
 							var productPrice = document.getElementById('price').value;
@@ -837,7 +837,7 @@
 
 							// Create a JavaScript object with the collected data
 							var productData = {
-								id: productId,
+								productId: productIdInputForEdit,
 								name: productName,
 								description: productDescription,
 								price: productPrice,
@@ -901,6 +901,7 @@
         // Loop through the checked checkboxes and extract the product IDs
         checkboxes.forEach(function (checkbox) {
             var productId = checkbox.closest('tr').querySelector('td:nth-child(2)').innerText;
+            alert("productId: "+productId);
             selectedProductIds.push(productId);
         });
 

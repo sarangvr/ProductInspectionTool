@@ -4,9 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
-import com.ensat.entities.Category;
 import com.ensat.entities.Quality;
 
 import lombok.Getter;
@@ -19,7 +17,8 @@ import lombok.Setter;
 @Component
 public class ProductDetails {
 
-	private long id;
+//	private long id;
+	private long productId;
 	private String name;
 	private String description;
 	private BigDecimal price;
@@ -63,18 +62,19 @@ public class ProductDetails {
 	private String temperatureControl;
 	@Override
 	public String toString() {
-		return "ProductDetails [id=" + id + ", name=" + name + ", description=" + description + ", price=" + price
-				+ ", quantity=" + quantity + ", manufacturingDate=" + manufacturingDate + ", expiryDate=" + expiryDate
-				+ ", category=" + category + ", weight=" + weight + ", colour=" + colour + ", quality=" + quality
-				+ ", mode=" + mode + ", organic=" + organic + ", nonGmo=" + nonGmo + ", wholeGrain=" + wholeGrain
-				+ ", freshnessGrocery=" + freshnessGrocery + ", nutrientContent=" + nutrientContent
+		return "ProductDetails [productId=" + productId + ", name=" + name + ", description=" + description + ", price="
+				+ price + ", quantity=" + quantity + ", manufacturingDate=" + manufacturingDate + ", expiryDate="
+				+ expiryDate + ", category=" + category + ", weight=" + weight + ", colour=" + colour + ", quality="
+				+ quality + ", mode=" + mode + ", organic=" + organic + ", nonGmo=" + nonGmo + ", wholeGrain="
+				+ wholeGrain + ", freshnessGrocery=" + freshnessGrocery + ", nutrientContent=" + nutrientContent
 				+ ", freshnessDairy=" + freshnessDairy + ", purity=" + purity + ", fatContent=" + fatContent
 				+ ", homogenization=" + homogenization + ", pasteurization=" + pasteurization + ", freshnessBakery="
 				+ freshnessBakery + ", texture=" + texture + ", moistureContent=" + moistureContent + ", flavorBakery="
-				+ flavorBakery + ", uniSizeShape=" + uniSizeShape + ", NaturalIngredients=" + naturalIngredients
+				+ flavorBakery + ", uniSizeShape=" + uniSizeShape + ", naturalIngredients=" + naturalIngredients
 				+ ", flavorBeverages=" + flavorBeverages + ", colorBeverages=" + colorBeverages + ", clarity=" + clarity
 				+ ", shelfLife=" + shelfLife + ", freshnessMeat=" + freshnessMeat + ", marbling=" + marbling
 				+ ", colorMeat=" + colorMeat + ", odor=" + odor + ", temperatureControl=" + temperatureControl + "]";
 	}
+	
 
 }

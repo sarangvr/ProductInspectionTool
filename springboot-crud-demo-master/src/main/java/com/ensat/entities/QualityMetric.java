@@ -10,7 +10,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import com.ensat.entities.Product;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,7 +37,7 @@ public class QualityMetric {
 	    private LocalDate manufacturingDate;
 	    @Column
 	    private LocalDate expiryDate;
-	    @OneToOne
+	    @ManyToOne
 	    @JoinColumn(name = "product_id") 
 	    private Product product;
 		

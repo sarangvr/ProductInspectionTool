@@ -21,7 +21,8 @@ import lombok.Setter;
 @Service
 public class ProductDetailsDTO {
 	
-	private long id;
+//	private long id;
+	private long productId;
     private String name;
     private String description;
     private BigDecimal price;
@@ -31,12 +32,12 @@ public class ProductDetailsDTO {
     private String category;
     private double weight;
     private String colour;
-	 private Quality quality;
-	public ProductDetailsDTO(long id, String name, String description, BigDecimal price, int quantity,
+	private Quality quality;
+	public ProductDetailsDTO(long productId, String name, String description, BigDecimal price, int quantity,
 			LocalDate manufacturingDate, LocalDate expiryDate, String category, double weight, String colour,
 			Quality quality) {
 		super();
-		this.id = id;
+		this.productId = productId;
 		this.name = name;
 		this.description = description;
 		this.price = price;
@@ -48,4 +49,6 @@ public class ProductDetailsDTO {
 		this.colour = colour;
 		this.quality = quality;
 	}
+	
+	
 }

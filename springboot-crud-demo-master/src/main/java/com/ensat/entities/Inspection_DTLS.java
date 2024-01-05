@@ -5,7 +5,7 @@ import javax.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -16,12 +16,12 @@ public class Inspection_DTLS {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "inspection_id")
     private long inspectionId;
-
-    @Column(name = "productid") // Corrected column name
-    private long productId;
+    @ManyToOne
+    @JoinColumn(name = "product_id") // Corrected column name
+    private Product product;
 
     @Column(name = "Date")
-    private Date date;
+    private LocalDate date;
 
     @Column(name = "product_name")
     private String productName;
