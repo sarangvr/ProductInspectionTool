@@ -10,3 +10,40 @@
     <h1>Hello, World!</h1>
 </body>
 </html>
+
+
+        <table class="tableTest">
+            <thead>
+                <tr>
+                    <th scope="col"><input type="checkbox" id="selectAll" onclick="toggleAllCheckboxes()" disabled></th>
+                    <th scope="col">Product Id</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Manuf Date</th>
+                    <th scope="col">Expiry Date</th>
+                    <th scope="col">Category</th>
+                    <th scope="col">Weight</th>
+                    <th scope="col">Colour</th>
+                    <th scope="col">Quality</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="product : ${products}">
+                    <td><input type="checkbox" class="productCheckbox" onclick="toggleCheckbox(this)"></td>
+                    <td th:text="${product.productId}"></td>
+                    <td th:text="${product.name}"></td>
+                    <td th:text="${product.description}"></td>
+                    <td th:text="${product.price}"></td>
+                    <td th:text="${product.quantity}"></td>
+                    <td th:text="${product.manufacturingDate}"></td>
+                    <td th:text="${product.expiryDate}"></td>
+                    <td th:text="${product.category}"></td>
+                    <td th:text="${product.weight}"></td>
+                    <td th:text="${product.colour}"></td>
+                    <!--<td th:text="${product.quality}"></td>-->
+                    <td th:class="${'quality-' + product.quality}" th:text="${product.quality}"></td>
+                </tr>
+            </tbody>
+        </table>

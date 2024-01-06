@@ -2,6 +2,7 @@ package com.ensat.services;
 
 import java.util.List;
 
+import com.ensat.category.entities.CategoryDto;
 import com.ensat.entities.Product;
 import com.ensat.model.ProductDetails;
 import com.ensat.model.ProductDetailsDTO;
@@ -17,5 +18,7 @@ public interface ProductService {
     Product saveProduct(ProductDetails productDetails);
 
     boolean deleteProduct(Long id);
+    
+    List<ProductDetails> getAllCategoryDetails(CategoryDto categoryDto);
 
 }
