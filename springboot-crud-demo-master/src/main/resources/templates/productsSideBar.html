@@ -404,7 +404,7 @@
             <option value="Dairy">Dairy</option>
             <option value="Bakery">Bakery</option>
             <option value="Beverages">Beverages</option>
-            <option value="Meat_and_Poultry">Meat and Poultry</option>
+            <option value="MeatAndPoultry">Meat and Poultry</option>
           </select>
         </div>
       </div>
@@ -452,48 +452,23 @@
       <div class="form-row Grocery">
 	    <div class="form-group col-md-2 d-flex flex-column align-items-start">
 	        <label for="weight">Organic:</label>
-	        <tr>
-				<td>
-					
 	        <input type="text" class="form-control" id="organic" name="organic" value="">
-				</td>
-			</tr>
 	    </div>
 	    <div class="form-group col-md-2 d-flex flex-column align-items-start">
 	        <label for="weight">Non-GMO:</label>
-	        <tr>
-				<td>
-					
 	        <input type="text" class="form-control" id="nonGmo" name="nonGmo">
-				</td>
-			</tr>
 	    </div>
 	    <div class="form-group col-md-2 d-flex flex-column align-items-start">
 	        <label for="weight">Whole Grain:</label>
-	        <tr>
-				<td>
-					
 	        <input type="text" class="form-control" id="wholeGrain" name="wholeGrain">
-				</td>
-			</tr>
 	    </div>
 	    <div class="form-group col-md-2 d-flex flex-column align-items-start">
 	        <label for="weight">Freshness:</label>
-	        <tr>
-				<td>
-					
 	        <input type="text" class="form-control" id="freshnessGrocery" name="freshnessGrocery">
-				</td>
-			</tr>
 	    </div>
 	    <div class="form-group col-md-2 d-flex flex-column align-items-start">
 	        <label for="weight">Nutrient Content:</label>
-	        <tr>
-				<td>
-					
 	        <input type="text" class="form-control" id="nutrientContent" name="nutrientContent">
-				</td>
-			</tr>
 	    </div>
 	</div>
 	<!-- Dairy -->
@@ -668,7 +643,7 @@
 			dairyCategory.style.display = 'none';
 			groceryCategory.style.display = 'none';
 			beveragesCategory.style.display = 'flex';
-		}else if(selectedCategory === 'Meat and Poultry'){
+		}else if(selectedCategory === 'MeatAndPoultry'){
 			categoryQualityHeading.style.display = 'flex';
 			beveragesCategory.style.display = 'none';
 			bakeryCategory.style.display = 'none';
