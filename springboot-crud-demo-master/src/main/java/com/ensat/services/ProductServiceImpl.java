@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import com.ensat.category.entities.Bakery;
 import com.ensat.category.entities.Beverages;
+import com.ensat.category.entities.CategoryDtlsDto;
 import com.ensat.category.entities.CategoryDto;
 import com.ensat.category.entities.Dairy;
 import com.ensat.category.entities.Grocery;
@@ -84,31 +85,60 @@ public class ProductServiceImpl implements ProductService, Constants {
     }
     
     @Override
-	public List<ProductDetails> getAllCategoryDetails(CategoryDto categoryDto) {
-    	String category = categoryDto.getCategory();
-    	long productId = categoryDto.getProductId();
-    	if(category.equals(GROCERY)) {
-    		List<Grocery> groceryList = groceryRepository.findAll();
+	public CategoryDtlsDto getAllCategoryDetails(CategoryDto categoryDto) {
+		CategoryDtlsDto categoryDtlsDto = new CategoryDtlsDto();
+		String category = categoryDto.getCategory();
+		long productId = categoryDto.getProductId();
+		if (category.equals(GROCERY)) {
+			List<Grocery> groceryList = groceryRepository.findAll();
 			long groceryId = Utility.findGroceryIdByProductId(groceryList, productId);
-			groceryRepository.findById(groceryId);
-		} else if(category.equals(DAIRY)) {
+			Grocery grocery = groceryRepository.findById(groceryId).get();
+			categoryDtlsDto.setOrganic(grocery.getOrganic());
+			categoryDtlsDto.setNonGmo(grocery.getNonGmo());
+			categoryDtlsDto.setWholeGrain(grocery.getWholeGrain());
+			categoryDtlsDto.setFreshnessGrocery(grocery.getFreshnessGrocery());
+			categoryDtlsDto.setNutrientContent(grocery.getNutrientContent());
+
+		} else if (category.equals(DAIRY)) {
 			List<Dairy> dairyList = dairyRepository.findAll();
 			long dairyId = Utility.findDairyIdByProductId(dairyList, productId);
 			Dairy dairy = dairyRepository.findById(dairyId).get();
-		} else if(category.equals(BAKERY)) {
+			categoryDtlsDto.setFreshnessDairy(dairy.getFreshnessDairy());
+			categoryDtlsDto.setPurity(dairy.getPurity());
+			categoryDtlsDto.setFatContent(dairy.getFatContent());
+			categoryDtlsDto.setHomogenization(dairy.getHomogenization());
+			categoryDtlsDto.setPasteurization(dairy.getPasteurization());
+
+		} else if (category.equals(BAKERY)) {
 			List<Bakery> bakeryList = bakeryRepository.findAll();
 			long bakeryId = Utility.getBakeryIdFromProductId(bakeryList, productId);
 			Bakery bakery = bakeryRepository.findById(bakeryId).get();
-		} else if(category.equals(BEVERAGES)) {
+			categoryDtlsDto.setFreshnessBakery(bakery.getFreshnessBakery());
+			categoryDtlsDto.setTexture(bakery.getTexture());
+			categoryDtlsDto.setMoistureContent(bakery.getMoistureContent());
+			categoryDtlsDto.setFlavorBakery(bakery.getFlavorBakery());
+			categoryDtlsDto.setUniSizeShape(bakery.getUniSizeShape());
+
+		} else if (category.equals(BEVERAGES)) {
 			List<Beverages> beveragesList = beveragesRepository.findAll();
 			long beveragesId = Utility.getBeveragesIdFromProductId(beveragesList, productId);
 			Beverages beverages = beveragesRepository.findById(beveragesId).get();
-		} else if(category.equals(MEAT_AND_POULTRY)) {
+			categoryDtlsDto.setNaturalIngredients(beverages.getNaturalIngredients());
+			categoryDtlsDto.setFlavorBeverages(beverages.getFlavorBeverages());
+			categoryDtlsDto.setColorBeverages(beverages.getColorBeverages());
+			categoryDtlsDto.setClarity(beverages.getClarity());
+			categoryDtlsDto.setShelfLife(beverages.getShelfLife());
+		} else if (category.equals(MEAT_AND_POULTRY)) {
 			List<MeatAndPoultry> meatAndPoultryList = meatAndPoultryRepository.findAll();
 			long meatAndPoultryId = Utility.getMeatAndPoulTryIdFromProductId(meatAndPoultryList, productId);
 			MeatAndPoultry meatAndPoultry = meatAndPoultryRepository.findById(meatAndPoultryId).get();
+			categoryDtlsDto.setFreshnessMeat(meatAndPoultry.getFreshnessMeat());
+			categoryDtlsDto.setMarbling(meatAndPoultry.getMarbling());
+			categoryDtlsDto.setColorMeat(meatAndPoultry.getColorMeat());
+			categoryDtlsDto.setOdor(meatAndPoultry.getOdor());
+			categoryDtlsDto.setTemperatureControl(meatAndPoultry.getTemperatureControl());
 		}
-		return null;
+		return categoryDtlsDto;
 	}
 
     @Override

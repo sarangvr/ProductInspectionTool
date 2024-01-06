@@ -813,7 +813,6 @@
 					var selectedProduct = document.querySelector('input[type="checkbox"]:checked').closest('tr');
 					
 					if (selectedProduct) {
-						alert("selectedProduct: "+selectedProduct.innerText);
 						// Show the form
 						form.style.display = 'block';
 
@@ -844,13 +843,43 @@
 						document.getElementById('colour').value = selectedProduct.querySelector('td:nth-child(11)').innerText;
 						document.getElementById('quality').value = selectedProduct.querySelector('td:nth-child(12)').innerText;
 						//post call for getting category list
-						alert("Category_List_START");
+						
 						var categoryName = selectedProduct.querySelector('td:nth-child(9)').innerText.trim();
 						var productIdVal = selectedProduct.querySelector('td:nth-child(2)').innerText.trim();
 						var categoryData = {
 								category: categoryName,
 								productId: productIdVal,
 						};
+						//var initialise
+						var organicVal = "";
+						var nonGmoVal = "";
+						var wholeGrainVal = "";
+						var freshnessGroceryVal = "";
+						var nutrientContentVal = "";
+						
+						var freshnessDairyVal = "";
+						var purityVal = "";
+						var fatContentVal = "";
+						var homogenizationVal = "";
+						var pasteurizationVal = "";
+						
+						var freshnessBakeryVal = "";
+						var textureVal = "";
+						var moistureContentVal = "";
+						var flavorBakeryVal = "";
+						var uniSizeShapeVal = "";
+						
+						var naturalIngredientsVal = "";
+						var flavorBeveragesVal = "";
+						var colorBeveragesVal = "";
+						var clarityVal = "";
+						var shelfLifeVal = "";
+						
+						var freshnessMeatVal = "";
+						var marblingVal = "";
+						var colorMeatVal = "";
+						var odorVal = "";
+						var temperatureControlVal = "";
 						axios.post('/getCategoryDtls', categoryData, {
 						    headers: {
 						        'Content-Type': 'application/json',
@@ -860,46 +889,95 @@
 						        console.log('Success:', response.data);
 						
 						        // Handle the list received in the response
-						        const resultList = response.data;
-								alert("Category_List_END");
-						        // Iterate through the list and get the String variable inside DTO
-						        /*resultList.forEach(dto => {
-									alert("response");
-						            const stringValue = dto.yourStringVariable; // Replace 'yourStringVariable' with the actual variable name
-						            console.log('String Value:', stringValue);
-						        }); */
-						
-						        // Disable the form elements after submission
-						        //disableFormElements(form);
-						
-						        // Reload the page after successful form submission
-						        //location.reload(true);
+						        const dto = response.data;
+						        organicVal = dto.organic;
+								nonGmoVal = dto.nonGmo;
+								wholeGrainVal = dto.wholeGrain;
+								freshnessGroceryVal = dto.freshnessGrocery;
+								nutrientContentVal = dto.nutrientContent;
+								
+								freshnessDairyVal = dto.freshnessDairy;
+								purityVal = dto.purity;
+								fatContentVal = dto.fatContent;
+								homogenizationVal = dto.homogenization;
+								pasteurizationVal = dto.pasteurization;
+								
+								freshnessBakeryVal = dto.freshnessBakery;
+								textureVal = dto.texture;
+								moistureContentVal = dto.moistureContent;
+								flavorBakeryVal = dto.flavorBakery;
+								uniSizeShapeVal = dto.uniSizeShape;
+								
+								naturalIngredientsVal = dto.naturalIngredients;
+								flavorBeveragesVal = dto.flavorBeverages;
+								colorBeveragesVal = dto.colorBeverages;
+								clarityVal = dto.clarity;
+								shelfLifeVal = dto.shelfLife;
+								
+								freshnessMeatVal = dto.freshnessMeat;
+								marblingVal = dto.marbling;
+								colorMeatVal = dto.colorMeat;
+								odorVal = dto.odor;
+								temperatureControlVal = dto.temperatureControl;
+								
+								// Set value based on the category
+								if (categoryName === 'Grocery') {
+								    var groceryCategory = document.querySelector('.Grocery');
+		        					groceryCategory.style.display = 'flex';
+		        					
+									document.getElementById('organic').value = organicVal;
+									document.getElementById('nonGmo').value = nonGmoVal;
+									document.getElementById('wholeGrain').value = wholeGrainVal;
+									document.getElementById('freshnessGrocery').value = freshnessGroceryVal;
+									document.getElementById('nutrientContent').value = nutrientContentVal;
+								    
+								} else if (categoryName === 'Dairy') {
+								    var dairyCategory = document.querySelector('.Dairy');
+		        					dairyCategory.style.display = 'flex';
+		        					
+		        					document.getElementById('freshnessDairy').value = freshnessDairyVal;
+									document.getElementById('purity').value = purityVal;
+									document.getElementById('fatContent').value = fatContentVal;
+									document.getElementById('homogenization').value = homogenizationVal;
+									document.getElementById('pasteurization').value = pasteurizationVal;
+		        					
+								} else if (categoryName === 'Bakery'){
+									var bakeryCategory = document.querySelector('.Bakery');
+		        					bakeryCategory.style.display = 'flex';
+		        					
+		        					document.getElementById('freshnessBakery').value = freshnessBakeryVal;
+									document.getElementById('texture').value = textureVal;
+									document.getElementById('moistureContent').value = moistureContentVal;
+									document.getElementById('flavorBakery').value = flavorBakeryVal;
+									document.getElementById('uniSizeShape').value = uniSizeShapeVal;
+		        					
+								} else if (categoryName === 'Beverages'){
+									var beveragesCategory = document.querySelector('.Beverages');
+		        					beveragesCategory.style.display = 'flex';
+		        					
+		        					document.getElementById('naturalIngredients').value = naturalIngredientsVal;
+									document.getElementById('flavorBeverages').value = flavorBeveragesVal;
+									document.getElementById('colorBeverages').value = colorBeveragesVal;
+									document.getElementById('clarity').value = clarityVal;
+									document.getElementById('shelfLife').value = shelfLifeVal;
+		        					
+								} else if (categoryName === 'MeatAndPoultry'){
+									var meatCategory = document.querySelector('.MeatAndPoultry');
+		        					meatCategory.style.display = 'flex';
+		        					
+		        					document.getElementById('freshnessMeat').value = freshnessMeatVal;
+									document.getElementById('marbling').value = marblingVal;
+									document.getElementById('colorMeat').value = colorMeatVal;
+									document.getElementById('odor').value = odorVal;
+									document.getElementById('temperatureControl').value = temperatureControlVal;
+		        					
+								}
+
 						    })
 						    .catch(error => {
 						        console.error('Error:', error);
 						    });
 						
-						
-						// Set value based on the category
-						if (categoryName === 'Grocery') {
-						    var groceryCategory = document.querySelector('.Grocery');
-        					groceryCategory.style.display = 'flex';
-							document.getElementById('organic').value = "YES";
-						    
-						} else if (categoryName === 'Dairy') {
-						    var dairyCategory = document.querySelector('.Dairy');
-        					dairyCategory.style.display = 'flex';
-						} else if (categoryName === 'Bakery'){
-							var bakeryCategory = document.querySelector('.Bakery');
-        					bakeryCategory.style.display = 'flex';
-						} else if (categoryName === 'Beverages'){
-							var beveragesCategory = document.querySelector('.Beverages');
-        					beveragesCategory.style.display = 'flex';
-						} else if (categoryName === 'MeatAndPoultry'){
-							var meatCategory = document.querySelector('.MeatAndPoultry');
-        					meatCategory.style.display = 'flex';
-						}
-
 						// Add an event listener to the form submission
 						form.addEventListener('submit', function (event) {
 							event.preventDefault(); // Prevent the default form submission

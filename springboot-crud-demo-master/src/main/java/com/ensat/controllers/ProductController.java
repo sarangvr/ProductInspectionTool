@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.ensat.category.entities.CategoryDtlsDto;
 import com.ensat.category.entities.CategoryDto;
 import com.ensat.config.CustomObjectMapper;
 import com.ensat.entities.Product;
@@ -91,20 +93,20 @@ public class ProductController {
         return "redirect:/products";
     }
     
-    @SuppressWarnings("rawtypes")
 	@PostMapping("/getCategoryDtls")
-	public List<ProductDetails> getCategoryDtls(@RequestBody String json, Model model) {
-    	@SuppressWarnings("unchecked")
-		List<ProductDetails> list = new ArrayList();
+	public ResponseEntity<CategoryDtlsDto> getCategoryDtls(@RequestBody String json, Model model) {
+    	CategoryDtlsDto categoryDtlsDto = new CategoryDtlsDto();
 		try {
 			ObjectMapper objectMapper = CustomObjectMapper.getObjectMapper();
 			CategoryDto categoryDto = objectMapper.readValue(json, CategoryDto.class);
-			list = productService.getAllCategoryDetails(categoryDto);
+			categoryDtlsDto = productService.getAllCategoryDetails(categoryDto);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("Error getCategoryDtls: " + e.getMessage());
+//			return (List<ProductDetails>) new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		return list;
+		return new ResponseEntity<CategoryDtlsDto>(categoryDtlsDto, HttpStatus.OK);
 
 	}
 
