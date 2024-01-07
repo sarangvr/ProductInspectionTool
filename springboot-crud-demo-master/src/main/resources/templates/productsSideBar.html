@@ -216,6 +216,9 @@
         	right: 50px;
         	transform: translateY(-50%);
         }
+        .required {
+		    color: red;
+		}
     </style>
 </head>
 <body>
@@ -365,14 +368,14 @@
       <div class="form-row">
         <!-- Product Id -->
         <div class="form-group col-md-4">
-          <label for="productId">Product Id:</label>
+          <label for="productId">Product Id:  <span class="required">*</span></label>
           <input type="text" class="form-control" id="productId" name="productId" required>
         </div>
 
         <!-- Name -->
         <div class="form-group col-md-4">
-          <label for="name">Name:</label>
-          <input type="text" class="form-control" id="name" name="name" >
+          <label for="name">Name:  <span class="required">*</span></label>
+          <input type="text" class="form-control" id="name" name="name" required>
         </div>
 
         <!-- Description -->
@@ -397,9 +400,9 @@
 
         <!-- Category Dropdown -->
         <div class="form-group col-md-4">
-          <label for="category">Category:</label>
-          <select class="form-control" id="category" name="category" onchange="showCategoryDtls()">
-			 <option value=""></option>
+          <label for="category">Category:  <span class="required">*</span></label>
+          <select class="form-control" id="category" name="category" onchange="showCategoryDtls()" required>
+			<option value=""></option>
             <option value="Grocery">Grocery</option>
             <option value="Dairy">Dairy</option>
             <option value="Bakery">Bakery</option>
@@ -418,13 +421,13 @@
 
         <!-- Expiry Date -->
         <div class="form-group col-md-4">
-          <label for="expiryDate">Expiry Date:</label>
+          <label for="expiryDate">Expiry Date:  <span class="required">*</span></label>
           <input type="date" class="form-control" id="expiryDate" name="expiryDate" >
         </div>
 
         <!-- Manufacturing Date -->
         <div class="form-group col-md-4">
-          <label for="manufacturingDate">Manufacturing Date:</label>
+          <label for="manufacturingDate">Manufacturing Date:  <span class="required">*</span></label>
           <input type="date" class="form-control" id="manufacturingDate" name="manufacturingDate" >
         </div>
       </div>
@@ -452,115 +455,250 @@
       <div class="form-row Grocery">
 	    <div class="form-group col-md-2 d-flex flex-column align-items-start">
 	        <label for="weight">Organic:</label>
-	        <input type="text" class="form-control" id="organic" name="organic" value="">
+	        <!--<input type="text" class="form-control" id="organic" name="organic" value="">-->
+	        <select class="form-control" id="organic" name="organic">
+		        <option value=""></option>
+		        <option value="YES">YES</option>
+		        <option value="NO">NO</option>
+		    </select>
 	    </div>
 	    <div class="form-group col-md-2 d-flex flex-column align-items-start">
 	        <label for="weight">Non-GMO:</label>
-	        <input type="text" class="form-control" id="nonGmo" name="nonGmo">
+	        <!--<input type="text" class="form-control" id="nonGmo" name="nonGmo">-->
+	        <select class="form-control" id="nonGmo" name="nonGmo">
+		        <option value=""></option>
+		        <option value="YES">YES</option>
+		        <option value="NO">NO</option>
+		    </select>
 	    </div>
 	    <div class="form-group col-md-2 d-flex flex-column align-items-start">
 	        <label for="weight">Whole Grain:</label>
 	        <input type="text" class="form-control" id="wholeGrain" name="wholeGrain">
 	    </div>
 	    <div class="form-group col-md-2 d-flex flex-column align-items-start">
-	        <label for="weight">Freshness:</label>
-	        <input type="text" class="form-control" id="freshnessGrocery" name="freshnessGrocery">
+	        <label for="weight">Freshness: <span class="required">*</span></label>
+	        <!--<input type="text" class="form-control" id="freshnessGrocery" name="freshnessGrocery">-->
+	        <select class="form-control" id="freshnessGrocery" name="freshnessGrocery" required>
+		        <option value=""></option>
+		        <option value="HIGH">HIGH</option>
+		        <option value="MEDIUM">MEDIUM</option>
+		        <option value="LOW">LOW</option>
+		    </select>
 	    </div>
 	    <div class="form-group col-md-2 d-flex flex-column align-items-start">
-	        <label for="weight">Nutrient Content:</label>
-	        <input type="text" class="form-control" id="nutrientContent" name="nutrientContent">
+	        <label for="weight">Nutrient Content: <span class="required">*</span></label>
+	        <!--<input type="text" class="form-control" id="nutrientContent" name="nutrientContent">-->
+	        <select class="form-control" id="nutrientContent" name="nutrientContent" required>
+		        <option value=""></option>
+		        <option value="HIGH">HIGH</option>
+		        <option value="MEDIUM">MEDIUM</option>
+		        <option value="LOW">LOW</option>
+		    </select>
 	    </div>
 	</div>
 	<!-- Dairy -->
       <div class="form-row Dairy">
 	    <div class="form-group col-md-2 d-flex flex-column align-items-start">
-	        <label for="weight">Freshness:</label>
-	        <input type="text" class="form-control" id="freshnessDairy" name="freshnessDairy">
+	        <label for="weight">Freshness: <span class="required">*</span></label>
+	        <!--<input type="text" class="form-control" id="freshnessDairy" name="freshnessDairy">-->
+	        <select class="form-control" id="freshnessDairy" name="freshnessDairy" required>
+		        <option value=""></option>
+		        <option value="HIGH">HIGH</option>
+		        <option value="MEDIUM">MEDIUM</option>
+		        <option value="LOW">LOW</option>
+		    </select>
 	    </div>
 	    <div class="form-group col-md-2 d-flex flex-column align-items-start">
 	        <label for="weight">Purity:</label>
-	        <input type="text" class="form-control" id="purity" name="purity">
+	        <!--<input type="text" class="form-control" id="purity" name="purity">-->
+	        <select class="form-control" id="purity" name="purity">
+		        <option value=""></option>
+		        <option value="HIGH">HIGH</option>
+		        <option value="MEDIUM">MEDIUM</option>
+		        <option value="LOW">LOW</option>
+		    </select>
 	    </div>
 	    <div class="form-group col-md-2 d-flex flex-column align-items-start">
-	        <label for="weight">Fat Content:</label>
-	        <input type="text" class="form-control" id="fatContent" name="fatContent">
+	        <label for="weight">Fat Content: <span class="required">*</span></label>
+	        <!--<input type="text" class="form-control" id="fatContent" name="fatContent">-->
+	        <select class="form-control" id="fatContent" name="fatContent" required>
+		        <option value=""></option>
+		        <option value="HIGH">HIGH</option>
+		        <option value="MEDIUM">MEDIUM</option>
+		        <option value="LOW">LOW</option>
+		    </select>
 	    </div>
 	    <div class="form-group col-md-2 d-flex flex-column align-items-start">
 	        <label for="weight">Homogenization:</label>
-	        <input type="text" class="form-control" id="homogenization" name="homogenization">
+	        <!--<input type="text" class="form-control" id="homogenization" name="homogenization">-->
+	        <select class="form-control" id="homogenization" name="homogenization">
+		        <option value=""></option>
+		        <option value="YES">YES</option>
+		        <option value="NO">NO</option>
+		    </select>
 	    </div>
 	    <div class="form-group col-md-2 d-flex flex-column align-items-start">
 	        <label for="weight">Pasteurization:</label>
-	        <input type="text" class="form-control" id="pasteurization" name="pasteurization">
+	        <!--<input type="text" class="form-control" id="pasteurization" name="pasteurization">-->
+	        <select class="form-control" id="pasteurization" name="pasteurization">
+		        <option value=""></option>
+		        <option value="YES">YES</option>
+		        <option value="NO">NO</option>
+		    </select>
 	    </div>
 	</div>
 	<!-- Bakery -->
       <div class="form-row Bakery">
 	    <div class="form-group col-md-2 d-flex flex-column align-items-start">
-	        <label for="weight">Freshness:</label>
-	        <input type="text" class="form-control" id="freshnessBakery" name="freshnessBakery">
+	        <label for="weight">Freshness: <span class="required">*</span></label>
+	        <!--<input type="text" class="form-control" id="freshnessBakery" name="freshnessBakery">-->
+	        <select class="form-control" id="freshnessBakery" name="freshnessBakery" required>
+		        <option value=""></option>
+		        <option value="HIGH">HIGH</option>
+		        <option value="MEDIUM">MEDIUM</option>
+		        <option value="LOW">LOW</option>
+		    </select>
 	    </div>
 	    <div class="form-group col-md-2 d-flex flex-column align-items-start">
 	        <label for="weight">Texture:</label>
-	        <input type="text" class="form-control" id="texture" name="texture">
+	        <!--<input type="text" class="form-control" id="texture" name="texture">-->
+	        <select class="form-control" id="texture" name="texture">
+		        <option value=""></option>
+		        <option value="HIGH">HIGH</option>
+		        <option value="MEDIUM">MEDIUM</option>
+		        <option value="LOW">LOW</option>
+		    </select>
 	    </div>
 	    <div class="form-group col-md-2 d-flex flex-column align-items-start">
-	        <label for="weight">Moisture Content:</label>
-	        <input type="text" class="form-control" id="moistureContent" name="moistureContent">
+	        <label for="weight">Moisture Content: <span class="required">*</span></label>
+	        <!--<input type="text" class="form-control" id="moistureContent" name="moistureContent">-->
+	        <select class="form-control" id="moistureContent" name="moistureContent" required>
+		        <option value=""></option>
+		        <option value="HIGH">HIGH</option>
+		        <option value="MEDIUM">MEDIUM</option>
+		        <option value="LOW">LOW</option>
+		    </select>
 	    </div>
 	    <div class="form-group col-md-2 d-flex flex-column align-items-start">
 	        <label for="weight">Flavor:</label>
-	        <input type="text" class="form-control" id="flavorBakery" name="flavorBakery">
+	        <!--<input type="text" class="form-control" id="flavorBakery" name="flavorBakery">-->
+	        <select class="form-control" id="flavorBakery" name="flavorBakery">
+		        <option value=""></option>
+		        <option value="HIGH">HIGH</option>
+		        <option value="MEDIUM">MEDIUM</option>
+		        <option value="LOW">LOW</option>
+		    </select>
 	    </div>
 	    <div class="form-group col-md-2 d-flex flex-column align-items-start">
 	        <label for="weight">Uniformity(Size,Shape):</label>
-	        <input type="text" class="form-control" id="uniSizeShape" name="uniSizeShape">
+	        <!--<input type="text" class="form-control" id="uniSizeShape" name="uniSizeShape">-->
+	        <select class="form-control" id="uniSizeShape" name="uniSizeShape">
+		        <option value=""></option>
+		        <option value="UNIFORM">UNIFORM</option>
+		        <option value="NON_UNIFORM">NON_UNIFORM</option>
+		    </select>
 	    </div>
 	</div>
 	<!-- Beverages -->
       <div class="form-row Beverages">
 	    <div class="form-group col-md-2 d-flex flex-column align-items-start">
-	        <label for="weight">Natural Ingredients:</label>
-	        <input type="text" class="form-control" id="naturalIngredients" name="naturalIngredients">
+	        <label for="weight">Natural Ingredients: <span class="required">*</span></label>
+	        <!--<input type="text" class="form-control" id="naturalIngredients" name="naturalIngredients">-->
+	        <select class="form-control" id="naturalIngredients" name="naturalIngredients" required>
+		        <option value=""></option>
+		        <option value="YES">YES</option>
+		        <option value="NO">NO</option>
+		    </select>
 	    </div>
 	    <div class="form-group col-md-2 d-flex flex-column align-items-start">
 	        <label for="weight">Flavor:</label>
-	        <input type="text" class="form-control" id="flavorBeverages" name="flavorBeverages">
+	        <!--<input type="text" class="form-control" id="flavorBeverages" name="flavorBeverages">-->
+	        <select class="form-control" id="flavorBeverages" name="flavorBeverages">
+		        <option value=""></option>
+		        <option value="HIGH">HIGH</option>
+		        <option value="MEDIUM">MEDIUM</option>
+		        <option value="LOW">LOW</option>
+		    </select>
 	    </div>
 	    <div class="form-group col-md-2 d-flex flex-column align-items-start">
 	        <label for="weight">Color:</label>
-	        <input type="text" class="form-control" id="colorBeverages" name="colorBeverages">
+	        <!--<input type="text" class="form-control" id="colorBeverages" name="colorBeverages">-->
+	        <select class="form-control" id="colorBeverages" name="colorBeverages">
+		        <option value=""></option>
+		        <option value="CHANGED">CHANGED</option>
+		        <option value="UNCHANGED">UNCHANGED</option>
+		    </select>
 	    </div>
 	    <div class="form-group col-md-2 d-flex flex-column align-items-start">
 	        <label for="weight">Clarity:</label>
-	        <input type="text" class="form-control" id="clarity" name="clarity">
+	        <!--<input type="text" class="form-control" id="clarity" name="clarity">-->
+	        <select class="form-control" id="clarity" name="clarity">
+		        <option value=""></option>
+		        <option value="HIGH">HIGH</option>
+		        <option value="MEDIUM">MEDIUM</option>
+		        <option value="LOW">LOW</option>
+		    </select>
 	    </div>
 	    <div class="form-group col-md-2 d-flex flex-column align-items-start">
-	        <label for="weight">Shelf Life:</label>
-	        <input type="text" class="form-control" id="shelfLife" name="shelfLife">
+	        <label for="weight">Shelf Life: <span class="required">*</span></label>
+	        <!--<input type="text" class="form-control" id="shelfLife" name="shelfLife">-->
+	        <select class="form-control" id="shelfLife" name="shelfLife" required>
+		        <option value=""></option>
+		        <option value="HIGH">HIGH</option>
+		        <option value="MEDIUM">MEDIUM</option>
+		        <option value="LOW">LOW</option>
+		    </select>
 	    </div>
 	</div>
 	<!-- Meat -->
       <div class="form-row MeatAndPoultry">
 	    <div class="form-group col-md-2 d-flex flex-column align-items-start">
-	        <label for="weight">Freshness:</label>
-	        <input type="text" class="form-control" id="freshnessMeat" name="freshnessMeat">
+	        <label for="weight">Freshness: <span class="required">*</span></label>
+	        <!--<input type="text" class="form-control" id="freshnessMeat" name="freshnessMeat">-->
+	        <select class="form-control" id="shelfLife" name="shelfLife" required>
+		        <option value=""></option>
+		        <option value="HIGH">HIGH</option>
+		        <option value="MEDIUM">MEDIUM</option>
+		        <option value="LOW">LOW</option>
+		    </select>
 	    </div>
 	    <div class="form-group col-md-2 d-flex flex-column align-items-start">
 	        <label for="weight">Marbling:</label>
-	        <input type="text" class="form-control" id="marbling" name="marbling">
+	        <!--<input type="text" class="form-control" id="marbling" name="marbling">-->
+	        <select class="form-control" id="shelfLife" name="shelfLife">
+		        <option value=""></option>
+		        <option value="HIGH">HIGH</option>
+		        <option value="MEDIUM">MEDIUM</option>
+		        <option value="LOW">LOW</option>
+		    </select>
 	    </div>
 	    <div class="form-group col-md-2 d-flex flex-column align-items-start">
 	        <label for="weight">Color:</label>
-	        <input type="text" class="form-control" id="colorMeat" name="colorMeat">
+	        <!--<input type="text" class="form-control" id="colorMeat" name="colorMeat">-->
+	        <select class="form-control" id="colorBeverages" name="colorBeverages">
+		        <option value=""></option>
+		        <option value="CHANGED">CHANGED</option>
+		        <option value="UNCHANGED">UNCHANGED</option>
+		    </select>
 	    </div>
 	    <div class="form-group col-md-2 d-flex flex-column align-items-start">
-	        <label for="weight">Odor:</label>
-	        <input type="text" class="form-control" id="odor" name="odor">
+	        <label for="weight">Odor: <span class="required">*</span></label>
+	        <!--<input type="text" class="form-control" id="odor" name="odor">-->
+	        <select class="form-control" id="colorBeverages" name="colorBeverages" required>
+		        <option value=""></option>
+		        <option value="CHANGED">CHANGED</option>
+		        <option value="UNCHANGED">UNCHANGED</option>
+		    </select>
 	    </div>
 	    <div class="form-group col-md-2 d-flex flex-column align-items-start">
 	        <label for="weight">Temperature Control:</label>
-	        <input type="text" class="form-control" id="temperatureControl" name="temperatureControl">
+	        <!--<input type="text" class="form-control" id="temperatureControl" name="temperatureControl">-->
+	        <select class="form-control" id="shelfLife" name="shelfLife">
+		        <option value=""></option>
+		        <option value="HIGH">HIGH</option>
+		        <option value="MEDIUM">MEDIUM</option>
+		        <option value="LOW">LOW</option>
+		    </select>
 	    </div>
 	</div>
 
