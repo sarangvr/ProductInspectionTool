@@ -2,7 +2,6 @@ package com.ensat.services;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
@@ -482,6 +481,5 @@ public class ProductServiceImpl implements ProductService, Constants {
 		}
 		return productDetails;
 	}
-
 
 }

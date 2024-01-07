@@ -157,7 +157,7 @@
         	/* Dark Green */
         }
 
-        #productForm {
+        #inspectionForm {
         	display: none;
         }
 
@@ -216,6 +216,9 @@
         	right: 50px;
         	transform: translateY(-50%);
         }
+        .required {
+		    color: red;
+		}
     </style>
 </head>
 <body>
@@ -250,13 +253,13 @@
                 </ul>
             </li>
             <li>
-                <a href="#">
+                <a th:href="@{/getProductInspection}">
                     <span class="icon"><i class="fas fa-user-friends"></i></span>
                     <span class="item">Inspection</span>
                 </a>
                 <ul>
-                    <li><a href="#">Auto Inspect</a></li>
-                    <li><a href="#">Manual Inspect</a></li>
+                    <li><a href="#" onclick="showInspectionForm('autoInspect')">Auto Inspect</a></li>
+                    <li><a href="#" onclick="showInspectionForm('manualInspect')">Manual Inspect</a></li>
                 </ul>
             </li>
             <li>
@@ -310,69 +313,53 @@
 		
 		<!-- breadcrumb END -->
 		
-        <h4>Inspection</h4>
+        <h4>Inspection List</h4>
 
         <!-- Product List Table -->
         <table class="table">
             <thead>
                 <tr>
-                    <!--<th scope="col"><input type="checkbox"></th>-->
                     <th scope="col"><input type="checkbox" id="selectAll" onclick="toggleAllCheckboxes()" disabled></th>
                     <th scope="col">Product Id</th>
                     <th scope="col">Product Name</th>
                     <th scope="col">Date</th>
-                    <th scope="col">Category</th>
-                    <th scope="col">Inspecter</th>
+                    <th scope="col">Inspector Name</th>
                     <th scope="col">Comments</th>
-                    <th scope="col">Manuf Date</th>
-                    <th scope="col">Expiry Date</th>
-                    <th scope="col">Weight</th>
-                    <th scope="col">Colour</th>
                     <th scope="col">Result</th>
                 </tr>
             </thead>
             <tbody>
                 <!-- Use Thymeleaf to iterate over the list of products -->
-                <tr th:each="product : ${products}">
+                <tr th:each="inspection : ${inspections}">
                     <!--<td><input type="checkbox"></td>-->
                     <td><input type="checkbox" class="productCheckbox" onclick="toggleCheckbox(this)"></td>
-                    <td th:text="${product.id}"></td>
-                    <td th:text="${product.name}"></td>
-                    <td th:text="${product.description}"></td>
-                    <td th:text="${product.price}"></td>
-                    <td th:text="${product.quantity}"></td>
-                    <td th:text="${product.manufacturingDate}"></td>
-                    <td th:text="${product.expiryDate}"></td>
-                    <td th:text="${product.category}"></td>
-                    <td th:text="${product.weight}"></td>
-                    <td th:text="${product.colour}"></td>
-                    <!--<td th:text="${product.quality}"></td>-->
-                    <td th:class="${'quality-' + product.quality}" th:text="${product.quality}"></td>
+                    <td th:text="${inspection.productId}"></td>
+                    <td th:text="${inspection.productName}"></td>
+                    <td th:text="${inspection.date}"></td>
+                    <td th:text="${inspection.inspector}"></td>
+                    <td th:text="${inspection.comments}"></td>
+                    <td th:text="${inspection.result}"></td>
                 </tr>
             </tbody>
         </table>
-        <!-- Buttons -->
-        <!--<button class="btn btn-primary" onclick="showProductForm('add')">Add</button>
-        <button class="btn btn-warning" onclick="showProductForm('edit')">Edit</button>
-        <button class="btn btn-danger" onclick="deleteSelected()">Delete</button>-->
 
-        <!-- Product Form -->
+        <!-- Inspection Form -->
     <!--<form id="productForm">-->
-    <form th:action="@{/register}" method="post" id="productForm">
+    <form th:action="@{/register}" method="post" id="inspectionForm">
 	<!--<form th:action="${#strings.endsWith(action, 'add') ? '/register' : '/edit'}" method="post" id="productForm">-->
-      <h6>Inspect Elements</h6>
+      <h6>Manual Inspect</h6>
 
       <div class="form-row">
         <!-- Product Id -->
         <div class="form-group col-md-4">
-          <label for="id">Product Id:</label>
-          <input type="text" class="form-control" id="id" name="id" required>
+          <label for="productId">Product Id:  <span class="required">*</span></label>
+          <input type="text" class="form-control" id="productId" name="productId" required>
         </div>
 
         <!-- Name -->
         <div class="form-group col-md-4">
-          <label for="name">Name:</label>
-          <input type="text" class="form-control" id="name" name="name" >
+          <label for="name">Name:  <span class="required">*</span></label>
+          <input type="text" class="form-control" id="name" name="name" required>
         </div>
 
         <!-- Description -->
@@ -397,14 +384,14 @@
 
         <!-- Category Dropdown -->
         <div class="form-group col-md-4">
-          <label for="category">Category:</label>
-          <select class="form-control" id="category" name="category" onchange="showCategoryDtls()">
-			 <option value=""></option>
+          <label for="category">Category:  <span class="required">*</span></label>
+          <select class="form-control" id="category" name="category" onchange="showCategoryDtls()" required>
+			<option value=""></option>
             <option value="Grocery">Grocery</option>
             <option value="Dairy">Dairy</option>
             <option value="Bakery">Bakery</option>
             <option value="Beverages">Beverages</option>
-            <option value="Meat">Meat</option>
+            <option value="MeatAndPoultry">Meat and Poultry</option>
           </select>
         </div>
       </div>
@@ -418,13 +405,13 @@
 
         <!-- Expiry Date -->
         <div class="form-group col-md-4">
-          <label for="expiryDate">Expiry Date:</label>
+          <label for="expiryDate">Expiry Date:  <span class="required">*</span></label>
           <input type="date" class="form-control" id="expiryDate" name="expiryDate" >
         </div>
 
         <!-- Manufacturing Date -->
         <div class="form-group col-md-4">
-          <label for="manufacturingDate">Manufacturing Date:</label>
+          <label for="manufacturingDate">Manufacturing Date:  <span class="required">*</span></label>
           <input type="date" class="form-control" id="manufacturingDate" name="manufacturingDate" >
         </div>
       </div>
@@ -446,6 +433,259 @@
           <input type="text" class="form-control" id="weight" name="weight" >
         </div>
       </div>
+      <!-- Category Link Fields -->
+      <h6 class="categoryQuality">Category Quality</h6>
+      <!-- Grocery -->
+      <div class="form-row Grocery">
+	    <div class="form-group col-md-2 d-flex flex-column align-items-start">
+	        <label for="weight">Organic:</label>
+	        <!--<input type="text" class="form-control" id="organic" name="organic" value="">-->
+	        <select class="form-control" id="organic" name="organic">
+		        <option value=""></option>
+		        <option value="YES">YES</option>
+		        <option value="NO">NO</option>
+		    </select>
+	    </div>
+	    <div class="form-group col-md-2 d-flex flex-column align-items-start">
+	        <label for="weight">Non-GMO:</label>
+	        <!--<input type="text" class="form-control" id="nonGmo" name="nonGmo">-->
+	        <select class="form-control" id="nonGmo" name="nonGmo">
+		        <option value=""></option>
+		        <option value="YES">YES</option>
+		        <option value="NO">NO</option>
+		    </select>
+	    </div>
+	    <div class="form-group col-md-2 d-flex flex-column align-items-start">
+	        <label for="weight">Whole Grain:</label>
+	        <input type="text" class="form-control" id="wholeGrain" name="wholeGrain">
+	    </div>
+	    <div class="form-group col-md-2 d-flex flex-column align-items-start">
+	        <label for="weight">Freshness: <span class="required">*</span></label>
+	        <!--<input type="text" class="form-control" id="freshnessGrocery" name="freshnessGrocery">-->
+	        <select class="form-control" id="freshnessGrocery" name="freshnessGrocery" required>
+		        <option value=""></option>
+		        <option value="HIGH">HIGH</option>
+		        <option value="MEDIUM">MEDIUM</option>
+		        <option value="LOW">LOW</option>
+		    </select>
+	    </div>
+	    <div class="form-group col-md-2 d-flex flex-column align-items-start">
+	        <label for="weight">Nutrient Content: <span class="required">*</span></label>
+	        <!--<input type="text" class="form-control" id="nutrientContent" name="nutrientContent">-->
+	        <select class="form-control" id="nutrientContent" name="nutrientContent" required>
+		        <option value=""></option>
+		        <option value="HIGH">HIGH</option>
+		        <option value="MEDIUM">MEDIUM</option>
+		        <option value="LOW">LOW</option>
+		    </select>
+	    </div>
+	</div>
+	<!-- Dairy -->
+      <div class="form-row Dairy">
+	    <div class="form-group col-md-2 d-flex flex-column align-items-start">
+	        <label for="weight">Freshness: <span class="required">*</span></label>
+	        <!--<input type="text" class="form-control" id="freshnessDairy" name="freshnessDairy">-->
+	        <select class="form-control" id="freshnessDairy" name="freshnessDairy" required>
+		        <option value=""></option>
+		        <option value="HIGH">HIGH</option>
+		        <option value="MEDIUM">MEDIUM</option>
+		        <option value="LOW">LOW</option>
+		    </select>
+	    </div>
+	    <div class="form-group col-md-2 d-flex flex-column align-items-start">
+	        <label for="weight">Purity:</label>
+	        <!--<input type="text" class="form-control" id="purity" name="purity">-->
+	        <select class="form-control" id="purity" name="purity">
+		        <option value=""></option>
+		        <option value="HIGH">HIGH</option>
+		        <option value="MEDIUM">MEDIUM</option>
+		        <option value="LOW">LOW</option>
+		    </select>
+	    </div>
+	    <div class="form-group col-md-2 d-flex flex-column align-items-start">
+	        <label for="weight">Fat Content: <span class="required">*</span></label>
+	        <!--<input type="text" class="form-control" id="fatContent" name="fatContent">-->
+	        <select class="form-control" id="fatContent" name="fatContent" required>
+		        <option value=""></option>
+		        <option value="HIGH">HIGH</option>
+		        <option value="MEDIUM">MEDIUM</option>
+		        <option value="LOW">LOW</option>
+		    </select>
+	    </div>
+	    <div class="form-group col-md-2 d-flex flex-column align-items-start">
+	        <label for="weight">Homogenization:</label>
+	        <!--<input type="text" class="form-control" id="homogenization" name="homogenization">-->
+	        <select class="form-control" id="homogenization" name="homogenization">
+		        <option value=""></option>
+		        <option value="YES">YES</option>
+		        <option value="NO">NO</option>
+		    </select>
+	    </div>
+	    <div class="form-group col-md-2 d-flex flex-column align-items-start">
+	        <label for="weight">Pasteurization:</label>
+	        <!--<input type="text" class="form-control" id="pasteurization" name="pasteurization">-->
+	        <select class="form-control" id="pasteurization" name="pasteurization">
+		        <option value=""></option>
+		        <option value="YES">YES</option>
+		        <option value="NO">NO</option>
+		    </select>
+	    </div>
+	</div>
+	<!-- Bakery -->
+      <div class="form-row Bakery">
+	    <div class="form-group col-md-2 d-flex flex-column align-items-start">
+	        <label for="weight">Freshness: <span class="required">*</span></label>
+	        <!--<input type="text" class="form-control" id="freshnessBakery" name="freshnessBakery">-->
+	        <select class="form-control" id="freshnessBakery" name="freshnessBakery" required>
+		        <option value=""></option>
+		        <option value="HIGH">HIGH</option>
+		        <option value="MEDIUM">MEDIUM</option>
+		        <option value="LOW">LOW</option>
+		    </select>
+	    </div>
+	    <div class="form-group col-md-2 d-flex flex-column align-items-start">
+	        <label for="weight">Texture:</label>
+	        <!--<input type="text" class="form-control" id="texture" name="texture">-->
+	        <select class="form-control" id="texture" name="texture">
+		        <option value=""></option>
+		        <option value="HIGH">HIGH</option>
+		        <option value="MEDIUM">MEDIUM</option>
+		        <option value="LOW">LOW</option>
+		    </select>
+	    </div>
+	    <div class="form-group col-md-2 d-flex flex-column align-items-start">
+	        <label for="weight">Moisture Content: <span class="required">*</span></label>
+	        <!--<input type="text" class="form-control" id="moistureContent" name="moistureContent">-->
+	        <select class="form-control" id="moistureContent" name="moistureContent" required>
+		        <option value=""></option>
+		        <option value="HIGH">HIGH</option>
+		        <option value="MEDIUM">MEDIUM</option>
+		        <option value="LOW">LOW</option>
+		    </select>
+	    </div>
+	    <div class="form-group col-md-2 d-flex flex-column align-items-start">
+	        <label for="weight">Flavor:</label>
+	        <!--<input type="text" class="form-control" id="flavorBakery" name="flavorBakery">-->
+	        <select class="form-control" id="flavorBakery" name="flavorBakery">
+		        <option value=""></option>
+		        <option value="HIGH">HIGH</option>
+		        <option value="MEDIUM">MEDIUM</option>
+		        <option value="LOW">LOW</option>
+		    </select>
+	    </div>
+	    <div class="form-group col-md-2 d-flex flex-column align-items-start">
+	        <label for="weight">Uniformity(Size,Shape):</label>
+	        <!--<input type="text" class="form-control" id="uniSizeShape" name="uniSizeShape">-->
+	        <select class="form-control" id="uniSizeShape" name="uniSizeShape">
+		        <option value=""></option>
+		        <option value="UNIFORM">UNIFORM</option>
+		        <option value="NON_UNIFORM">NON_UNIFORM</option>
+		    </select>
+	    </div>
+	</div>
+	<!-- Beverages -->
+      <div class="form-row Beverages">
+	    <div class="form-group col-md-2 d-flex flex-column align-items-start">
+	        <label for="weight">Natural Ingredients: <span class="required">*</span></label>
+	        <!--<input type="text" class="form-control" id="naturalIngredients" name="naturalIngredients">-->
+	        <select class="form-control" id="naturalIngredients" name="naturalIngredients" required>
+		        <option value=""></option>
+		        <option value="YES">YES</option>
+		        <option value="NO">NO</option>
+		    </select>
+	    </div>
+	    <div class="form-group col-md-2 d-flex flex-column align-items-start">
+	        <label for="weight">Flavor:</label>
+	        <!--<input type="text" class="form-control" id="flavorBeverages" name="flavorBeverages">-->
+	        <select class="form-control" id="flavorBeverages" name="flavorBeverages">
+		        <option value=""></option>
+		        <option value="HIGH">HIGH</option>
+		        <option value="MEDIUM">MEDIUM</option>
+		        <option value="LOW">LOW</option>
+		    </select>
+	    </div>
+	    <div class="form-group col-md-2 d-flex flex-column align-items-start">
+	        <label for="weight">Color:</label>
+	        <!--<input type="text" class="form-control" id="colorBeverages" name="colorBeverages">-->
+	        <select class="form-control" id="colorBeverages" name="colorBeverages">
+		        <option value=""></option>
+		        <option value="CHANGED">CHANGED</option>
+		        <option value="UNCHANGED">UNCHANGED</option>
+		    </select>
+	    </div>
+	    <div class="form-group col-md-2 d-flex flex-column align-items-start">
+	        <label for="weight">Clarity:</label>
+	        <!--<input type="text" class="form-control" id="clarity" name="clarity">-->
+	        <select class="form-control" id="clarity" name="clarity">
+		        <option value=""></option>
+		        <option value="HIGH">HIGH</option>
+		        <option value="MEDIUM">MEDIUM</option>
+		        <option value="LOW">LOW</option>
+		    </select>
+	    </div>
+	    <div class="form-group col-md-2 d-flex flex-column align-items-start">
+	        <label for="weight">Shelf Life: <span class="required">*</span></label>
+	        <!--<input type="text" class="form-control" id="shelfLife" name="shelfLife">-->
+	        <select class="form-control" id="shelfLife" name="shelfLife" required>
+		        <option value=""></option>
+		        <option value="HIGH">HIGH</option>
+		        <option value="MEDIUM">MEDIUM</option>
+		        <option value="LOW">LOW</option>
+		    </select>
+	    </div>
+	</div>
+	<!-- Meat -->
+      <div class="form-row MeatAndPoultry">
+	    <div class="form-group col-md-2 d-flex flex-column align-items-start">
+	        <label for="weight">Freshness: <span class="required">*</span></label>
+	        <!--<input type="text" class="form-control" id="freshnessMeat" name="freshnessMeat">-->
+	        <select class="form-control" id="shelfLife" name="shelfLife" required>
+		        <option value=""></option>
+		        <option value="HIGH">HIGH</option>
+		        <option value="MEDIUM">MEDIUM</option>
+		        <option value="LOW">LOW</option>
+		    </select>
+	    </div>
+	    <div class="form-group col-md-2 d-flex flex-column align-items-start">
+	        <label for="weight">Marbling:</label>
+	        <!--<input type="text" class="form-control" id="marbling" name="marbling">-->
+	        <select class="form-control" id="shelfLife" name="shelfLife">
+		        <option value=""></option>
+		        <option value="HIGH">HIGH</option>
+		        <option value="MEDIUM">MEDIUM</option>
+		        <option value="LOW">LOW</option>
+		    </select>
+	    </div>
+	    <div class="form-group col-md-2 d-flex flex-column align-items-start">
+	        <label for="weight">Color:</label>
+	        <!--<input type="text" class="form-control" id="colorMeat" name="colorMeat">-->
+	        <select class="form-control" id="colorBeverages" name="colorBeverages">
+		        <option value=""></option>
+		        <option value="CHANGED">CHANGED</option>
+		        <option value="UNCHANGED">UNCHANGED</option>
+		    </select>
+	    </div>
+	    <div class="form-group col-md-2 d-flex flex-column align-items-start">
+	        <label for="weight">Odor: <span class="required">*</span></label>
+	        <!--<input type="text" class="form-control" id="odor" name="odor">-->
+	        <select class="form-control" id="colorBeverages" name="colorBeverages" required>
+		        <option value=""></option>
+		        <option value="CHANGED">CHANGED</option>
+		        <option value="UNCHANGED">UNCHANGED</option>
+		    </select>
+	    </div>
+	    <div class="form-group col-md-2 d-flex flex-column align-items-start">
+	        <label for="weight">Temperature Control:</label>
+	        <!--<input type="text" class="form-control" id="temperatureControl" name="temperatureControl">-->
+	        <select class="form-control" id="shelfLife" name="shelfLife">
+		        <option value=""></option>
+		        <option value="HIGH">HIGH</option>
+		        <option value="MEDIUM">MEDIUM</option>
+		        <option value="LOW">LOW</option>
+		    </select>
+	    </div>
+	</div>
+
 
       <!-- Submit Button -->
 		<button type="submit" class="btn btn-success">Submit</button>
@@ -455,19 +695,88 @@
 
 
     </div>
-	<!-- JavaScript to toggle visibility of the form -->
-    <!-- Include Axios via CDN in your HTML file -->
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
 		var hamburger = document.querySelector(".hamburger");
 	    hamburger.addEventListener("click", function(){
 	        document.querySelector("body").classList.toggle("active");
 	    });
+        // Handling category details
+        //categoryQuality
+        var categoryQualityHeading = document.querySelector('.categoryQuality');
+        categoryQualityHeading.style.display = 'none';
+        //Grocery
+        var groceryCategory = document.querySelector('.Grocery');
+        groceryCategory.style.display = 'none';
+        //Dairy
+        var dairyCategory = document.querySelector('.Dairy');
+        dairyCategory.style.display = 'none';
+        //Bakery
+        var bakeryCategory = document.querySelector('.Bakery');
+        bakeryCategory.style.display = 'none';
+        //Beverages
+        var beveragesCategory = document.querySelector('.Beverages');
+        beveragesCategory.style.display = 'none';
+        //Meat
+        var meatCategory = document.querySelector('.MeatAndPoultry');
+        meatCategory.style.display = 'none';
         
-    function showProductForm(action) {
-				var form = document.getElementById('productForm');
-				if (action === 'add') {
+    function callProducts() {
+        productContentSection.style.display = 'block'; // Change 'flex' to 'block' if you prefer
+        homePage.style.display = 'none';
+    }
+    // Handling category showCategoryDtls()
+    function showCategoryDtls() {
+	    var selectedCategory = document.getElementById('category').value;
+		if(selectedCategory === 'Grocery'){
+			categoryQualityHeading.style.display = 'flex';
+			meatCategory.style.display = 'none';
+			beveragesCategory.style.display = 'none';
+			bakeryCategory.style.display = 'none';
+			dairyCategory.style.display = 'none';
+			groceryCategory.style.display = 'flex';
+		}else if(selectedCategory === 'Dairy'){
+			categoryQualityHeading.style.display = 'flex';
+			meatCategory.style.display = 'none';
+			beveragesCategory.style.display = 'none';
+			bakeryCategory.style.display = 'none';
+			groceryCategory.style.display = 'none';
+			dairyCategory.style.display = 'flex';
+		}else if(selectedCategory === 'Bakery'){
+			categoryQualityHeading.style.display = 'flex';
+			meatCategory.style.display = 'none';
+			beveragesCategory.style.display = 'none';
+			dairyCategory.style.display = 'none';
+			groceryCategory.style.display = 'none';
+			bakeryCategory.style.display = 'flex';
+		}else if(selectedCategory === 'Beverages'){
+			categoryQualityHeading.style.display = 'flex';
+			meatCategory.style.display = 'none';
+			bakeryCategory.style.display = 'none';
+			dairyCategory.style.display = 'none';
+			groceryCategory.style.display = 'none';
+			beveragesCategory.style.display = 'flex';
+		}else if(selectedCategory === 'MeatAndPoultry'){
+			categoryQualityHeading.style.display = 'flex';
+			beveragesCategory.style.display = 'none';
+			bakeryCategory.style.display = 'none';
+			dairyCategory.style.display = 'none';
+			groceryCategory.style.display = 'none';
+			meatCategory.style.display = 'flex';
+		}else{
+			categoryQualityHeading.style.display = 'none';
+			beveragesCategory.style.display = 'none';
+			bakeryCategory.style.display = 'none';
+			dairyCategory.style.display = 'none';
+			groceryCategory.style.display = 'none';
+			meatCategory.style.display = 'none';
+		}
+	}
+
+    
+    function showInspectionForm(action) {
+				var form = document.getElementById('inspectionForm');
+				if (action === 'manualInspect') {
 					// Show the form
 					form.style.display = 'block';
 
@@ -479,7 +788,7 @@
 						event.preventDefault(); // Prevent the default form submission
 
 						// Collect data from form fields
-						var productId = document.getElementById('id').value;
+						var productIdInput = document.getElementById('productId').value;
 						var productName = document.getElementById('name').value;
 						var productDescription = document.getElementById('description').value;
 						var productPrice = document.getElementById('price').value;
@@ -491,11 +800,44 @@
 						var productColour = document.getElementById('colour').value;
 						var productQuality = document.getElementById('quality').value;
 						
-						//Quality Parameters
+						// Quality Parameters
+						var productorganic = document.getElementById('organic').value;
+						var productnonGmo = document.getElementById('nonGmo').value;
+						var productwholeGrain = document.getElementById('wholeGrain').value;
+						var productfreshnessGrocery = document.getElementById('freshnessGrocery').value;
+						var productnutrientContent = document.getElementById('nutrientContent').value;
+						
+						var productfreshnessDairy = document.getElementById('freshnessDairy').value;
+						var productpurity = document.getElementById('purity').value;
+						var productfatContent = document.getElementById('fatContent').value;
+						var producthomogenization = document.getElementById('homogenization').value;
+						var productpasteurization = document.getElementById('pasteurization').value;
+						
+						var productfreshnessBakery = document.getElementById('freshnessBakery').value;
+						var producttexture = document.getElementById('texture').value;
+						var productmoistureContent = document.getElementById('moistureContent').value;
+						var productflavorBakery = document.getElementById('flavorBakery').value;
+						var productuniSizeShape = document.getElementById('uniSizeShape').value;
+						
+						var productnaturalIngredients = document.getElementById('naturalIngredients').value;
+						var productflavorBeverages = document.getElementById('flavorBeverages').value;
+						var productcolorBeverages = document.getElementById('colorBeverages').value;
+						var productclarity = document.getElementById('clarity').value;
+						var productshelfLife = document.getElementById('shelfLife').value;
+						
+						var productfreshnessMeat = document.getElementById('freshnessMeat').value;
+						var productmarbling = document.getElementById('marbling').value;
+						var productcolorMeat = document.getElementById('colorMeat').value;
+						var productodor = document.getElementById('odor').value;
+						var producttemperatureControl = document.getElementById('temperatureControl').value;
+
+						
+
+						// Collect other fields as needed...
 
 						// Create a JavaScript object with the collected data
 						var productData = {
-							id: productId,
+							productId: productIdInput,
 							name: productName,
 							description: productDescription,
 							price: productPrice,
@@ -507,6 +849,31 @@
 							colour: productColour,
 							quality: productQuality,
 							mode: action,
+							organic: productorganic,
+							nonGmo: productnonGmo,
+							wholeGrain: productwholeGrain,
+							freshnessGrocery: productfreshnessGrocery,
+						    nutrientContent: productnutrientContent,
+						    freshnessDairy: productfreshnessDairy,
+						    purity: productpurity,
+						    fatContent: productfatContent,
+						    homogenization: producthomogenization,
+						    pasteurization: productpasteurization,
+						    freshnessBakery: productfreshnessBakery,
+						    texture: producttexture,
+						    moistureContent: productmoistureContent,
+						    flavorBakery: productflavorBakery,
+						    uniSizeShape: productuniSizeShape,
+						    naturalIngredients: productnaturalIngredients,
+						    flavorBeverages: productflavorBeverages,
+						    colorBeverages: productcolorBeverages,
+						    clarity: productclarity,
+						    shelfLife: productshelfLife,
+						    freshnessMeat: productfreshnessMeat,
+						    marbling: productmarbling,
+						    colorMeat: productcolorMeat,
+						    odor: productodor,
+						    temperatureControl: producttemperatureControl,
 							// Add other fields...
 						};
 
@@ -527,11 +894,12 @@
 								console.error('Error:', error);
 							});
 					});
-				} else if (action === 'edit') {
+				} else if (action === 'autoInspect') {
 					// Hide the form initially
 					form.style.display = 'none';
 					// Find the selected product in the table
 					var selectedProduct = document.querySelector('input[type="checkbox"]:checked').closest('tr');
+					
 					if (selectedProduct) {
 						// Show the form
 						form.style.display = 'block';
@@ -540,13 +908,13 @@
 						enableFormElements(form);
 
 						// Populate form fields with selected product data
-						document.getElementById('id').value = selectedProduct.querySelector('td:nth-child(2)').innerText;
+						document.getElementById('productId').value = selectedProduct.querySelector('td:nth-child(2)').innerText;
 						document.getElementById('name').value = selectedProduct.querySelector('td:nth-child(3)').innerText;
 						document.getElementById('description').value = selectedProduct.querySelector('td:nth-child(4)').innerText;
 						document.getElementById('price').value = selectedProduct.querySelector('td:nth-child(5)').innerText;
 						document.getElementById('quantity').value = selectedProduct.querySelector('td:nth-child(6)').innerText;
 
-						var productIdInput = document.getElementById('id');
+						var productIdInput = document.getElementById('productId');
 						// Disable Product Id input field
 						productIdInput.disabled = true;
 
@@ -562,12 +930,147 @@
 						document.getElementById('weight').value = selectedProduct.querySelector('td:nth-child(10)').innerText;
 						document.getElementById('colour').value = selectedProduct.querySelector('td:nth-child(11)').innerText;
 						document.getElementById('quality').value = selectedProduct.querySelector('td:nth-child(12)').innerText;
-						// Populate other fields as needed...
+						//post call for getting category list
+						
+						var categoryName = selectedProduct.querySelector('td:nth-child(9)').innerText.trim();
+						var productIdVal = selectedProduct.querySelector('td:nth-child(2)').innerText.trim();
+						var categoryData = {
+								category: categoryName,
+								productId: productIdVal,
+						};
+						//var initialise
+						var organicVal = "";
+						var nonGmoVal = "";
+						var wholeGrainVal = "";
+						var freshnessGroceryVal = "";
+						var nutrientContentVal = "";
+						
+						var freshnessDairyVal = "";
+						var purityVal = "";
+						var fatContentVal = "";
+						var homogenizationVal = "";
+						var pasteurizationVal = "";
+						
+						var freshnessBakeryVal = "";
+						var textureVal = "";
+						var moistureContentVal = "";
+						var flavorBakeryVal = "";
+						var uniSizeShapeVal = "";
+						
+						var naturalIngredientsVal = "";
+						var flavorBeveragesVal = "";
+						var colorBeveragesVal = "";
+						var clarityVal = "";
+						var shelfLifeVal = "";
+						
+						var freshnessMeatVal = "";
+						var marblingVal = "";
+						var colorMeatVal = "";
+						var odorVal = "";
+						var temperatureControlVal = "";
+						axios.post('/getCategoryDtls', categoryData, {
+						    headers: {
+						        'Content-Type': 'application/json',
+						    },
+						})
+						    .then(response => {
+						        console.log('Success:', response.data);
+						
+						        // Handle the list received in the response
+						        const dto = response.data;
+						        organicVal = dto.organic;
+								nonGmoVal = dto.nonGmo;
+								wholeGrainVal = dto.wholeGrain;
+								freshnessGroceryVal = dto.freshnessGrocery;
+								nutrientContentVal = dto.nutrientContent;
+								
+								freshnessDairyVal = dto.freshnessDairy;
+								purityVal = dto.purity;
+								fatContentVal = dto.fatContent;
+								homogenizationVal = dto.homogenization;
+								pasteurizationVal = dto.pasteurization;
+								
+								freshnessBakeryVal = dto.freshnessBakery;
+								textureVal = dto.texture;
+								moistureContentVal = dto.moistureContent;
+								flavorBakeryVal = dto.flavorBakery;
+								uniSizeShapeVal = dto.uniSizeShape;
+								
+								naturalIngredientsVal = dto.naturalIngredients;
+								flavorBeveragesVal = dto.flavorBeverages;
+								colorBeveragesVal = dto.colorBeverages;
+								clarityVal = dto.clarity;
+								shelfLifeVal = dto.shelfLife;
+								
+								freshnessMeatVal = dto.freshnessMeat;
+								marblingVal = dto.marbling;
+								colorMeatVal = dto.colorMeat;
+								odorVal = dto.odor;
+								temperatureControlVal = dto.temperatureControl;
+								
+								// Set value based on the category
+								if (categoryName === 'Grocery') {
+								    var groceryCategory = document.querySelector('.Grocery');
+		        					groceryCategory.style.display = 'flex';
+		        					
+									document.getElementById('organic').value = organicVal;
+									document.getElementById('nonGmo').value = nonGmoVal;
+									document.getElementById('wholeGrain').value = wholeGrainVal;
+									document.getElementById('freshnessGrocery').value = freshnessGroceryVal;
+									document.getElementById('nutrientContent').value = nutrientContentVal;
+								    
+								} else if (categoryName === 'Dairy') {
+								    var dairyCategory = document.querySelector('.Dairy');
+		        					dairyCategory.style.display = 'flex';
+		        					
+		        					document.getElementById('freshnessDairy').value = freshnessDairyVal;
+									document.getElementById('purity').value = purityVal;
+									document.getElementById('fatContent').value = fatContentVal;
+									document.getElementById('homogenization').value = homogenizationVal;
+									document.getElementById('pasteurization').value = pasteurizationVal;
+		        					
+								} else if (categoryName === 'Bakery'){
+									var bakeryCategory = document.querySelector('.Bakery');
+		        					bakeryCategory.style.display = 'flex';
+		        					
+		        					document.getElementById('freshnessBakery').value = freshnessBakeryVal;
+									document.getElementById('texture').value = textureVal;
+									document.getElementById('moistureContent').value = moistureContentVal;
+									document.getElementById('flavorBakery').value = flavorBakeryVal;
+									document.getElementById('uniSizeShape').value = uniSizeShapeVal;
+		        					
+								} else if (categoryName === 'Beverages'){
+									var beveragesCategory = document.querySelector('.Beverages');
+		        					beveragesCategory.style.display = 'flex';
+		        					
+		        					document.getElementById('naturalIngredients').value = naturalIngredientsVal;
+									document.getElementById('flavorBeverages').value = flavorBeveragesVal;
+									document.getElementById('colorBeverages').value = colorBeveragesVal;
+									document.getElementById('clarity').value = clarityVal;
+									document.getElementById('shelfLife').value = shelfLifeVal;
+		        					
+								} else if (categoryName === 'MeatAndPoultry'){
+									var meatCategory = document.querySelector('.MeatAndPoultry');
+		        					meatCategory.style.display = 'flex';
+		        					
+		        					document.getElementById('freshnessMeat').value = freshnessMeatVal;
+									document.getElementById('marbling').value = marblingVal;
+									document.getElementById('colorMeat').value = colorMeatVal;
+									document.getElementById('odor').value = odorVal;
+									document.getElementById('temperatureControl').value = temperatureControlVal;
+		        					
+								}
+
+						    })
+						    .catch(error => {
+						        console.error('Error:', error);
+						    });
+						
 						// Add an event listener to the form submission
 						form.addEventListener('submit', function (event) {
 							event.preventDefault(); // Prevent the default form submission
 							// Collect data from form fields
-							var productId = document.getElementById('id').value;
+							var productIdInputForEdit = document.getElementById('productId').value;
 							var productName = document.getElementById('name').value;
 							var productDescription = document.getElementById('description').value;
 							var productPrice = document.getElementById('price').value;
@@ -579,10 +1082,41 @@
 							var productColour = document.getElementById('colour').value;
 							var productQuality = document.getElementById('quality').value;
 							// Collect other fields as needed...
+							// Quality Parameters
+							var productorganic = document.getElementById('organic').value;
+							var productnonGmo = document.getElementById('nonGmo').value;
+							var productwholeGrain = document.getElementById('wholeGrain').value;
+							var productfreshnessGrocery = document.getElementById('freshnessGrocery').value;
+							var productnutrientContent = document.getElementById('nutrientContent').value;
+							
+							var productfreshnessDairy = document.getElementById('freshnessDairy').value;
+							var productpurity = document.getElementById('purity').value;
+							var productfatContent = document.getElementById('fatContent').value;
+							var producthomogenization = document.getElementById('homogenization').value;
+							var productpasteurization = document.getElementById('pasteurization').value;
+							
+							var productfreshnessBakery = document.getElementById('freshnessBakery').value;
+							var producttexture = document.getElementById('texture').value;
+							var productmoistureContent = document.getElementById('moistureContent').value;
+							var productflavorBakery = document.getElementById('flavorBakery').value;
+							var productuniSizeShape = document.getElementById('uniSizeShape').value;
+							
+							var productnaturalIngredients = document.getElementById('naturalIngredients').value;
+							var productflavorBeverages = document.getElementById('flavorBeverages').value;
+							var productcolorBeverages = document.getElementById('colorBeverages').value;
+							var productclarity = document.getElementById('clarity').value;
+							var productshelfLife = document.getElementById('shelfLife').value;
+							
+							var productfreshnessMeat = document.getElementById('freshnessMeat').value;
+							var productmarbling = document.getElementById('marbling').value;
+							var productcolorMeat = document.getElementById('colorMeat').value;
+							var productodor = document.getElementById('odor').value;
+							var producttemperatureControl = document.getElementById('temperatureControl').value;
+							
 
 							// Create a JavaScript object with the collected data
 							var productData = {
-								id: productId,
+								productId: productIdInputForEdit,
 								name: productName,
 								description: productDescription,
 								price: productPrice,
@@ -594,8 +1128,35 @@
 								colour: productColour,
 								quality: productQuality,
 								mode: action,
+								organic: productorganic,
+								nonGmo: productnonGmo,
+								wholeGrain: productwholeGrain,
+								freshnessGrocery: productfreshnessGrocery,
+							    nutrientContent: productnutrientContent,
+							    freshnessDairy: productfreshnessDairy,
+							    purity: productpurity,
+							    fatContent: productfatContent,
+							    homogenization: producthomogenization,
+							    pasteurization: productpasteurization,
+							    freshnessBakery: productfreshnessBakery,
+							    texture: producttexture,
+							    moistureContent: productmoistureContent,
+							    flavorBakery: productflavorBakery,
+							    uniSizeShape: productuniSizeShape,
+							    naturalIngredients: productnaturalIngredients,
+							    flavorBeverages: productflavorBeverages,
+							    colorBeverages: productcolorBeverages,
+							    clarity: productclarity,
+							    shelfLife: productshelfLife,
+							    freshnessMeat: productfreshnessMeat,
+							    marbling: productmarbling,
+							    colorMeat: productcolorMeat,
+							    odor: productodor,
+							    temperatureControl: producttemperatureControl,
 								// Add other fields...
 							};
+
+
 							// Use Axios to make the POST request
 							axios.post('/register', productData, {
 								headers: {
@@ -690,7 +1251,7 @@
     }
     
     function cancelProductForm() {
-	    var form = document.getElementById('productForm');
+	    var form = document.getElementById('inspectionForm');
 	    
 	    // Hide the form
 	    form.style.display = 'none';

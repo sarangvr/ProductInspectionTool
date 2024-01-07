@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import com.ensat.model.ProductDetailsDTO;
+import com.ensat.model.InspectionDetailsDTO;
+import com.ensat.services.InspectionService;
 import com.ensat.services.ProductService;
 
 
@@ -22,6 +24,9 @@ import com.ensat.services.ProductService;
 public class IndexController {
 	@Autowired
     private ProductService productService;
+	
+	@Autowired
+    private InspectionService inspectionService;
 
 	@GetMapping("/")
 	public String showLoginForm() {
@@ -52,9 +57,16 @@ public class IndexController {
    	}
     
     @GetMapping("/getProductInspection")
-    public String getInspectionDetails() {
-    	return "inspectionSideBar";
-    }
+	public String getInspectionDetails(Model model) {
+		try {
+			List<InspectionDetailsDTO> inspectionList = inspectionService.listAllInspection();
+			model.addAttribute("inspections", inspectionList);
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("Error getProducts: " + e.getMessage());
+		}
+		return "inspectionSideBar";
+	}
     
     @GetMapping("/inspection")
 	public String showInspectionPage() {
