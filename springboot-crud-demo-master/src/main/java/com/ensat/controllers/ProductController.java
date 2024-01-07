@@ -104,7 +104,7 @@ public class ProductController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("Error getCategoryDtls: " + e.getMessage());
-//			return (List<ProductDetails>) new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<CategoryDtlsDto>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return new ResponseEntity<CategoryDtlsDto>(categoryDtlsDto, HttpStatus.OK);
 

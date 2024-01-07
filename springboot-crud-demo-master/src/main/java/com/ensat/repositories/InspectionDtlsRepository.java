@@ -15,10 +15,14 @@ public interface InspectionDtlsRepository extends JpaRepository<Inspection_DTLS,
 	           "p.name, " +
 	           "i.date, " +
 	           "i.inspector, " +
+	           "q.manufacturingDate, " +
+	           "q.expiryDate, " +
+	           "p.category, " +
 	           "i.comments, " +
 	           "i.result) " +
 	           "FROM Product p " +
-	           "JOIN Inspection_DTLS i ON p.productId = i.product.productId")
+	           "JOIN Inspection_DTLS i ON p.productId = i.product.productId " +
+	           "JOIN QualityMetric q ON p.productId = q.product.productId")
 	List<InspectionDetailsDTO> findAllInspectionDetails();
 	
 	List<Inspection_DTLS> findAllByProductId(Long productId);

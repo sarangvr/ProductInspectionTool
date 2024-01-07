@@ -8,4 +8,6 @@ public interface Constants {
 	public static final String BEVERAGES = "Beverages";
 	public static final String MEAT_AND_POULTRY = "MeatAndPoultry";
 	public static final String PENDING = "PENDING";
+	public static final String WAITING_FOR_INSPECTION = "Waiting for inspection";
+	public static final String SYSTEM = "SYSTEM";
 }

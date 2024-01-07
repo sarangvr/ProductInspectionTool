@@ -32,10 +32,8 @@ public class ProductDetailsDTO {
     private String category;
     private double weight;
     private String colour;
-	private Quality quality;
 	public ProductDetailsDTO(long productId, String name, String description, BigDecimal price, int quantity,
-			LocalDate manufacturingDate, LocalDate expiryDate, String category, double weight, String colour,
-			Quality quality) {
+			LocalDate manufacturingDate, LocalDate expiryDate, String category, double weight, String colour) {
 		super();
 		this.productId = productId;
 		this.name = name;
@@ -47,7 +45,6 @@ public class ProductDetailsDTO {
 		this.category = category;
 		this.weight = weight;
 		this.colour = colour;
-		this.quality = quality;
 	}
 	
 	

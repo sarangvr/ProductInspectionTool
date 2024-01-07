@@ -22,8 +22,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
            "q.expiryDate, " +
            "p.category, " +
            "q.weight, " +
-           "q.colour, " +
-           "q.quality) " +
+           "q.colour) " +
            "FROM Product p " +
            "JOIN QualityMetric q ON p.productId = q.product.productId")
     List<ProductDetailsDTO> findAllProductDetails();

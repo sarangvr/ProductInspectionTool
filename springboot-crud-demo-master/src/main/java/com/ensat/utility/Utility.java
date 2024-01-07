@@ -9,6 +9,7 @@ import com.ensat.category.entities.Grocery;
 import com.ensat.category.entities.MeatAndPoultry;
 import com.ensat.entities.Inspection_DTLS;
 import com.ensat.entities.QualityMetric;
+import com.ensat.model.ProductDetails;
 
 public class Utility implements Constants {
 	public static long findInspectionIdByProductId(List<Inspection_DTLS> inspDtls, Long productId) {
@@ -79,6 +80,12 @@ public class Utility implements Constants {
 			}
 		}
 		return 0;
+	}
+
+	public static ProductDetails deriveQuality(ProductDetails productDetails) {
+		
+		// TODO Auto-generated method stub
+		return productDetails;
 	}
 	
 

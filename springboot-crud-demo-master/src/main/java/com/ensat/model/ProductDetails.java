@@ -60,6 +60,12 @@ public class ProductDetails {
 	private String colorMeat;
 	private String odor;
 	private String temperatureControl;
+	
+	private String groceryQuality;
+	private String dairyQuality;
+	private String bakeryQuality;
+	private String beveragesQuality;
+	private String meatAndPoultryQuality;
 	@Override
 	public String toString() {
 		return "ProductDetails [productId=" + productId + ", name=" + name + ", description=" + description + ", price="
@@ -73,8 +79,12 @@ public class ProductDetails {
 				+ flavorBakery + ", uniSizeShape=" + uniSizeShape + ", naturalIngredients=" + naturalIngredients
 				+ ", flavorBeverages=" + flavorBeverages + ", colorBeverages=" + colorBeverages + ", clarity=" + clarity
 				+ ", shelfLife=" + shelfLife + ", freshnessMeat=" + freshnessMeat + ", marbling=" + marbling
-				+ ", colorMeat=" + colorMeat + ", odor=" + odor + ", temperatureControl=" + temperatureControl + "]";
+				+ ", colorMeat=" + colorMeat + ", odor=" + odor + ", temperatureControl=" + temperatureControl
+				+ ", groceryQuality=" + groceryQuality + ", dairyQuality=" + dairyQuality + ", bakeryQuality="
+				+ bakeryQuality + ", beveragesQuality=" + beveragesQuality + ", meatAndPoultryQuality="
+				+ meatAndPoultryQuality + "]";
 	}
+	
 	
 
 }

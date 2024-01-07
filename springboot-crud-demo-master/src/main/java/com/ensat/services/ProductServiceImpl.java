@@ -26,6 +26,7 @@ import com.ensat.category.repositories.GroceryRepository;
 import com.ensat.category.repositories.MeatAndPoultryRepository;
 import com.ensat.entities.Inspection_DTLS;
 import com.ensat.entities.Product;
+import com.ensat.entities.Quality;
 import com.ensat.entities.QualityMetric;
 import com.ensat.model.ProductDetails;
 import com.ensat.model.ProductDetailsDTO;
@@ -184,7 +185,9 @@ public class ProductServiceImpl implements ProductService, Constants {
 			qualityMetric.setColour(productDetails.getColour());
 			qualityMetric.setExpiryDate(productDetails.getExpiryDate());
 			qualityMetric.setManufacturingDate(productDetails.getManufacturingDate());
-			qualityMetric.setQuality(productDetails.getQuality());
+			// Implement new method deriveQuality(productDetails)
+			//ProductDetails pDtls = Utility.deriveQuality(productDetails);
+			qualityMetric.setQuality(Quality.WAITING_FOR_INSPECTION);
 			qualityMetric.setWeight(productDetails.getWeight());
 			qualityMetricRepository.save(qualityMetric);
 
@@ -192,7 +195,7 @@ public class ProductServiceImpl implements ProductService, Constants {
 			inspectionDtls.setProduct(product);
 			inspectionDtls.setCategory(productDetails.getCategory());
 			inspectionDtls.setDate(productDetails.getExpiryDate());
-			inspectionDtls.setInspector("Insp_1");
+			inspectionDtls.setInspector(SYSTEM);
 			inspectionDtls.setProductName(productDetails.getName());
 			inspectionDtls.setResult(PENDING);
 			inspectionDtlsRepository.save(inspectionDtls);
@@ -316,7 +319,7 @@ public class ProductServiceImpl implements ProductService, Constants {
 			qualityMetric.setColour(productDetails.getColour());
 			qualityMetric.setExpiryDate(productDetails.getExpiryDate());
 			qualityMetric.setManufacturingDate(productDetails.getManufacturingDate());
-			qualityMetric.setQuality(productDetails.getQuality());
+			qualityMetric.setQuality(Quality.WAITING_FOR_INSPECTION);
 			qualityMetric.setWeight(productDetails.getWeight());
 			qualityMetricRepository.save(qualityMetric);
 			
@@ -326,7 +329,7 @@ public class ProductServiceImpl implements ProductService, Constants {
 				inspectionDtls.setProduct(product);
 				inspectionDtls.setCategory(productDetails.getCategory());
 				inspectionDtls.setDate(productDetails.getExpiryDate());
-				inspectionDtls.setInspector("Insp_1");
+				inspectionDtls.setInspector(SYSTEM);
 				inspectionDtls.setProductName(productDetails.getName());
 				inspectionDtls.setResult(PENDING);
 				inspectionDtlsRepository.save(inspectionDtls);

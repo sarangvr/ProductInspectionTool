@@ -19,18 +19,24 @@ public class InspectionDetailsDTO {
     private String productName;
     private LocalDate date;
     private String inspector;
+    private LocalDate manufacturingDate;
+    private LocalDate expiryDate;
+    private String category;
     private String comments;
     private String result;
-	public InspectionDetailsDTO(long productId, String productName, LocalDate date, String inspector, String comments,
-			String result) {
+    
+	public InspectionDetailsDTO(long productId, String productName, LocalDate date, String inspector,
+			LocalDate manufacturingDate, LocalDate expiryDate, String category, String comments, String result) {
 		super();
 		this.productId = productId;
 		this.productName = productName;
 		this.date = date;
 		this.inspector = inspector;
+		this.manufacturingDate = manufacturingDate;
+		this.expiryDate = expiryDate;
+		this.category = category;
 		this.comments = comments;
 		this.result = result;
 	}
-    
     
 }

@@ -162,9 +162,9 @@
         }
 
         /* Add color styles based on the quality level */
-        .quality-LOW {
+        /* .quality-LOW {
         	color: red;
-        }
+        } 
 
         .quality-MEDIUM {
         	color: #FFD700;
@@ -172,7 +172,7 @@
 
         .quality-HIGH {
         	color: green;
-        }
+        } */
 
         /* breadcrumb */
         .breadcrumb {
@@ -331,7 +331,7 @@
                     <th scope="col">Category</th>
                     <th scope="col">Weight</th>
                     <th scope="col">Colour</th>
-                    <th scope="col">Quality</th>
+                    <!--<th scope="col">Quality</th>-->
                 </tr>
             </thead>
             <tbody>
@@ -350,7 +350,7 @@
                     <td th:text="${product.weight}"></td>
                     <td th:text="${product.colour}"></td>
                     <!--<td th:text="${product.quality}"></td>-->
-                    <td th:class="${'quality-' + product.quality}" th:text="${product.quality}"></td>
+                    <!--<td th:class="${'quality-' + product.quality}" th:text="${product.quality}"></td>-->
                 </tr>
             </tbody>
         </table>
@@ -430,10 +430,15 @@
           <label for="manufacturingDate">Manufacturing Date:  <span class="required">*</span></label>
           <input type="date" class="form-control" id="manufacturingDate" name="manufacturingDate" >
         </div>
+        <!-- Weight -->
+        <div class="form-group col-md-4">
+          <label for="weight">Weight:</label>
+          <input type="text" class="form-control" id="weight" name="weight" >
+        </div>
       </div>
 
-      <div class="form-row">
-        <!-- Quality -->
+      <!--<div class="form-row">
+         Quality 
         <div class="form-group col-md-4">
           <label for="quality">Quality:</label>
           <select class="form-control" id="quality" name="quality" >
@@ -443,12 +448,12 @@
           </select>
         </div>
 
-        <!-- Weight -->
+        
         <div class="form-group col-md-4">
           <label for="weight">Weight:</label>
           <input type="text" class="form-control" id="weight" name="weight" >
         </div>
-      </div>
+      </div>-->
       <!-- Category Link Fields -->
       <h6 class="categoryQuality">Category Quality</h6>
       <!-- Grocery -->
@@ -824,7 +829,7 @@
 						var productCategory = document.getElementById('category').value;
 						var productWeight = document.getElementById('weight').value;
 						var productColour = document.getElementById('colour').value;
-						var productQuality = document.getElementById('quality').value;
+						//var productQuality = "";
 						//alert("test4");
 						// Quality Parameters
 						var productorganic = document.getElementById('organic').value;
@@ -873,7 +878,6 @@
 							category: productCategory,
 							weight: productWeight,
 							colour: productColour,
-							quality: productQuality,
 							mode: action,
 							organic: productorganic,
 							nonGmo: productnonGmo,
@@ -902,7 +906,6 @@
 						    temperatureControl: producttemperatureControl,
 							// Add other fields...
 						};
-alert("test9"+productData);
 						// Use Axios to make the POST request
 						axios.post('/register', productData, {
 							headers: {
@@ -955,7 +958,7 @@ alert("test9"+productData);
 						document.getElementById('category').value = selectedProduct.querySelector('td:nth-child(9)').innerText;
 						document.getElementById('weight').value = selectedProduct.querySelector('td:nth-child(10)').innerText;
 						document.getElementById('colour').value = selectedProduct.querySelector('td:nth-child(11)').innerText;
-						document.getElementById('quality').value = selectedProduct.querySelector('td:nth-child(12)').innerText;
+						//document.getElementById('quality').value = selectedProduct.querySelector('td:nth-child(12)').innerText;
 						//post call for getting category list
 						
 						var categoryName = selectedProduct.querySelector('td:nth-child(9)').innerText.trim();
@@ -1106,7 +1109,7 @@ alert("test9"+productData);
 							var productCategory = document.getElementById('category').value;
 							var productWeight = document.getElementById('weight').value;
 							var productColour = document.getElementById('colour').value;
-							var productQuality = document.getElementById('quality').value;
+							var productQuality = "";
 							// Collect other fields as needed...
 							// Quality Parameters
 							var productorganic = document.getElementById('organic').value;
@@ -1152,7 +1155,6 @@ alert("test9"+productData);
 								category: productCategory,
 								weight: productWeight,
 								colour: productColour,
-								quality: productQuality,
 								mode: action,
 								organic: productorganic,
 								nonGmo: productnonGmo,
