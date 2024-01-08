@@ -1,5 +1,6 @@
 package com.ensat.services;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +31,7 @@ import com.ensat.entities.Quality;
 import com.ensat.entities.QualityMetric;
 import com.ensat.model.ProductDetails;
 import com.ensat.model.ProductDetailsDTO;
+import com.ensat.model.QualityInspectionDetailsDto;
 import com.ensat.repositories.InspectionDtlsRepository;
 import com.ensat.repositories.ProductRepository;
 import com.ensat.repositories.QualityMetricRepository;
@@ -515,6 +517,45 @@ public class ProductServiceImpl implements ProductService, Constants {
 			System.out.println(ERROR_MESSAGE + e.getMessage());
 		}
 		return productDetails;
+	}
+
+	@Override
+	public QualityInspectionDetailsDto getQualityParameters(QualityInspectionDetailsDto qualityDto) {
+		QualityInspectionDetailsDto qualityInspDtlsDto = new QualityInspectionDetailsDto();
+		try {
+			long productId = qualityDto.getProductId();
+
+			Product product = productRepository.findById(productId).get();
+
+			List<Inspection_DTLS> inspDtlsList = inspectionDtlsRepository.findAll();
+			long inspectionId = Utility.findInspectionIdByProductId(inspDtlsList, productId);
+			Inspection_DTLS inspectionDtls = inspectionDtlsRepository.findById(inspectionId).get();
+			inspectionDtls.setProduct(product);
+			inspectionDtls.setDate(LocalDate.now());
+			inspectionDtls.setComments(qualityDto.getComments());
+			if(Utility.validateEmptyString(qualityDto.getInspectorName()))
+				inspectionDtls.setInspector(qualityDto.getInspectorName());
+			else
+				inspectionDtls.setInspector(SYSTEM);
+			inspectionDtls.setResult(qualityDto.getResult());
+			inspectionDtlsRepository.save(inspectionDtls);
+
+			List<QualityMetric> qualityList = qualityMetricRepository.findAll();
+			long qualityId = Utility.findQualityMetricIdByProductId(qualityList, productId);
+			QualityMetric qualityMetric = qualityMetricRepository.findById(qualityId).get();
+			qualityMetric.setProduct(product);
+			qualityMetric.setQuality(qualityDto.getQuality());
+			qualityMetricRepository.save(qualityMetric);
+
+			qualityInspDtlsDto.setComments(inspectionDtls.getComments());
+			qualityInspDtlsDto.setInspectorName(inspectionDtls.getInspector());
+
+			qualityInspDtlsDto.setResult(inspectionDtls.getResult());
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println(ERROR_MESSAGE + e.getMessage());
+		}
+		return qualityInspDtlsDto;
 	}
 
 }

@@ -229,7 +229,7 @@
         <!-- Profile image & text -->
         <div class="profile">
             <img src="images/logo.jpg" alt="profile_picture">
-            <h3>User_1</h3>
+            <h3>Admin</h3>
             <p>user</p>
         </div>
 
@@ -247,9 +247,9 @@
                     <span class="item">Products</span>
                 </a>
                 <ul>
-                    <li><a href="#" onclick="showProductForm('add')">Add Product</a></li>
-                    <li><a href="#" onclick="showProductForm('edit')">Edit Product</a></li>
-                    <li><a href="#" onclick="deleteSelected()">Delete Product</a></li>
+                    <li><a href="#" >Add Product</a></li>
+                    <li><a href="#" >Edit Product</a></li>
+                    <li><a href="#" >Delete Product</a></li>
                 </ul>
             </li>
             <li>
@@ -322,12 +322,13 @@
                     <th scope="col"><input type="checkbox" id="selectAll" onclick="toggleAllCheckboxes()" disabled></th>
                     <th scope="col">Product Id</th>
                     <th scope="col">Category</th>
-                    <th scope="col">Product Name</th>
+                    <th scope="col">Name</th>
                     <th scope="col">Manuf Date</th>
                     <th scope="col">Expiry Date</th>
                     <th scope="col">Date</th>
-                    <th scope="col">Inspector Name</th>
+                    <th scope="col">Inspector</th>
                     <th scope="col">Comments</th>
+                    <th scope="col">Quality</th>
                     <th scope="col">Result</th>
                 </tr>
             </thead>
@@ -343,6 +344,7 @@
                     <td th:text="${inspection.date}"></td>
                     <td th:text="${inspection.inspector}"></td>
                     <td th:text="${inspection.comments}"></td>
+                    <td th:text="${inspection.quality}"></td>
                     <td th:text="${inspection.result}"></td>
                 </tr>
             </tbody>
@@ -350,7 +352,7 @@
 
         <!-- Inspection Form -->
     <!--<form id="productForm">-->
-    <form th:action="@{/register}" method="post" id="inspectionForm">
+    <form th:action="@{/getQualityParam}" method="post" id="inspectionForm" onsubmit="return validateAndSubmit()">
 	<!--<form th:action="${#strings.endsWith(action, 'add') ? '/register' : '/edit'}" method="post" id="productForm">-->
       <h6>Manual Inspect</h6>
 
@@ -364,7 +366,7 @@
         <!-- Product Name -->
         <div class="form-group col-md-4">
           <label for="name">Product Name: </label>
-          <input type="text" class="form-control" id="name" name="name">
+          <input type="text" class="form-control" id="name" name="name" disabled>
         </div>
 
         
@@ -382,7 +384,7 @@
         <!-- Category Dropdown -->
         <div class="form-group col-md-4">
           <label for="category">Category: </label>
-          <input type="text" class="form-control" id="category" name="category">
+          <input type="text" class="form-control" id="category" name="category" disabled>
         </div>
         
       </div>
@@ -390,8 +392,8 @@
       <div class="form-row">
 		  <!-- Inspector Name -->
         <div class="form-group col-md-4">
-          <label for="description">Inspector Name:</label>
-          <input type="text" class="form-control" id="description" name="description" >
+          <label for="inspectorName">Inspector Name:</label>
+          <input type="text" class="form-control" id="inspectorName" name="inspectorName" >
         </div>
         <!-- Comments -->
         <div class="form-group col-md-4">
@@ -401,8 +403,13 @@
 
         <!-- Result -->
         <div class="form-group col-md-4">
-          <label for="result">Result:</label>
-          <input type="text" class="form-control" id="result" name="result" >
+          <label for="result">Result: <span class="required">*</span></label>
+          <!--<input type="text" class="form-control" id="result" name="result" >-->
+          <select class="form-control" id="result" name="result" required>
+		        <option value=""></option>
+		        <option value="PASS">PASS</option>
+		        <option value="FAIL">FAIL</option>
+		    </select>
         </div>
 
         
@@ -412,7 +419,7 @@
          <!-- Quality -->
          <div class="form-group col-md-4">
           <label for="quality">Quality: </label>
-          <input type="quality" class="form-control" id="quality" name="quality" >
+          <input type="text" class="form-control" id="quality" name="quality" disabled>
         </div>
         <!--<div class="form-group col-md-4">
           <label for="quality">Quality:</label>
@@ -426,13 +433,13 @@
         <!-- Expiry Date -->
         <div class="form-group col-md-4">
           <label for="expiryDate">Expiry Date: </label>
-          <input type="date" class="form-control" id="expiryDate" name="expiryDate" >
+          <input type="date" class="form-control" id="expiryDate" name="expiryDate" disabled>
         </div>
 
         <!-- Manufacturing Date -->
         <div class="form-group col-md-4">
           <label for="manufacturingDate">Manufacturing Date: </label>
-          <input type="date" class="form-control" id="manufacturingDate" name="manufacturingDate" >
+          <input type="date" class="form-control" id="manufacturingDate" name="manufacturingDate" disabled>
         </div>
       </div>
 
@@ -728,6 +735,51 @@
         productContentSection.style.display = 'block'; // Change 'flex' to 'block' if you prefer
         homePage.style.display = 'none';
     }
+    function validateAndSubmit() {
+// getQualityParam
+		var form = document.getElementById('inspectionForm');
+		var selectedProduct = document.querySelector('input[type="checkbox"]:checked').closest('tr');
+		var productIdVal = document.getElementById('productId').value;
+		var productCategory = document.getElementById('category').value;
+		var inspectorNameParamVal = document.getElementById('inspectorName').value;
+		var commentsParamVal = document.getElementById('comments').value;
+		var resultParamVal = document.getElementById('result').value;
+		var qualityParamVal = document.getElementById('quality').value;
+							
+	    var qualityParam = {
+			productId: productIdVal,
+			category: productCategory,
+			inspectorName: inspectorNameParamVal,
+			comments: commentsParamVal,
+			result: resultParamVal,
+			quality: qualityParamVal,
+			// Add other fields...
+		};
+	    axios.post('/getQualityParam', qualityParam, {
+	    headers: {
+		        'Content-Type': 'application/json',
+		    },
+		})
+		    .then(response => {
+		        console.log('Success:', response.data);
+		
+		        // Handle the list received in the response
+		        const dto = response.data;
+		        var inspectorName = dto.inspectorName;
+		        var comments = dto.comments;
+		        var result = dto.result;
+		        var quality = dto.quality;
+		        document.getElementById('inspectorName').value = inspectorName;
+		        document.getElementById('comments').value = comments;
+		        document.getElementById('result').value = result;
+		        document.getElementById('quality').value = quality;
+		        location.reload(true);
+		    })
+		    .catch(error => {
+		        console.error('Error:', error);
+		    });
+		    form.style.display = 'none';
+    }
     // Handling category showCategoryDtls()
     function showCategoryDtls() {
 	    var selectedCategory = document.getElementById('category').value;
@@ -784,7 +836,6 @@
 					form.style.display = 'none';
 					// Find the selected product in the table
 					var selectedProduct = document.querySelector('input[type="checkbox"]:checked').closest('tr');
-					
 					if (selectedProduct) {
 						// Show the form
 						form.style.display = 'block';
@@ -796,7 +847,15 @@
 						document.getElementById('productId').value = selectedProduct.querySelector('td:nth-child(2)').innerText;
 						document.getElementById('category').value = selectedProduct.querySelector('td:nth-child(3)').innerText;
 						document.getElementById('name').value = selectedProduct.querySelector('td:nth-child(4)').innerText;
-
+						
+						//Testing
+						document.getElementById('inspectorName').value = selectedProduct.querySelector('td:nth-child(8)').innerText;
+						document.getElementById('comments').value = selectedProduct.querySelector('td:nth-child(9)').innerText;
+						document.getElementById('quality').value = selectedProduct.querySelector('td:nth-child(10)').innerText;
+						document.getElementById('result').value = selectedProduct.querySelector('td:nth-child(11)').innerText;
+						
+						var qq = document.getElementById('quality').value;
+						var rr = document.getElementById('result').value;
 						var productIdInput = document.getElementById('productId');
 						// Disable Product Id input field
 						productIdInput.disabled = true;
@@ -944,9 +1003,50 @@
 						    .catch(error => {
 						        console.error('Error:', error);
 						    });
+						    // getQualityParam
+						    /*var productIdVal = document.getElementById('productId').value;
+							var productCategory = document.getElementById('category').value;
+						    var inspectorNameParamVal = document.getElementById('inspectorName').value;
+						    var commentsParamVal = document.getElementById('comments').value;
+						    var resultParamVal = document.getElementById('result').value;
+						    var qualityParamVal = document.getElementById('quality').value;
+							if (qualityParamVal === null || qualityParamVal === undefined) {
+							    qualityParamVal = "WAITING";
+							} else {
+							    qualityParamVal = qualityParamVal.toString();
+							}
+						    var qualityParam = {
+								productId: productIdVal,
+								category: categoryName,
+								inspectorName: inspectorNameParamVal,
+								comments: commentsParamVal,
+								result: resultParamVal,
+								quality: qualityParamVal,
+								// Add other fields...
+							};
+							//alert("qualityParam: "+qualityParam);
+						    axios.post('/getQualityParam', qualityParam, {
+						    headers: {
+							        'Content-Type': 'application/json',
+							    },
+							})
+							    .then(response => {
+							        console.log('Success:', response.data);
+							
+							        // Handle the list received in the response
+							        const dto = response.data;
+							        document.getElementById('inspectorName').value = dto.inspectorName;
+							        document.getElementById('comments').value = dto.comments;
+							        document.getElementById('result').value = dto.result;
+							        document.getElementById('quality').value = dto.quality;
+							    })
+							    .catch(error => {
+							        console.error('Error:', error);
+							    }); */
+						   
 						
 						// Add an event listener to the form submission
-						form.addEventListener('submit', function (event) {
+						/*form.addEventListener('submit', function (event) {
 							event.preventDefault(); // Prevent the default form submission
 							// Collect data from form fields
 							var productIdInputForEdit = document.getElementById('productId').value;
@@ -992,72 +1092,16 @@
 							var productodor = document.getElementById('odor').value;
 							var producttemperatureControl = document.getElementById('temperatureControl').value;
 							
-
-							// Create a JavaScript object with the collected data
-							var productData = {
-								productId: productIdInputForEdit,
-								name: productName,
-								description: productDescription,
-								price: productPrice,
-								quantity: productQuantity,
-								manufacturingDate: productManufacturingDate,
-								expiryDate: productExpiryDate,
-								category: productCategory,
-								weight: productWeight,
-								colour: productColour,
-								quality: productQuality,
-								mode: action,
-								organic: productorganic,
-								nonGmo: productnonGmo,
-								wholeGrain: productwholeGrain,
-								freshnessGrocery: productfreshnessGrocery,
-							    nutrientContent: productnutrientContent,
-							    freshnessDairy: productfreshnessDairy,
-							    purity: productpurity,
-							    fatContent: productfatContent,
-							    homogenization: producthomogenization,
-							    pasteurization: productpasteurization,
-							    freshnessBakery: productfreshnessBakery,
-							    texture: producttexture,
-							    moistureContent: productmoistureContent,
-							    flavorBakery: productflavorBakery,
-							    uniSizeShape: productuniSizeShape,
-							    naturalIngredients: productnaturalIngredients,
-							    flavorBeverages: productflavorBeverages,
-							    colorBeverages: productcolorBeverages,
-							    clarity: productclarity,
-							    shelfLife: productshelfLife,
-							    freshnessMeat: productfreshnessMeat,
-							    marbling: productmarbling,
-							    colorMeat: productcolorMeat,
-							    odor: productodor,
-							    temperatureControl: producttemperatureControl,
-								// Add other fields...
-							};
-
-
-							// Use Axios to make the POST request
-							axios.post('/register', productData, {
-								headers: {
-									'Content-Type': 'application/json',
-								},
-							})
-								.then(response => {
-									console.log('Success:', response.data);
-									// Disable the form elements after submission
-									disableFormElements(form);
-									// Reload the page after successful form submission
-									location.reload(true);
-								})
-								.catch(error => {
-									console.error('Error:', error);
-								});
-						});
+							 
+							    
+							
+						});*/
 					} else {
-						alert('Please select at least one product to edit.');
+						alert('Please select at least one product to Inspect.');
 					}
 
 				}
+				//here
 			}
 
         function disableFormElements(form) {

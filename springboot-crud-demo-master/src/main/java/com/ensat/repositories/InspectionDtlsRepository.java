@@ -19,6 +19,7 @@ public interface InspectionDtlsRepository extends JpaRepository<Inspection_DTLS,
 	           "q.expiryDate, " +
 	           "p.category, " +
 	           "i.comments, " +
+	           "q.quality, " +
 	           "i.result) " +
 	           "FROM Product p " +
 	           "JOIN Inspection_DTLS i ON p.productId = i.product.productId " +

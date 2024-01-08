@@ -67,7 +67,7 @@ public class IndexController {
 		}
 		return "inspectionSideBar";
 	}
-
+	
 	@GetMapping("/inspection")
 	public String showInspectionPage() {
 		return "inspection"; // inspection.html

@@ -23,12 +23,6 @@ import lombok.Setter;
 @Component
 public class InspectionDetails {
 
-//	private long id;
-//	private LocalDate date;
-//	private String inspector;
-//	private Result result;
-//	private String comments;
-//	private long product_id;
     private Long inspectionId;
     private Product product;
     private Date date;

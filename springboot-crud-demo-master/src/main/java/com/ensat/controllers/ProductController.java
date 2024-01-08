@@ -23,8 +23,10 @@ import com.ensat.category.entities.CategoryDtlsDto;
 import com.ensat.category.entities.CategoryDto;
 import com.ensat.config.CustomObjectMapper;
 import com.ensat.entities.Product;
+import com.ensat.entities.Quality;
 import com.ensat.model.ProductDetails;
 import com.ensat.model.ProductDetailsDTO;
+import com.ensat.model.QualityInspectionDetailsDto;
 import com.ensat.services.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -78,6 +80,36 @@ public class ProductController {
 			return new ResponseEntity<CategoryDtlsDto>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return new ResponseEntity<CategoryDtlsDto>(categoryDtlsDto, HttpStatus.OK);
+
+	}
+	
+	@PostMapping("/getQualityParam")
+	public ResponseEntity<QualityInspectionDetailsDto> getQualityParam(@RequestBody String json, Model model) {
+		QualityInspectionDetailsDto qualityInspectionDetailsDto = new QualityInspectionDetailsDto();
+		try {
+			ObjectMapper objectMapper = CustomObjectMapper.getObjectMapper();
+			QualityInspectionDetailsDto qualityDto = objectMapper.readValue(json, QualityInspectionDetailsDto.class);
+//			categoryDtlsDto = productService.getAllCategoryDetails(categoryDto);
+			qualityInspectionDetailsDto = productService.getQualityParameters(qualityDto);
+//			qualityDto.setCategory("test");
+//			qualityDto.setComments("test comments");
+//			qualityDto.setInspectorName("test insp");
+//			qualityDto.setQuality("test quality");
+//			qualityDto.setResult("test result");
+//			qualityInspectionDetailsDto.setCategory(qualityDto.getCategory());
+//			qualityInspectionDetailsDto.setComments(qualityDto.getComments());
+//			qualityInspectionDetailsDto.setInspectorName(qualityDto.getInspectorName());
+//			qualityInspectionDetailsDto.setProductId(qualityDto.getProductId());
+//			qualityInspectionDetailsDto.setQuality(qualityDto.getQuality());
+//			qualityInspectionDetailsDto.setResult(qualityDto.getResult());
+			
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("Error getCategoryDtls: " + e.getMessage());
+			return new ResponseEntity<QualityInspectionDetailsDto>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<QualityInspectionDetailsDto>(qualityInspectionDetailsDto, HttpStatus.OK);
 
 	}
 
