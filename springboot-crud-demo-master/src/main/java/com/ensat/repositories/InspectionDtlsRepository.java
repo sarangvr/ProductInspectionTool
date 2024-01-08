@@ -26,7 +26,4 @@ public interface InspectionDtlsRepository extends JpaRepository<Inspection_DTLS,
 	List<InspectionDetailsDTO> findAllInspectionDetails();
 	
 	List<Inspection_DTLS> findAllByProductId(Long productId);
-
-	
-	
 }

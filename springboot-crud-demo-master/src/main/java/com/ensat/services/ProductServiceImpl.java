@@ -35,56 +35,58 @@ import com.ensat.repositories.ProductRepository;
 import com.ensat.repositories.QualityMetricRepository;
 import com.ensat.utility.Constants;
 import com.ensat.utility.Utility;
+
 /**
  * Product service implement.
  */
 @Service
 public class ProductServiceImpl implements ProductService, Constants {
 	private static final Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
-     @Autowired
-     private ProductRepository productRepository;
-     
-     @Autowired
-     private QualityMetricRepository qualityMetricRepository;
-     
-     @Autowired
-     private InspectionDtlsRepository inspectionDtlsRepository;
-     @Autowired
-     private GroceryRepository groceryRepository;
-     @Autowired
-     private DairyRepository dairyRepository;
-     @Autowired
-     private BakeryRepository bakeryRepository;
-     @Autowired
-     private BeveragesRepository beveragesRepository;
-     @Autowired
-     private MeatAndPoultryRepository meatAndPoultryRepository;
-     
-    @Override
-    public List<ProductDetailsDTO> listAllProducts() {
-    	List<ProductDetailsDTO> list = new ArrayList<>();
-    	try {
-    		
-    		list = productRepository.findAllProductDetails();
-    		
+	@Autowired
+	private ProductRepository productRepository;
+
+	@Autowired
+	private QualityMetricRepository qualityMetricRepository;
+
+	@Autowired
+	private InspectionDtlsRepository inspectionDtlsRepository;
+	@Autowired
+	private GroceryRepository groceryRepository;
+	@Autowired
+	private DairyRepository dairyRepository;
+	@Autowired
+	private BakeryRepository bakeryRepository;
+	@Autowired
+	private BeveragesRepository beveragesRepository;
+	@Autowired
+	private MeatAndPoultryRepository meatAndPoultryRepository;
+
+	@Override
+	public List<ProductDetailsDTO> listAllProducts() {
+		List<ProductDetailsDTO> list = new ArrayList<>();
+		try {
+
+			list = productRepository.findAllProductDetails();
+
 		} catch (NotReadablePropertyException e) {
-			logger.error("Error while processing NotReadablePropertyException", e);
+			logger.error(NOT_READABLE_PROPERTY_EXCEPTION, e);
 			e.printStackTrace();
-			System.out.println("Error Inspection_DTLS: " + e.getMessage());
+			System.out.println(ERROR_LIST_ALL_PRODUCTS + e.getMessage());
 		} catch (DataIntegrityViolationException e) {
 			if (e.getCause() instanceof ConstraintViolationException) {
 				ConstraintViolationException constraintViolationException = (ConstraintViolationException) e.getCause();
-				logger.error("Constraint violation details - Constraint Name: {}, SQL: {}",constraintViolationException.getConstraintName(), constraintViolationException.getSQL());
+				logger.error(CONSTRAINT_VIOLATION, constraintViolationException.getConstraintName(),
+						constraintViolationException.getSQL());
 			}
-			logger.error("Error while processing DataIntegrityViolationException", e);
-		} catch(InvalidDataAccessResourceUsageException e) {
+			logger.error(DATA_INTEGRITY_VIOLATION_EXCEPTION, e);
+		} catch (InvalidDataAccessResourceUsageException e) {
 			e.printStackTrace();
-			System.out.println("Error listAllProducts: " + e.getMessage());
+			System.out.println(ERROR_LIST_ALL_PRODUCTS + e.getMessage());
 		}
-        return list;
-    }
-    
-    @Override
+		return list;
+	}
+
+	@Override
 	public CategoryDtlsDto getAllCategoryDetails(CategoryDto categoryDto) {
 		CategoryDtlsDto categoryDtlsDto = new CategoryDtlsDto();
 		String category = categoryDto.getCategory();
@@ -141,7 +143,7 @@ public class ProductServiceImpl implements ProductService, Constants {
 		return categoryDtlsDto;
 	}
 
-    @Override
+	@Override
 	public ProductDetails getProductById(Long id) {
 		ProductDetails productDetails = new ProductDetails();
 		try {
@@ -160,12 +162,12 @@ public class ProductServiceImpl implements ProductService, Constants {
 			productDetails.setWeight(qualityMetric.getWeight());
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.out.println("Error createProductNew: " + e.getMessage());
+			System.out.println(ERROR_MESSAGE + e.getMessage());
 		}
 		return productDetails;
 	}
 
-    @SuppressWarnings("unchecked")
+	@SuppressWarnings(UNCHECKED)
 	@Override
 	public Product saveProduct(ProductDetails productDetails) {
 		Product product = new Product();
@@ -185,9 +187,24 @@ public class ProductServiceImpl implements ProductService, Constants {
 			qualityMetric.setColour(productDetails.getColour());
 			qualityMetric.setExpiryDate(productDetails.getExpiryDate());
 			qualityMetric.setManufacturingDate(productDetails.getManufacturingDate());
-			// Implement new method deriveQuality(productDetails)
-			//ProductDetails pDtls = Utility.deriveQuality(productDetails);
-			qualityMetric.setQuality(Quality.WAITING_FOR_INSPECTION);
+
+			// Set Quality corresponding to the quality parameters provided in Category
+			if (Utility.validateEmptyString(productDetails.getCategory())) {
+				ProductDetails productDtls = Utility.deriveQuality(productDetails);
+				if (product.getCategory().equals(GROCERY)) {
+					qualityMetric.setQuality(productDtls.getGroceryQuality());
+				} else if (product.getCategory().equals(DAIRY)) {
+					qualityMetric.setQuality(productDtls.getDairyQuality());
+				} else if (product.getCategory().equals(BAKERY)) {
+					qualityMetric.setQuality(productDtls.getBakeryQuality());
+				} else if (product.getCategory().equals(BEVERAGES)) {
+					qualityMetric.setQuality(productDtls.getBeveragesQuality());
+				} else if (product.getCategory().equals(MEAT_AND_POULTRY)) {
+					qualityMetric.setQuality(productDtls.getMeatAndPoultryQuality());
+				}
+			} else {
+				qualityMetric.setQuality(Quality.WAITING_FOR_INSPECTION);
+			}
 			qualityMetric.setWeight(productDetails.getWeight());
 			qualityMetricRepository.save(qualityMetric);
 
@@ -199,10 +216,10 @@ public class ProductServiceImpl implements ProductService, Constants {
 			inspectionDtls.setProductName(productDetails.getName());
 			inspectionDtls.setResult(PENDING);
 			inspectionDtlsRepository.save(inspectionDtls);
-			
-			if(Utility.validateEmptyString(productDetails.getCategory())) {
-				if(productDetails.getCategory().equals(GROCERY)) {
-					Grocery grocery =  new Grocery();
+
+			if (Utility.validateEmptyString(productDetails.getCategory())) {
+				if (productDetails.getCategory().equals(GROCERY)) {
+					Grocery grocery = new Grocery();
 					grocery.setProduct(product);
 					grocery.setFreshnessGrocery(productDetails.getFreshnessGrocery());
 					grocery.setNonGmo(productDetails.getNonGmo());
@@ -210,8 +227,8 @@ public class ProductServiceImpl implements ProductService, Constants {
 					grocery.setOrganic(productDetails.getOrganic());
 					grocery.setWholeGrain(productDetails.getWholeGrain());
 					groceryRepository.save(grocery);
-					
-				}else if(productDetails.getCategory().equals(DAIRY)) {
+
+				} else if (productDetails.getCategory().equals(DAIRY)) {
 					Dairy dairy = new Dairy();
 					dairy.setProduct(product);
 					dairy.setFatContent(productDetails.getFatContent());
@@ -220,7 +237,7 @@ public class ProductServiceImpl implements ProductService, Constants {
 					dairy.setPasteurization(productDetails.getPasteurization());
 					dairy.setPurity(productDetails.getPurity());
 					dairyRepository.save(dairy);
-				}else if(productDetails.getCategory().equals(BAKERY)) {
+				} else if (productDetails.getCategory().equals(BAKERY)) {
 					Bakery bakery = new Bakery();
 					bakery.setProduct(product);
 					bakery.setFlavorBakery(productDetails.getFlavorBakery());
@@ -229,7 +246,7 @@ public class ProductServiceImpl implements ProductService, Constants {
 					bakery.setTexture(productDetails.getTexture());
 					bakery.setUniSizeShape(productDetails.getUniSizeShape());
 					bakeryRepository.save(bakery);
-				}else if(productDetails.getCategory().equals(BEVERAGES)) {
+				} else if (productDetails.getCategory().equals(BEVERAGES)) {
 					Beverages beverages = new Beverages();
 					beverages.setProduct(product);
 					beverages.setClarity(productDetails.getClarity());
@@ -238,7 +255,7 @@ public class ProductServiceImpl implements ProductService, Constants {
 					beverages.setNaturalIngredients(productDetails.getNaturalIngredients());
 					beverages.setShelfLife(productDetails.getShelfLife());
 					beveragesRepository.save(beverages);
-				}else if(productDetails.getCategory().equals(MEAT_AND_POULTRY)) {
+				} else if (productDetails.getCategory().equals(MEAT_AND_POULTRY)) {
 					MeatAndPoultry meatAndPoultry = new MeatAndPoultry();
 					meatAndPoultry.setProduct(product);
 					meatAndPoultry.setColorMeat(productDetails.getColorMeat());
@@ -253,51 +270,51 @@ public class ProductServiceImpl implements ProductService, Constants {
 		} catch (DataIntegrityViolationException e) {
 			if (e.getCause() instanceof ConstraintViolationException) {
 				ConstraintViolationException constraintViolationException = (ConstraintViolationException) e.getCause();
-				logger.error("Constraint violation details - Constraint Name: {}, SQL: {}",
-						constraintViolationException.getConstraintName(), constraintViolationException.getSQL());
+				logger.error(CONSTRAINT_VIOLATION, constraintViolationException.getConstraintName(),
+						constraintViolationException.getSQL());
 			}
-			logger.error("Error while processing DataIntegrityViolationException", e);
+			logger.error(DATA_INTEGRITY_VIOLATION_EXCEPTION, e);
 		} catch (NotReadablePropertyException e) {
-			logger.error("Error while processing NotReadablePropertyException", e);
+			logger.error(NOT_READABLE_PROPERTY_EXCEPTION, e);
 			e.printStackTrace();
-			System.out.println("Error Inspection_DTLS: " + e.getMessage());
+			System.out.println(ERROR_MESSAGE + e.getMessage());
 		}
 		return product;
 	}
 
-    @Override
+	@Override
 	public boolean deleteProduct(Long id) {
 		try {
 			Product product = productRepository.findById(id).get();
 			String oldCategory = product.getCategory();
-			if(oldCategory.equals(GROCERY)) {
+			if (oldCategory.equals(GROCERY)) {
 				List<Grocery> groceryList = groceryRepository.findAll();
 				long groceryId = Utility.findGroceryIdByProductId(groceryList, id);
 				groceryRepository.deleteById(groceryId);
-				
-			} else if(oldCategory.equals(DAIRY)) {
+
+			} else if (oldCategory.equals(DAIRY)) {
 				List<Dairy> dairyList = dairyRepository.findAll();
 				long dairyId = Utility.findDairyIdByProductId(dairyList, id);
 				dairyRepository.deleteById(dairyId);
 			}
-			List<Inspection_DTLS> inspDtlsList =  inspectionDtlsRepository.findAll();
+			List<Inspection_DTLS> inspDtlsList = inspectionDtlsRepository.findAll();
 			long inspectionId = Utility.findInspectionIdByProductId(inspDtlsList, id);
 			inspectionDtlsRepository.deleteById(inspectionId);
-			
+
 			List<QualityMetric> qualityList = qualityMetricRepository.findAll();
 			long qualityId = Utility.findQualityMetricIdByProductId(qualityList, id);
 			qualityMetricRepository.deleteById(qualityId);
-			
+
 			productRepository.deleteById(id);
-			System.out.println("Delete Successful");
+			System.out.println(DELETE_SUCCESSFUL);
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.out.println("Error createProductNew: " + e.getMessage());
+			System.out.println(ERROR_MESSAGE + e.getMessage());
 		}
 		return true;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings(UNCHECKED)
 	@Override
 	public ProductDetails editProductById(ProductDetails productDetails) {
 		try {
@@ -312,175 +329,190 @@ public class ProductServiceImpl implements ProductService, Constants {
 			product.setPrice(productDetails.getPrice());
 			product.setQuantity(productDetails.getQuantity());
 			product = productRepository.save(product);
-			
+
 			List<QualityMetric> qualityList = qualityMetricRepository.findAll();
 			long qualityId = Utility.findQualityMetricIdByProductId(qualityList, productDetails.getProductId());
 			QualityMetric qualityMetric = qualityMetricRepository.findById(qualityId).get();
 			qualityMetric.setColour(productDetails.getColour());
 			qualityMetric.setExpiryDate(productDetails.getExpiryDate());
 			qualityMetric.setManufacturingDate(productDetails.getManufacturingDate());
-			qualityMetric.setQuality(Quality.WAITING_FOR_INSPECTION);
+			// Set Quality corresponding to the quality parameters provided in Category
+			if (Utility.validateEmptyString(productDetails.getCategory())) {
+				ProductDetails productDtls = Utility.deriveQuality(productDetails);
+				if (product.getCategory().equals(GROCERY)) {
+					qualityMetric.setQuality(productDtls.getGroceryQuality());
+				} else if (product.getCategory().equals(DAIRY)) {
+					qualityMetric.setQuality(productDtls.getDairyQuality());
+				} else if (product.getCategory().equals(BAKERY)) {
+					qualityMetric.setQuality(productDtls.getBakeryQuality());
+				} else if (product.getCategory().equals(BEVERAGES)) {
+					qualityMetric.setQuality(productDtls.getBeveragesQuality());
+				} else if (product.getCategory().equals(MEAT_AND_POULTRY)) {
+					qualityMetric.setQuality(productDtls.getMeatAndPoultryQuality());
+				}
+			} else {
+				qualityMetric.setQuality(Quality.WAITING_FOR_INSPECTION);
+			}
 			qualityMetric.setWeight(productDetails.getWeight());
 			qualityMetricRepository.save(qualityMetric);
-			
-			List<Inspection_DTLS> inspDtlsList =  inspectionDtlsRepository.findAll();
+
+			List<Inspection_DTLS> inspDtlsList = inspectionDtlsRepository.findAll();
 			long inspectionId = Utility.findInspectionIdByProductId(inspDtlsList, productDetails.getProductId());
 			Inspection_DTLS inspectionDtls = inspectionDtlsRepository.findById(inspectionId).get();
-				inspectionDtls.setProduct(product);
-				inspectionDtls.setCategory(productDetails.getCategory());
-				inspectionDtls.setDate(productDetails.getExpiryDate());
-				inspectionDtls.setInspector(SYSTEM);
-				inspectionDtls.setProductName(productDetails.getName());
-				inspectionDtls.setResult(PENDING);
-				inspectionDtlsRepository.save(inspectionDtls);
-				
-				
-				if (productDetails.getCategory().equals(oldCategory)) {
-					if (productDetails.getCategory().equals(GROCERY)) {
-						List<Grocery> groceryList = groceryRepository.findAll();
-						long groceryId = Utility.findGroceryIdByProductId(groceryList, productDetails.getProductId());
-						Grocery grocery = (Grocery) groceryRepository.findById(groceryId).get();
+			inspectionDtls.setProduct(product);
+			inspectionDtls.setCategory(productDetails.getCategory());
+			inspectionDtls.setDate(productDetails.getExpiryDate());
+			inspectionDtls.setInspector(SYSTEM);
+			inspectionDtls.setProductName(productDetails.getName());
+			inspectionDtls.setResult(PENDING);
+			inspectionDtlsRepository.save(inspectionDtls);
 
-						grocery.setProduct(product);
-						grocery.setFreshnessGrocery(productDetails.getFreshnessGrocery());
-						grocery.setNonGmo(productDetails.getNonGmo());
-						grocery.setNutrientContent(productDetails.getNutrientContent());
-						grocery.setOrganic(productDetails.getOrganic());
-						grocery.setWholeGrain(productDetails.getWholeGrain());
-						groceryRepository.save(grocery);
+			if (productDetails.getCategory().equals(oldCategory)) {
+				if (productDetails.getCategory().equals(GROCERY)) {
+					List<Grocery> groceryList = groceryRepository.findAll();
+					long groceryId = Utility.findGroceryIdByProductId(groceryList, productDetails.getProductId());
+					Grocery grocery = (Grocery) groceryRepository.findById(groceryId).get();
 
-					} else if (productDetails.getCategory().equals(DAIRY)) {
-						List<Dairy> dairyList = dairyRepository.findAll();
-						long dairyId = Utility.findDairyIdByProductId(dairyList, productDetails.getProductId());
-						Dairy dairy = dairyRepository.findById(dairyId).get();
+					grocery.setProduct(product);
+					grocery.setFreshnessGrocery(productDetails.getFreshnessGrocery());
+					grocery.setNonGmo(productDetails.getNonGmo());
+					grocery.setNutrientContent(productDetails.getNutrientContent());
+					grocery.setOrganic(productDetails.getOrganic());
+					grocery.setWholeGrain(productDetails.getWholeGrain());
+					groceryRepository.save(grocery);
 
-						dairy.setProduct(product);
-						dairy.setFatContent(productDetails.getFatContent());
-						dairy.setFreshnessDairy(productDetails.getFreshnessDairy());
-						dairy.setHomogenization(productDetails.getHomogenization());
-						dairy.setPasteurization(productDetails.getPasteurization());
-						dairy.setPurity(productDetails.getPurity());
-						dairyRepository.save(dairy);
-					} else if (productDetails.getCategory().equals(BAKERY)) {
-						List<Bakery> bakeryList = bakeryRepository.findAll();
-						long bakeryId = Utility.getBakeryIdFromProductId(bakeryList, productId);
-						Bakery bakery = bakeryRepository.findById(bakeryId).get();
-						
-						bakery.setProduct(product);
-						bakery.setFlavorBakery(productDetails.getFlavorBakery());
-						bakery.setFreshnessBakery(productDetails.getFreshnessBakery());
-						bakery.setMoistureContent(productDetails.getMoistureContent());
-						bakery.setTexture(productDetails.getTexture());
-						bakery.setUniSizeShape(productDetails.getUniSizeShape());
-						bakeryRepository.save(bakery);
-					} else if (productDetails.getCategory().equals(BEVERAGES)) {
-						List<Beverages> beveragesList = beveragesRepository.findAll();
-						long beveragesId = Utility.getBeveragesIdFromProductId(beveragesList, productId);
-						Beverages beverages = beveragesRepository.findById(beveragesId).get();
-						
-						beverages.setProduct(product);
-						beverages.setClarity(productDetails.getClarity());
-						beverages.setColorBeverages(productDetails.getColorBeverages());
-						beverages.setFlavorBeverages(productDetails.getFlavorBeverages());
-						beverages.setNaturalIngredients(productDetails.getNaturalIngredients());
-						beverages.setShelfLife(productDetails.getShelfLife());
-						beveragesRepository.save(beverages);
-					} else if (productDetails.getCategory().equals(MEAT_AND_POULTRY)) {
-						List<MeatAndPoultry> meatAndPoultryList = meatAndPoultryRepository.findAll();
-						long meatAndPoultryId = Utility.getMeatAndPoulTryIdFromProductId(meatAndPoultryList, productId);
-						MeatAndPoultry meatAndPoultry = meatAndPoultryRepository.findById(meatAndPoultryId).get();
-						
-						meatAndPoultry.setProduct(product);
-						meatAndPoultry.setColorMeat(productDetails.getColorMeat());
-						meatAndPoultry.setFreshnessMeat(productDetails.getFreshnessMeat());
-						meatAndPoultry.setMarbling(productDetails.getMarbling());
-						meatAndPoultry.setOdor(productDetails.getOdor());
-						meatAndPoultry.setTemperatureControl(productDetails.getTemperatureControl());
-						meatAndPoultryRepository.save(meatAndPoultry);
-					}
-				}else {
-					
-					//updating to new category
-					if (productDetails.getCategory().equals(GROCERY)) {
-						Grocery grocery = new Grocery();
+				} else if (productDetails.getCategory().equals(DAIRY)) {
+					List<Dairy> dairyList = dairyRepository.findAll();
+					long dairyId = Utility.findDairyIdByProductId(dairyList, productDetails.getProductId());
+					Dairy dairy = dairyRepository.findById(dairyId).get();
 
-						grocery.setProduct(product);
-						grocery.setFreshnessGrocery(productDetails.getFreshnessGrocery());
-						grocery.setNonGmo(productDetails.getNonGmo());
-						grocery.setNutrientContent(productDetails.getNutrientContent());
-						grocery.setOrganic(productDetails.getOrganic());
-						grocery.setWholeGrain(productDetails.getWholeGrain());
-						groceryRepository.save(grocery);
+					dairy.setProduct(product);
+					dairy.setFatContent(productDetails.getFatContent());
+					dairy.setFreshnessDairy(productDetails.getFreshnessDairy());
+					dairy.setHomogenization(productDetails.getHomogenization());
+					dairy.setPasteurization(productDetails.getPasteurization());
+					dairy.setPurity(productDetails.getPurity());
+					dairyRepository.save(dairy);
+				} else if (productDetails.getCategory().equals(BAKERY)) {
+					List<Bakery> bakeryList = bakeryRepository.findAll();
+					long bakeryId = Utility.getBakeryIdFromProductId(bakeryList, productId);
+					Bakery bakery = bakeryRepository.findById(bakeryId).get();
 
-					} else if (productDetails.getCategory().equals(DAIRY)) {
-						Dairy dairy = new Dairy();
+					bakery.setProduct(product);
+					bakery.setFlavorBakery(productDetails.getFlavorBakery());
+					bakery.setFreshnessBakery(productDetails.getFreshnessBakery());
+					bakery.setMoistureContent(productDetails.getMoistureContent());
+					bakery.setTexture(productDetails.getTexture());
+					bakery.setUniSizeShape(productDetails.getUniSizeShape());
+					bakeryRepository.save(bakery);
+				} else if (productDetails.getCategory().equals(BEVERAGES)) {
+					List<Beverages> beveragesList = beveragesRepository.findAll();
+					long beveragesId = Utility.getBeveragesIdFromProductId(beveragesList, productId);
+					Beverages beverages = beveragesRepository.findById(beveragesId).get();
 
-						dairy.setProduct(product);
-						dairy.setFatContent(productDetails.getFatContent());
-						dairy.setFreshnessDairy(productDetails.getFreshnessDairy());
-						dairy.setHomogenization(productDetails.getHomogenization());
-						dairy.setPasteurization(productDetails.getPasteurization());
-						dairy.setPurity(productDetails.getPurity());
-						dairyRepository.save(dairy);
-					} else if(productDetails.getCategory().equals(BAKERY)) {
-						Bakery bakery = new Bakery();
-						
-						bakery.setProduct(product);
-						bakery.setFlavorBakery(productDetails.getFlavorBakery());
-						bakery.setFreshnessBakery(productDetails.getFreshnessBakery());
-						bakery.setMoistureContent(productDetails.getMoistureContent());
-						bakery.setTexture(productDetails.getTexture());
-						bakery.setUniSizeShape(productDetails.getUniSizeShape());
-						bakeryRepository.save(bakery);
-					}else if(productDetails.getCategory().equals(BEVERAGES)) {
-						Beverages beverages = new Beverages();
-						
-						beverages.setProduct(product);
-						beverages.setClarity(productDetails.getClarity());
-						beverages.setColorBeverages(productDetails.getColorBeverages());
-						beverages.setFlavorBeverages(productDetails.getFlavorBeverages());
-						beverages.setNaturalIngredients(productDetails.getNaturalIngredients());
-						beverages.setShelfLife(productDetails.getShelfLife());
-						beveragesRepository.save(beverages);
-					}else if(productDetails.getCategory().equals(MEAT_AND_POULTRY)) {
-						MeatAndPoultry meatAndPoultry = new MeatAndPoultry();
-						
-						meatAndPoultry.setProduct(product);
-						meatAndPoultry.setColorMeat(productDetails.getColorMeat());
-						meatAndPoultry.setFreshnessMeat(productDetails.getFreshnessMeat());
-						meatAndPoultry.setMarbling(productDetails.getMarbling());
-						meatAndPoultry.setOdor(productDetails.getOdor());
-						meatAndPoultry.setTemperatureControl(productDetails.getTemperatureControl());
-						meatAndPoultryRepository.save(meatAndPoultry);
-					}
-					//Delete
-					if(oldCategory.equals(GROCERY)) {
-						List<Grocery> groceryList = groceryRepository.findAll();
-						long groceryId = Utility.findGroceryIdByProductId(groceryList, productId);
-						groceryRepository.deleteById(groceryId);
-						
-					} else if(oldCategory.equals(DAIRY)) {
-						List<Dairy> dairyList = dairyRepository.findAll();
-						long dairyId = Utility.findDairyIdByProductId(dairyList, productId);
-						dairyRepository.deleteById(dairyId);
-					} else if(oldCategory.equals(BAKERY)) {
-						List<Bakery> bakeryList = bakeryRepository.findAll();
-						long bakeryId = Utility.getBakeryIdFromProductId(bakeryList, productId);
-						bakeryRepository.deleteById(bakeryId);
-					} else if(oldCategory.equals(BEVERAGES)) {
-						List<Beverages> beveragesList = beveragesRepository.findAll();
-						long beveragesId = Utility.getBeveragesIdFromProductId(beveragesList, productId);
-						beveragesRepository.deleteById(beveragesId);
-					} else if(oldCategory.equals(MEAT_AND_POULTRY)) {
-						List<MeatAndPoultry> meatAndPoultryList = meatAndPoultryRepository.findAll();
-						long meatAndPoultryId = Utility.getMeatAndPoulTryIdFromProductId(meatAndPoultryList, productId);
-						meatAndPoultryRepository.deleteById(meatAndPoultryId);
-					}
+					beverages.setProduct(product);
+					beverages.setClarity(productDetails.getClarity());
+					beverages.setColorBeverages(productDetails.getColorBeverages());
+					beverages.setFlavorBeverages(productDetails.getFlavorBeverages());
+					beverages.setNaturalIngredients(productDetails.getNaturalIngredients());
+					beverages.setShelfLife(productDetails.getShelfLife());
+					beveragesRepository.save(beverages);
+				} else if (productDetails.getCategory().equals(MEAT_AND_POULTRY)) {
+					List<MeatAndPoultry> meatAndPoultryList = meatAndPoultryRepository.findAll();
+					long meatAndPoultryId = Utility.getMeatAndPoulTryIdFromProductId(meatAndPoultryList, productId);
+					MeatAndPoultry meatAndPoultry = meatAndPoultryRepository.findById(meatAndPoultryId).get();
+
+					meatAndPoultry.setProduct(product);
+					meatAndPoultry.setColorMeat(productDetails.getColorMeat());
+					meatAndPoultry.setFreshnessMeat(productDetails.getFreshnessMeat());
+					meatAndPoultry.setMarbling(productDetails.getMarbling());
+					meatAndPoultry.setOdor(productDetails.getOdor());
+					meatAndPoultry.setTemperatureControl(productDetails.getTemperatureControl());
+					meatAndPoultryRepository.save(meatAndPoultry);
 				}
-				
+			} else {
+
+				// updating to new category
+				if (productDetails.getCategory().equals(GROCERY)) {
+					Grocery grocery = new Grocery();
+
+					grocery.setProduct(product);
+					grocery.setFreshnessGrocery(productDetails.getFreshnessGrocery());
+					grocery.setNonGmo(productDetails.getNonGmo());
+					grocery.setNutrientContent(productDetails.getNutrientContent());
+					grocery.setOrganic(productDetails.getOrganic());
+					grocery.setWholeGrain(productDetails.getWholeGrain());
+					groceryRepository.save(grocery);
+
+				} else if (productDetails.getCategory().equals(DAIRY)) {
+					Dairy dairy = new Dairy();
+
+					dairy.setProduct(product);
+					dairy.setFatContent(productDetails.getFatContent());
+					dairy.setFreshnessDairy(productDetails.getFreshnessDairy());
+					dairy.setHomogenization(productDetails.getHomogenization());
+					dairy.setPasteurization(productDetails.getPasteurization());
+					dairy.setPurity(productDetails.getPurity());
+					dairyRepository.save(dairy);
+				} else if (productDetails.getCategory().equals(BAKERY)) {
+					Bakery bakery = new Bakery();
+
+					bakery.setProduct(product);
+					bakery.setFlavorBakery(productDetails.getFlavorBakery());
+					bakery.setFreshnessBakery(productDetails.getFreshnessBakery());
+					bakery.setMoistureContent(productDetails.getMoistureContent());
+					bakery.setTexture(productDetails.getTexture());
+					bakery.setUniSizeShape(productDetails.getUniSizeShape());
+					bakeryRepository.save(bakery);
+				} else if (productDetails.getCategory().equals(BEVERAGES)) {
+					Beverages beverages = new Beverages();
+
+					beverages.setProduct(product);
+					beverages.setClarity(productDetails.getClarity());
+					beverages.setColorBeverages(productDetails.getColorBeverages());
+					beverages.setFlavorBeverages(productDetails.getFlavorBeverages());
+					beverages.setNaturalIngredients(productDetails.getNaturalIngredients());
+					beverages.setShelfLife(productDetails.getShelfLife());
+					beveragesRepository.save(beverages);
+				} else if (productDetails.getCategory().equals(MEAT_AND_POULTRY)) {
+					MeatAndPoultry meatAndPoultry = new MeatAndPoultry();
+
+					meatAndPoultry.setProduct(product);
+					meatAndPoultry.setColorMeat(productDetails.getColorMeat());
+					meatAndPoultry.setFreshnessMeat(productDetails.getFreshnessMeat());
+					meatAndPoultry.setMarbling(productDetails.getMarbling());
+					meatAndPoultry.setOdor(productDetails.getOdor());
+					meatAndPoultry.setTemperatureControl(productDetails.getTemperatureControl());
+					meatAndPoultryRepository.save(meatAndPoultry);
+				}
+				// Delete
+				if (oldCategory.equals(GROCERY)) {
+					List<Grocery> groceryList = groceryRepository.findAll();
+					long groceryId = Utility.findGroceryIdByProductId(groceryList, productId);
+					groceryRepository.deleteById(groceryId);
+
+				} else if (oldCategory.equals(DAIRY)) {
+					List<Dairy> dairyList = dairyRepository.findAll();
+					long dairyId = Utility.findDairyIdByProductId(dairyList, productId);
+					dairyRepository.deleteById(dairyId);
+				} else if (oldCategory.equals(BAKERY)) {
+					List<Bakery> bakeryList = bakeryRepository.findAll();
+					long bakeryId = Utility.getBakeryIdFromProductId(bakeryList, productId);
+					bakeryRepository.deleteById(bakeryId);
+				} else if (oldCategory.equals(BEVERAGES)) {
+					List<Beverages> beveragesList = beveragesRepository.findAll();
+					long beveragesId = Utility.getBeveragesIdFromProductId(beveragesList, productId);
+					beveragesRepository.deleteById(beveragesId);
+				} else if (oldCategory.equals(MEAT_AND_POULTRY)) {
+					List<MeatAndPoultry> meatAndPoultryList = meatAndPoultryRepository.findAll();
+					long meatAndPoultryId = Utility.getMeatAndPoulTryIdFromProductId(meatAndPoultryList, productId);
+					meatAndPoultryRepository.deleteById(meatAndPoultryId);
+				}
+			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.out.println("Error createProductNew: " + e.getMessage());
+			System.out.println(ERROR_MESSAGE + e.getMessage());
 		}
 		return productDetails;
 	}

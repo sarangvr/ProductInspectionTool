@@ -1,4 +1,5 @@
 package com.ensat.controllers;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,6 @@ import com.ensat.model.InspectionDetailsDTO;
 import com.ensat.services.InspectionService;
 import com.ensat.services.ProductService;
 
-
 /**
  * Homepage controller.
  */
@@ -23,40 +23,40 @@ import com.ensat.services.ProductService;
 @Controller
 public class IndexController {
 	@Autowired
-    private ProductService productService;
-	
+	private ProductService productService;
+
 	@Autowired
-    private InspectionService inspectionService;
+	private InspectionService inspectionService;
 
 	@GetMapping("/")
 	public String showLoginForm() {
-	    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-	    if (!authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
-	        return "login";
-	    }
-	    System.out.println("User is already authenticated, redirecting to /products");
-	    return "redirect:/home";
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (!authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
+			return "login";
+		}
+		System.out.println("User is already authenticated, redirecting to /products");
+		return "redirect:/home";
 	}
-	
+
 	@GetMapping("/home")
 	public String showHomePage() {
-		return "homeSideBar"; // This should match the name of your homeSideBar.html file
+		return "homeSideBar"; // homeSideBar.html
 	}
-	
-    @GetMapping("/getProducts")
-   	public String getProducts(Model model) {
-   		try {
-   			List<ProductDetailsDTO> productList = productService.listAllProducts();
-   			model.addAttribute("products", productList);
-   		} catch (Exception e) {
-   			e.printStackTrace();
-   			System.out.println("Error getProducts: " + e.getMessage());
-   		}
-   		return "productsSideBar";
 
-   	}
-    
-    @GetMapping("/getProductInspection")
+	@GetMapping("/getProducts")
+	public String getProducts(Model model) {
+		try {
+			List<ProductDetailsDTO> productList = productService.listAllProducts();
+			model.addAttribute("products", productList);
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("Error getProducts: " + e.getMessage());
+		}
+		return "productsSideBar";
+
+	}
+
+	@GetMapping("/getProductInspection")
 	public String getInspectionDetails(Model model) {
 		try {
 			List<InspectionDetailsDTO> inspectionList = inspectionService.listAllInspection();
@@ -67,15 +67,15 @@ public class IndexController {
 		}
 		return "inspectionSideBar";
 	}
-    
-    @GetMapping("/inspection")
+
+	@GetMapping("/inspection")
 	public String showInspectionPage() {
-		return "inspection"; // This should match the name of your inspection.html file
+		return "inspection"; // inspection.html
 	}
-    
-    @GetMapping("/reports")
+
+	@GetMapping("/reports")
 	public String showReportsPage() {
-		return "reports"; // This should match the name of your reports.html file
+		return "reports"; // reports.html
 	}
 
 }

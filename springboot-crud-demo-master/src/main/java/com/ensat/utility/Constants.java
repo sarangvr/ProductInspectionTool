@@ -10,4 +10,19 @@ public interface Constants {
 	public static final String PENDING = "PENDING";
 	public static final String WAITING_FOR_INSPECTION = "Waiting for inspection";
 	public static final String SYSTEM = "SYSTEM";
+	public static final String HIGH = "HIGH";
+	public static final String MEDIUM = "MEDIUM";
+	public static final String LOW = "LOW";
+	public static final String YES = "YES";
+	public static final String NO = "NO";
+	public static final String UNCHANGED = "UNCHANGED";
+	public static final String CHANGED = "CHANGED";
+	public static final String ERROR_DERIVE_QUALITY = "Error deriveQuality: ";
+	public static final String UNCHECKED = "unchecked";
+	public static final String NOT_READABLE_PROPERTY_EXCEPTION = "Error while processing NotReadablePropertyException";
+	public static final String CONSTRAINT_VIOLATION = "Constraint violation details - Constraint Name: {}, SQL: {}";
+	public static final String DATA_INTEGRITY_VIOLATION_EXCEPTION = "Error while processing DataIntegrityViolationException";
+	public static final String ERROR_LIST_ALL_PRODUCTS = "Error listAllProducts: ";
+	public static final String ERROR_MESSAGE = "Error Message: ";
+	public static final String DELETE_SUCCESSFUL = "DELETE_SUCCESSFUL";
 }

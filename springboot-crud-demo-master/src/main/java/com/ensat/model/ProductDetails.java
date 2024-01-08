@@ -17,7 +17,6 @@ import lombok.Setter;
 @Component
 public class ProductDetails {
 
-//	private long id;
 	private long productId;
 	private String name;
 	private String description;
@@ -60,12 +59,13 @@ public class ProductDetails {
 	private String colorMeat;
 	private String odor;
 	private String temperatureControl;
-	
-	private String groceryQuality;
-	private String dairyQuality;
-	private String bakeryQuality;
-	private String beveragesQuality;
-	private String meatAndPoultryQuality;
+
+	private Quality groceryQuality;
+	private Quality dairyQuality;
+	private Quality bakeryQuality;
+	private Quality beveragesQuality;
+	private Quality meatAndPoultryQuality;
+
 	@Override
 	public String toString() {
 		return "ProductDetails [productId=" + productId + ", name=" + name + ", description=" + description + ", price="
@@ -84,7 +84,4 @@ public class ProductDetails {
 				+ bakeryQuality + ", beveragesQuality=" + beveragesQuality + ", meatAndPoultryQuality="
 				+ meatAndPoultryQuality + "]";
 	}
-	
-	
-
 }

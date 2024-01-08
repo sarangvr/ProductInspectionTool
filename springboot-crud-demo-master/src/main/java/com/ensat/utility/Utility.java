@@ -8,6 +8,7 @@ import com.ensat.category.entities.Dairy;
 import com.ensat.category.entities.Grocery;
 import com.ensat.category.entities.MeatAndPoultry;
 import com.ensat.entities.Inspection_DTLS;
+import com.ensat.entities.Quality;
 import com.ensat.entities.QualityMetric;
 import com.ensat.model.ProductDetails;
 
@@ -83,8 +84,140 @@ public class Utility implements Constants {
 	}
 
 	public static ProductDetails deriveQuality(ProductDetails productDetails) {
-		
-		// TODO Auto-generated method stub
+		try {
+			String categoryName = productDetails.getCategory();
+
+			if (categoryName.equals(GROCERY)) {
+				if (productDetails.getFreshnessGrocery().equals(HIGH)
+						&& productDetails.getNutrientContent().equals(HIGH)) {
+					productDetails.setGroceryQuality(Quality.HIGH);
+				} else if (productDetails.getFreshnessGrocery().equals(MEDIUM)
+						&& productDetails.getNutrientContent().equals(MEDIUM)) {
+					productDetails.setGroceryQuality(Quality.MEDIUM);
+				} else if (productDetails.getFreshnessGrocery().equals(LOW)
+						&& productDetails.getNutrientContent().equals(LOW)) {
+					productDetails.setGroceryQuality(Quality.LOW);
+				} else if (productDetails.getFreshnessGrocery().equals(HIGH)
+						&& productDetails.getNutrientContent().equals(MEDIUM)) {
+					productDetails.setGroceryQuality(Quality.HIGH);
+				} else if (productDetails.getFreshnessGrocery().equals(HIGH)
+						&& productDetails.getNutrientContent().equals(LOW)) {
+					productDetails.setGroceryQuality(Quality.MEDIUM);
+				} else if (productDetails.getFreshnessGrocery().equals(MEDIUM)
+						&& productDetails.getNutrientContent().equals(HIGH)) {
+					productDetails.setGroceryQuality(Quality.HIGH);
+				} else if (productDetails.getFreshnessGrocery().equals(MEDIUM)
+						&& productDetails.getNutrientContent().equals(LOW)) {
+					productDetails.setGroceryQuality(Quality.LOW);
+				} else if (productDetails.getFreshnessGrocery().equals(LOW)
+						&& productDetails.getNutrientContent().equals(HIGH)) {
+					productDetails.setGroceryQuality(Quality.MEDIUM);
+				} else if (productDetails.getFreshnessGrocery().equals(LOW)
+						&& productDetails.getNutrientContent().equals(MEDIUM)) {
+					productDetails.setGroceryQuality(Quality.LOW);
+				}
+			} else if (categoryName.equals(DAIRY)) {
+				if (productDetails.getFreshnessDairy().equals(HIGH)
+						&& productDetails.getFatContent().equals(HIGH)) {
+					productDetails.setDairyQuality(Quality.HIGH);
+				} else if (productDetails.getFreshnessDairy().equals(MEDIUM)
+						&& productDetails.getFatContent().equals(MEDIUM)) {
+					productDetails.setDairyQuality(Quality.MEDIUM);
+				} else if (productDetails.getFreshnessDairy().equals(LOW)
+						&& productDetails.getFatContent().equals(LOW)) {
+					productDetails.setDairyQuality(Quality.LOW);
+				} else if (productDetails.getFreshnessDairy().equals(HIGH)
+						&& productDetails.getFatContent().equals(MEDIUM)) {
+					productDetails.setDairyQuality(Quality.HIGH);
+				} else if (productDetails.getFreshnessDairy().equals(HIGH)
+						&& productDetails.getFatContent().equals(LOW)) {
+					productDetails.setDairyQuality(Quality.MEDIUM);
+				} else if (productDetails.getFreshnessDairy().equals(MEDIUM)
+						&& productDetails.getFatContent().equals(HIGH)) {
+					productDetails.setDairyQuality(Quality.HIGH);
+				} else if (productDetails.getFreshnessDairy().equals(MEDIUM)
+						&& productDetails.getFatContent().equals(LOW)) {
+					productDetails.setDairyQuality(Quality.LOW);
+				} else if (productDetails.getFreshnessDairy().equals(LOW)
+						&& productDetails.getFatContent().equals(HIGH)) {
+					productDetails.setDairyQuality(Quality.MEDIUM);
+				} else if (productDetails.getFreshnessDairy().equals(LOW)
+						&& productDetails.getFatContent().equals(MEDIUM)) {
+					productDetails.setDairyQuality(Quality.LOW);
+				}
+			} else if (categoryName.equals(BAKERY)) {
+				if (productDetails.getFreshnessBakery().equals(HIGH)
+						&& productDetails.getMoistureContent().equals(HIGH)) {
+					productDetails.setBakeryQuality(Quality.HIGH);
+				} else if (productDetails.getFreshnessBakery().equals(MEDIUM)
+						&& productDetails.getMoistureContent().equals(MEDIUM)) {
+					productDetails.setBakeryQuality(Quality.MEDIUM);
+				} else if (productDetails.getFreshnessBakery().equals(LOW)
+						&& productDetails.getMoistureContent().equals(LOW)) {
+					productDetails.setBakeryQuality(Quality.LOW);
+				} else if (productDetails.getFreshnessBakery().equals(HIGH)
+						&& productDetails.getMoistureContent().equals(MEDIUM)) {
+					productDetails.setBakeryQuality(Quality.HIGH);
+				} else if (productDetails.getFreshnessBakery().equals(HIGH)
+						&& productDetails.getMoistureContent().equals(LOW)) {
+					productDetails.setBakeryQuality(Quality.MEDIUM);
+				} else if (productDetails.getFreshnessBakery().equals(MEDIUM)
+						&& productDetails.getMoistureContent().equals(HIGH)) {
+					productDetails.setBakeryQuality(Quality.HIGH);
+				} else if (productDetails.getFreshnessBakery().equals(MEDIUM)
+						&& productDetails.getMoistureContent().equals(LOW)) {
+					productDetails.setBakeryQuality(Quality.HIGH);
+				} else if (productDetails.getFreshnessBakery().equals(LOW)
+						&& productDetails.getMoistureContent().equals(HIGH)) {
+					productDetails.setBakeryQuality(Quality.MEDIUM);
+				} else if (productDetails.getFreshnessBakery().equals(LOW)
+						&& productDetails.getMoistureContent().equals(MEDIUM)) {
+					productDetails.setBakeryQuality(Quality.LOW);
+				}
+			} else if (categoryName.equals(BEVERAGES)) {
+				if (productDetails.getNaturalIngredients().equals(YES)
+						&& productDetails.getShelfLife().equals(HIGH)) {
+					productDetails.setBeveragesQuality(Quality.HIGH);
+				} else if (productDetails.getNaturalIngredients().equals(YES)
+						&& productDetails.getShelfLife().equals(MEDIUM)) {
+					productDetails.setBeveragesQuality(Quality.MEDIUM);
+				} else if (productDetails.getNaturalIngredients().equals(YES)
+						&& productDetails.getShelfLife().equals(LOW)) {
+					productDetails.setBeveragesQuality(Quality.LOW);
+				} else if (productDetails.getNaturalIngredients().equals(NO)
+						&& productDetails.getShelfLife().equals(HIGH)) {
+					productDetails.setBeveragesQuality(Quality.MEDIUM);
+				} else if (productDetails.getNaturalIngredients().equals(NO)
+						&& productDetails.getShelfLife().equals(MEDIUM)) {
+					productDetails.setBeveragesQuality(Quality.MEDIUM);
+				} else if (productDetails.getNaturalIngredients().equals(NO)
+						&& productDetails.getShelfLife().equals(LOW)) {
+					productDetails.setBeveragesQuality(Quality.LOW);
+				}
+			} else if (categoryName.equals(MEAT_AND_POULTRY)) {
+				if (productDetails.getOdor().equals(UNCHANGED) && productDetails.getFreshnessMeat().equals(HIGH)) {
+					productDetails.setMeatAndPoultryQuality(Quality.HIGH);
+				} else if (productDetails.getOdor().equals(UNCHANGED)
+						&& productDetails.getFreshnessMeat().equals(MEDIUM)) {
+					productDetails.setMeatAndPoultryQuality(Quality.MEDIUM);
+				} else if (productDetails.getOdor().equals(UNCHANGED)
+						&& productDetails.getFreshnessMeat().equals(LOW)) {
+					productDetails.setMeatAndPoultryQuality(Quality.LOW);
+				} else if (productDetails.getOdor().equals(CHANGED)
+						&& productDetails.getFreshnessMeat().equals(HIGH)) {
+					productDetails.setMeatAndPoultryQuality(Quality.MEDIUM);
+				} else if (productDetails.getOdor().equals(CHANGED)
+						&& productDetails.getFreshnessMeat().equals(MEDIUM)) {
+					productDetails.setMeatAndPoultryQuality(Quality.MEDIUM);
+				} else if (productDetails.getOdor().equals(CHANGED)
+						&& productDetails.getFreshnessMeat().equals(LOW)) {
+					productDetails.setMeatAndPoultryQuality(Quality.LOW);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println(ERROR_DERIVE_QUALITY + e.getMessage());
+		}
 		return productDetails;
 	}
 	
