@@ -293,12 +293,24 @@ public class ProductServiceImpl implements ProductService, Constants {
 				List<Grocery> groceryList = groceryRepository.findAll();
 				long groceryId = Utility.findGroceryIdByProductId(groceryList, id);
 				groceryRepository.deleteById(groceryId);
-
 			} else if (oldCategory.equals(DAIRY)) {
 				List<Dairy> dairyList = dairyRepository.findAll();
 				long dairyId = Utility.findDairyIdByProductId(dairyList, id);
 				dairyRepository.deleteById(dairyId);
+			} else if (oldCategory.equals(BAKERY)) {
+				List<Bakery> bakeryList = bakeryRepository.findAll();
+				long bakeryId = Utility.getBakeryIdFromProductId(bakeryList, id);
+				bakeryRepository.deleteById(bakeryId);
+			} else if (oldCategory.equals(BEVERAGES)) {
+				List<Beverages> beveragesList = beveragesRepository.findAll();
+				long beveragesId = Utility.getBeveragesIdFromProductId(beveragesList, id);
+				beveragesRepository.deleteById(beveragesId);
+			} else if (oldCategory.equals(MEAT_AND_POULTRY)) {
+				List<MeatAndPoultry> meatAndPoultryList = meatAndPoultryRepository.findAll();
+				long meatAndPoultryId = Utility.getMeatAndPoulTryIdFromProductId(meatAndPoultryList, id);
+				meatAndPoultryRepository.deleteById(meatAndPoultryId);
 			}
+			
 			List<Inspection_DTLS> inspDtlsList = inspectionDtlsRepository.findAll();
 			long inspectionId = Utility.findInspectionIdByProductId(inspDtlsList, id);
 			inspectionDtlsRepository.deleteById(inspectionId);
