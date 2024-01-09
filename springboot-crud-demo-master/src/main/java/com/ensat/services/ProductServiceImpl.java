@@ -546,6 +546,9 @@ public class ProductServiceImpl implements ProductService, Constants {
 			inspectionDtls.setDate(LocalDate.now());
 			inspectionDtls.setComments(qualityDto.getComments());
 			if(Utility.validateEmptyString(qualityDto.getInspectorName()))
+				if(qualityDto.getInspectorName().equals(AUTO_INSPECTED))
+					inspectionDtls.setInspector(SYSTEM);
+				else
 				inspectionDtls.setInspector(qualityDto.getInspectorName());
 			else
 				inspectionDtls.setInspector(SYSTEM);

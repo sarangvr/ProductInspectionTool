@@ -147,7 +147,7 @@
 
          .container {
         	background-color: white;
-        	padding: 20px;
+        	padding: 2px;
         	margin-top: 20px;
         	border-radius: 10px;
         }
@@ -229,8 +229,8 @@
         <!-- Profile image & text -->
         <div class="profile">
             <img src="images/logo.jpg" alt="profile_picture">
-            <h3>User_1</h3>
-            <p>user</p>
+            <h3>Account</h3>
+            <p>Peter</p>
         </div>
 
         <!-- Menu items -->
@@ -247,20 +247,25 @@
                     <span class="item">Products</span>
                 </a>
                 <ul>
-                    <li><a href="#" onclick="showProductForm('add')">Add Product</a></li>
-                    <li><a href="#" onclick="showProductForm('edit')">Edit Product</a></li>
-                    <li><a href="#" onclick="deleteSelected()">Delete Product</a></li>
+                    <!--<li><a href="#" onclick="showProductForm('add')">Add Product</a></li>-->
+                    <li><a href="#" onclick="showProductForm('add')" id="addProductLink"><span class="icon"><i class="fas fa-plus"></i></span><span class="item">Add Product</span></a></li>
+                    <!--<li><a href="#" onclick="showProductForm('edit')">Edit Product</a></li>-->
+                    <li><a href="#" onclick="showProductForm('edit')" id="editProductLink"><span class="icon"><i class="fas fa-edit"></i></span><span class="item">Edit Product</span></a></li>
+                    <!--<li><a href="#" onclick="deleteSelected()">Delete Product</a></li>-->
+                    <!-- Inside the <li> tag for "Delete Product" -->
+					<li><a href="#" onclick="deleteSelected()" id="deleteProductLink"><span class="icon"><i class="fas fa-trash"></i></span><span class="item">Delete Product</span></a></li>
+
                 </ul>
             </li>
             <li>
                 <a th:href="@{/getProductInspection}">
                     <span class="icon"><i class="fas fa-user-friends"></i></span>
-                    <span class="item">Inspection</span>
+                    <span class="item">Quality Metric</span>
                 </a>
-                <ul>
+                <!--<ul>
                     <li><a href="#">Auto Inspect</a></li>
                     <li><a href="#">Manual Inspect</a></li>
-                </ul>
+                </ul>-->
             </li>
             <li>
                 <a th:href="@{/reports}">
@@ -289,11 +294,15 @@
 	        <div class="container">
         <!-- Breadcrumb with Tabs -->
         <nav aria-label="breadcrumb" class="breadcrumb">
-            <ol class="breadcrumb">
-                <!--<li class="breadcrumb-item active" aria-current="page">Products</li>
-                <li class="breadcrumb-item"><a th:href="@{/inspection}">Inspection</a></li>
-                <li class="breadcrumb-item"><a th:href="@{/reports}">Reports</a></li>-->
-            </ol>
+			<div class="breadcrumb-search">
+		        <div class="input-group">
+				    <input type="text" class="form-control" id="productIdSearch" placeholder="Search Product ID">
+				    <div class="input-group-append">
+				        <button class="btn btn-primary" type="button" onclick="searchProduct()">Search</button>
+				    </div>
+				</div>
+		    </div>
+            <ol class="breadcrumb"></ol>
             <!-- Notification and Settings Icons -->
             <div class="breadcrumb-icons">
                 <!-- Logout Button -->
@@ -322,7 +331,7 @@
                     <!--<th scope="col"><input type="checkbox"></th>-->
                     <th scope="col"><input type="checkbox" id="selectAll" onclick="toggleAllCheckboxes()" disabled></th>
                     <th scope="col">Product Id</th>
-                    <th scope="col">Name</th>
+                    <th scope="col">Product Name</th>
                     <th scope="col">Description</th>
                     <th scope="col">Price</th>
                     <th scope="col">Quantity</th>
@@ -388,7 +397,7 @@
       <div class="form-row">
         <!-- Quantity -->
         <div class="form-group col-md-4">
-          <label for="quantity">Quantity:</label>
+          <label for="quantity">Quantity:(Kg)</label>
           <input type="text" class="form-control" id="quantity" name="quantity" >
         </div>
 
@@ -432,7 +441,7 @@
         </div>
         <!-- Weight -->
         <div class="form-group col-md-4">
-          <label for="weight">Weight:</label>
+          <label for="weight">Weight:(Kg)</label>
           <input type="text" class="form-control" id="weight" name="weight" >
         </div>
       </div>
@@ -751,6 +760,25 @@
         var meatCategory = document.querySelector('.MeatAndPoultry');
         meatCategory.style.display = 'none';
         
+    function searchProduct() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("productIdSearch");
+        filter = input.value.toUpperCase();
+        table = document.querySelector(".table"); // Assuming your table has the "table" class
+        tr = table.getElementsByTagName("tr");
+
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[1]; // Assuming Product ID is in the second column
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
     function callProducts() {
         productContentSection.style.display = 'block'; // Change 'flex' to 'block' if you prefer
         homePage.style.display = 'none';
@@ -806,6 +834,13 @@
     
     function showProductForm(action) {
 				var form = document.getElementById('productForm');
+		if (action === 'add') {
+	        document.getElementById('addProductLink').classList.add('active');
+	        document.getElementById('editProductLink').classList.remove('active');
+	    } else if (action === 'edit') {
+	        document.getElementById('editProductLink').classList.add('active');
+	        document.getElementById('addProductLink').classList.remove('active');
+	    }
 				//alert("test1");
 				if (action === 'add') {
 					// Show the form
@@ -1224,6 +1259,11 @@
         }
 
         function deleteSelected() {
+			
+        document.getElementById('deleteProductLink').classList.add('active');
+        document.getElementById('addProductLink').classList.remove('active');
+        document.getElementById('editProductLink').classList.remove('active');
+        
         // Find all checkboxes that are checked
         var checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
 
@@ -1254,6 +1294,7 @@
         } else {
             alert('Please select at least one product to delete.');
         }
+        document.getElementById('deleteProductLink').classList.remove('active');
     }
     
     function isValidDate(dateString) {
@@ -1289,6 +1330,9 @@
 	
 	    // Disable form elements
 	    disableFormElements(form);
+	    document.getElementById('addProductLink').classList.remove('active');
+	    document.getElementById('editProductLink').classList.remove('active');
+	    
 	}
 </script>
 

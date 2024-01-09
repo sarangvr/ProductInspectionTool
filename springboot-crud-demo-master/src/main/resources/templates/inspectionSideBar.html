@@ -147,7 +147,7 @@
 
          .container {
         	background-color: white;
-        	padding: 20px;
+        	padding: 0px;
         	margin-top: 20px;
         	border-radius: 10px;
         }
@@ -219,6 +219,14 @@
         .required {
 		    color: red;
 		}
+		/* Add this style for color based on result value */
+        .result-PASS { color: green; }
+        .result-FAIL { color: red; }
+        .result-PENDING { color: dodgerblue; 
+        }
+        .h4style{
+			padding-left: 6px;
+		}
     </style>
 </head>
 <body>
@@ -229,8 +237,8 @@
         <!-- Profile image & text -->
         <div class="profile">
             <img src="images/logo.jpg" alt="profile_picture">
-            <h3>Admin</h3>
-            <p>user</p>
+            <h3>Account</h3>
+            <p>Peter</p>
         </div>
 
         <!-- Menu items -->
@@ -246,20 +254,22 @@
                     <span class="icon"><i class="fas fa-desktop"></i></span>
                     <span class="item">Products</span>
                 </a>
-                <ul>
+                <!--<ul>
                     <li><a href="#" >Add Product</a></li>
                     <li><a href="#" >Edit Product</a></li>
                     <li><a href="#" >Delete Product</a></li>
-                </ul>
+                </ul>-->
             </li>
             <li>
                 <a th:href="@{/getProductInspection}">
                     <span class="icon"><i class="fas fa-user-friends"></i></span>
-                    <span class="item">Inspection</span>
+                    <span class="item">Quality Metric</span>
                 </a>
                 <ul>
-                    <li><a href="#" onclick="showInspectionForm('autoInspect')">Auto Inspect</a></li>
-                    <li><a href="#" onclick="showInspectionForm('manualInspect')">Manual Inspect</a></li>
+                    <!--<li><a th:href="@{/doAutoInspect}" onclick="autoInspect()">Auto Inspect</a></li>-->
+                    <li><a th:href="@{/doAutoInspect}" onclick="autoInspect('autoInspect')" id="autoInspectLink"><span class="icon"><i class="fas fa-sync"></i></span><span class="item">Auto Inspect</span></a></li>
+                    <!--<li><a href="#" onclick="showInspectionForm('manualInspect')">Manual Inspect</a></li>-->
+                    <li><a href="#" onclick="showInspectionForm('manualInspect')" id="manualInspectLink"><span class="icon"><i class="fas fa-hand-paper"></i></span><span class="item">Manual Inspect</span></a></li>
                 </ul>
             </li>
             <li>
@@ -289,11 +299,15 @@
 	        <div class="container">
         <!-- Breadcrumb with Tabs -->
         <nav aria-label="breadcrumb" class="breadcrumb">
-            <ol class="breadcrumb">
-                <!--<li class="breadcrumb-item active" aria-current="page">Products</li>
-                <li class="breadcrumb-item"><a th:href="@{/inspection}">Inspection</a></li>
-                <li class="breadcrumb-item"><a th:href="@{/reports}">Reports</a></li>-->
-            </ol>
+			<div class="breadcrumb-search">
+		        <div class="input-group">
+				    <input type="text" class="form-control" id="productIdSearch" placeholder="Search Product ID">
+				    <div class="input-group-append">
+				        <button class="btn btn-primary" type="button" onclick="searchProduct()">Search</button>
+				    </div>
+				</div>
+		    </div>
+            <ol class="breadcrumb"></ol>
             <!-- Notification and Settings Icons -->
             <div class="breadcrumb-icons">
                 <!-- Logout Button -->
@@ -313,19 +327,19 @@
 		
 		<!-- breadcrumb END -->
 		
-        <h4>Inspection List</h4>
+        <h4 class="h4style">  Quality Metric</h4>
 
         <!-- Product List Table -->
         <table class="table">
             <thead>
                 <tr>
                     <th scope="col"><input type="checkbox" id="selectAll" onclick="toggleAllCheckboxes()" disabled></th>
-                    <th scope="col">Product Id</th>
+                    <th scope="col">Id</th>
                     <th scope="col">Category</th>
                     <th scope="col">Name</th>
                     <th scope="col">Manuf Date</th>
                     <th scope="col">Expiry Date</th>
-                    <th scope="col">Date</th>
+                    <th scope="col">Inspected Date</th>
                     <th scope="col">Inspector</th>
                     <th scope="col">Comments</th>
                     <th scope="col">Quality</th>
@@ -345,7 +359,7 @@
                     <td th:text="${inspection.inspector}"></td>
                     <td th:text="${inspection.comments}"></td>
                     <td th:text="${inspection.quality}"></td>
-                    <td th:text="${inspection.result}"></td>
+                    <td th:class="${'result-' + inspection.result}" th:text="${inspection.result}"></td>
                 </tr>
             </tbody>
         </table>
@@ -393,8 +407,8 @@
       <div class="form-row">
 		  <!-- Inspector Name -->
         <div class="form-group col-md-4">
-          <label for="inspectorName">Inspector Name:</label>
-          <input type="text" class="form-control" id="inspectorName" name="inspectorName" >
+          <label for="inspectorName">Inspector Name: <span class="required">*</span></label>
+          <input type="text" class="form-control" id="inspectorName" name="inspectorName" required>
         </div>
         <!-- Comments -->
         <div class="form-group col-md-4">
@@ -731,6 +745,36 @@
         //Meat
         var meatCategory = document.querySelector('.MeatAndPoultry');
         meatCategory.style.display = 'none';
+    
+    function searchProduct() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("productIdSearch");
+        filter = input.value.toUpperCase();
+        table = document.querySelector(".table"); // Assuming your table has the "table" class
+        tr = table.getElementsByTagName("tr");
+
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[1]; // Assuming Product ID is in the second column
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+       
+    function autoInspect(form) {
+            // Add your autoInspect logic here
+            if (action === 'autoInspect') {
+			        document.getElementById('autoInspectLink').classList.add('active');
+			        document.getElementById('manualInspectLink').classList.remove('active');
+		    	}
+			alert("Proceed to Auto Inspect ?");
+			document.getElementById('autoInspectLink').classList.remove('active');
+        }
         
     function callProducts() {
         productContentSection.style.display = 'block'; // Change 'flex' to 'block' if you prefer
@@ -837,6 +881,11 @@
 
     
     function showInspectionForm(action) {
+		// Add and remove 'active' class based on inspectType
+	    if (action === 'manualInspect') {
+	        document.getElementById('manualInspectLink').classList.add('active');
+	        document.getElementById('autoInspectLink').classList.remove('active');
+	    }
 				var form = document.getElementById('inspectionForm');
 				if (action === 'manualInspect') {
 					// Hide the form initially
@@ -856,7 +905,9 @@
 						document.getElementById('name').value = selectedProduct.querySelector('td:nth-child(4)').innerText;
 						
 						//Testing
-						document.getElementById('inspectorName').value = selectedProduct.querySelector('td:nth-child(8)').innerText;
+						//document.getElementById('inspectorName').value = selectedProduct.querySelector('td:nth-child(8)').innerText;
+						document.getElementById('inspectorName').value = (selectedProduct.querySelector('td:nth-child(8)').innerText !== '') ? '' : selectedProduct.querySelector('td:nth-child(8)').innerText;
+
 						document.getElementById('comments').value = selectedProduct.querySelector('td:nth-child(9)').innerText;
 						document.getElementById('quality').value = selectedProduct.querySelector('td:nth-child(10)').innerText;
 						document.getElementById('result').value = selectedProduct.querySelector('td:nth-child(11)').innerText;
@@ -1072,7 +1123,7 @@
 					}
 
 				}
-				//here
+				
 			}
 
         function disableFormElements(form) {
@@ -1155,6 +1206,8 @@
 	
 	    // Disable form elements
 	    disableFormElements(form);
+	    document.getElementById('manualInspectLink').classList.remove('active');
+	    document.getElementById('autoInspectLink').classList.remove('active');
 	}
 </script>
 

@@ -25,4 +25,7 @@ public interface Constants {
 	public static final String ERROR_LIST_ALL_PRODUCTS = "Error listAllProducts: ";
 	public static final String ERROR_MESSAGE = "Error Message: ";
 	public static final String DELETE_SUCCESSFUL = "DELETE_SUCCESSFUL";
+	public static final String AUTO_INSPECTED = "AUTO_INSP";
+	public static final String PASS = "PASS";
+	public static final String FAIL = "FAIL";
 }

@@ -68,6 +68,24 @@ public class IndexController {
 		return "inspectionSideBar";
 	}
 	
+	@GetMapping("/doAutoInspect")
+	public String autoInspectProducts(Model model) {
+	    try {
+	        boolean flag = inspectionService.autoInspectProducts();
+
+	        if (flag) {
+	            // If auto inspection is successful, redirect to "/getProductInspection"
+	            return "redirect:/getProductInspection";
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        System.out.println("Error during autoInspectProducts: " + e.getMessage());
+	    }
+
+	    // If there's an error or auto inspection fails, return to "inspectionSideBar"
+	    return "inspectionSideBar";
+	}
+	
 	@GetMapping("/inspection")
 	public String showInspectionPage() {
 		return "inspection"; // inspection.html
