@@ -120,13 +120,6 @@
             margin-left: 0;
             width: 100%;
         }
-        /*.wrapper .section .home-page {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            text-align: center;
-        }*/
 
         .wrapper .sidebar ul ul {
             list-style-type: none;
@@ -160,19 +153,6 @@
         #productForm {
         	display: none;
         }
-
-        /* Add color styles based on the quality level */
-        /* .quality-LOW {
-        	color: red;
-        } 
-
-        .quality-MEDIUM {
-        	color: #FFD700;
-        }
-
-        .quality-HIGH {
-        	color: green;
-        } */
 
         /* breadcrumb */
         .breadcrumb {
@@ -358,16 +338,9 @@
                     <td th:text="${product.category}"></td>
                     <td th:text="${product.weight}"></td>
                     <td th:text="${product.colour}"></td>
-                    <!--<td th:text="${product.quality}"></td>-->
-                    <!--<td th:class="${'quality-' + product.quality}" th:text="${product.quality}"></td>-->
                 </tr>
             </tbody>
         </table>
-        <!-- Buttons -->
-        <!--<button class="btn btn-primary" onclick="showProductForm('add')">Add</button>
-        <button class="btn btn-warning" onclick="showProductForm('edit')">Edit</button>
-        <button class="btn btn-danger" onclick="deleteSelected()">Delete</button>-->
-
         <!-- Product Form -->
     <!--<form id="productForm">-->
     <form th:action="@{/register}" method="post" id="productForm">
@@ -427,17 +400,15 @@
           <label for="colour">Colour:</label>
           <input type="text" class="form-control" id="colour" name="colour" >
         </div>
-
+		<!-- Manufacturing Date -->
+        <div class="form-group col-md-4">
+          <label for="manufacturingDate">Manufacturing Date:  <span class="required">*</span></label>
+          <input type="date" class="form-control" id="manufacturingDate" name="manufacturingDate" >
+        </div>
         <!-- Expiry Date -->
         <div class="form-group col-md-4">
           <label for="expiryDate">Expiry Date:  <span class="required">*</span></label>
           <input type="date" class="form-control" id="expiryDate" name="expiryDate" >
-        </div>
-
-        <!-- Manufacturing Date -->
-        <div class="form-group col-md-4">
-          <label for="manufacturingDate">Manufacturing Date:  <span class="required">*</span></label>
-          <input type="date" class="form-control" id="manufacturingDate" name="manufacturingDate" >
         </div>
         <!-- Weight -->
         <div class="form-group col-md-4">
@@ -445,24 +416,6 @@
           <input type="text" class="form-control" id="weight" name="weight" >
         </div>
       </div>
-
-      <!--<div class="form-row">
-         Quality 
-        <div class="form-group col-md-4">
-          <label for="quality">Quality:</label>
-          <select class="form-control" id="quality" name="quality" >
-            <option value="LOW">LOW</option>
-            <option value="MEDIUM">MEDIUM</option>
-            <option value="HIGH">HIGH</option>
-          </select>
-        </div>
-
-        
-        <div class="form-group col-md-4">
-          <label for="weight">Weight:</label>
-          <input type="text" class="form-control" id="weight" name="weight" >
-        </div>
-      </div>-->
       <!-- Category Link Fields -->
       <h6 class="categoryQuality">Category Quality</h6>
       <!-- Grocery -->
@@ -1335,9 +1288,6 @@
 	    
 	}
 </script>
-
-
-
 
 </body>
 </html>

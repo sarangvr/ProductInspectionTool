@@ -4,15 +4,14 @@ import java.util.List;
 
 import com.ensat.model.InspectionDetails;
 import com.ensat.model.InspectionDetailsDTO;
+import com.ensat.model.ReportsDto;
 
 public interface InspectionService {
 	
 	List<InspectionDetailsDTO> listAllInspection();
-
-	InspectionDetails getProductInspection(Long id);
-	
-	InspectionDetails editProductInspection(InspectionDetails inspection);
 	
 	boolean autoInspectProducts();
+
+	ReportsDto getReportsDetails();
 	
 }

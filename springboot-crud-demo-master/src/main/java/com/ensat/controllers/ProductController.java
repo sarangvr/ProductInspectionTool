@@ -89,20 +89,7 @@ public class ProductController {
 		try {
 			ObjectMapper objectMapper = CustomObjectMapper.getObjectMapper();
 			QualityInspectionDetailsDto qualityDto = objectMapper.readValue(json, QualityInspectionDetailsDto.class);
-//			categoryDtlsDto = productService.getAllCategoryDetails(categoryDto);
 			qualityInspectionDetailsDto = productService.getQualityParameters(qualityDto);
-//			qualityDto.setCategory("test");
-//			qualityDto.setComments("test comments");
-//			qualityDto.setInspectorName("test insp");
-//			qualityDto.setQuality("test quality");
-//			qualityDto.setResult("test result");
-//			qualityInspectionDetailsDto.setCategory(qualityDto.getCategory());
-//			qualityInspectionDetailsDto.setComments(qualityDto.getComments());
-//			qualityInspectionDetailsDto.setInspectorName(qualityDto.getInspectorName());
-//			qualityInspectionDetailsDto.setProductId(qualityDto.getProductId());
-//			qualityInspectionDetailsDto.setQuality(qualityDto.getQuality());
-//			qualityInspectionDetailsDto.setResult(qualityDto.getResult());
-			
 
 		} catch (Exception e) {
 			e.printStackTrace();

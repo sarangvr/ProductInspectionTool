@@ -299,14 +299,6 @@
 	        <div class="container">
         <!-- Breadcrumb with Tabs -->
         <nav aria-label="breadcrumb" class="breadcrumb">
-			<div class="breadcrumb-search">
-		        <div class="input-group">
-				    <input type="text" class="form-control" id="productIdSearch" placeholder="Search Product ID">
-				    <div class="input-group-append">
-				        <button class="btn btn-primary" type="button" onclick="searchProduct()">Search</button>
-				    </div>
-				</div>
-		    </div>
             <ol class="breadcrumb"></ol>
             <!-- Notification and Settings Icons -->
             <div class="breadcrumb-icons">
@@ -324,11 +316,12 @@
 	    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 	    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 	    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-		
+		<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
 		<!-- breadcrumb END -->
 		
         <h4 class="h4style">Reports</h4>
-		<p>This webpage provides reports on product inspections.</p>
+		<p>This webpage provides reports on Quality Metric</p>
 
         <!-- Pie Chart -->
         <div id="pieChartContainer" style="height: 300px;"></div>
@@ -338,35 +331,51 @@
     </div>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
-	document.addEventListener("DOMContentLoaded", function () {
-	        // Hardcoded pie chart values (PASS is 75%, FAIL is 15%)
-	        var pieChartOptions = {
-	            series: [75, 15],
-	            labels: ['PASS', 'FAIL'],
-	            colors: ['#28a745', '#dc3545'],
-	            chart: {
-	                type: 'donut',
-	                width: 600, // Set the width of the chart (double the existing size)
-	                height: 200, // Set the height of the chart (double the existing size)
-	            },
-	            responsive: [{
-	                breakpoint: 480,
-	                options: {
-	                    chart: {
-	                        width: 400,
-	                        height: 160 // Adjust the height for smaller screens
-	                    },
-	                    legend: {
-	                        position: 'bottom'
-	                    }
-	                }
-	            }]
-	        };
-	
-	        // Create the pie chart
-	        var pieChart = new ApexCharts(document.querySelector("#pieChartContainer"), pieChartOptions);
-	        pieChart.render();
-	    });
+axios.get('/getReports', {
+    headers: {
+        'Content-Type': 'application/json',
+    },
+})
+    .then(response => {
+        console.log('Success:', response.data);
+        // Handle the data received in the response
+        const dto = response.data;
+        var low = dto.low;
+        var medium = dto.medium;
+        var high = dto.high;
+
+        // Do something with the data
+        var pieChartOptions = {
+            series: [low, medium, high],
+            labels: ['LOW QUALITY', 'MEDIUM QUALITY', 'HIGH QUALITY'],
+            colors: ['#28a745', '#FFFF00', '#dc3545'],
+            chart: {
+                type: 'donut',
+                width: 600,
+                height: 200,
+            },
+            responsive: [{
+                breakpoint: 480,
+                options: {
+                    chart: {
+                        width: 400,
+                        height: 160
+                    },
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }]
+        };
+
+        // Create the pie chart
+        var pieChart = new ApexCharts(document.querySelector("#pieChartContainer"), pieChartOptions);
+        pieChart.render();
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
 </script>
+
 </body>
 </html>

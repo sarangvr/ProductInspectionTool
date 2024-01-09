@@ -28,4 +28,5 @@ public interface Constants {
 	public static final String AUTO_INSPECTED = "AUTO_INSP";
 	public static final String PASS = "PASS";
 	public static final String FAIL = "FAIL";
+	public static final String PRODUCT_INSPECTED = "Auto Inspected";
 }

@@ -162,11 +162,6 @@
                     <span class="icon"><i class="fas fa-desktop"></i></span>
                     <span class="item">Products</span>
                 </a>
-                <!--<ul>
-                    <li><a href="#">Add Product</a></li>
-                    <li><a href="#">Edit Product</a></li>
-                    <li><a href="#">Delete Product</a></li>
-                </ul>-->
                 
             </li>
             <li>
@@ -174,13 +169,9 @@
                     <span class="icon"><i class="fas fa-check-circle"></i></i></span>
                     <span class="item">Quality Metric</span>
                 </a>
-                <!--<ul>
-                    <li><a href="#">Auto Inspect</a></li>
-                    <li><a href="#">Manual Inspect</a></li>
-                </ul>-->
             </li>
             <li>
-                <a href="#">
+                <a th:href="@{/reports}">
                     <span class="icon"><i class="fas fa-chart-line"></i></span>
                     <span class="item">Reports</span>
                 </a>
@@ -211,21 +202,6 @@
         document.querySelector("body").classList.toggle("active");
     });
     
-	function callProductsPage() {
-	    // Use Axios to make the GET request
-	    axios.get('/getProducts')
-	    .then(response => {
-	        console.log('Success:', response.data);
-	        // Reload the page after successful form submission
-	        //location.reload(true);
-	    })
-	    .catch(error => {
-	        console.error('Error:', error);
-	    });
-	
-	}
-
-
 </script>
 
 </body>

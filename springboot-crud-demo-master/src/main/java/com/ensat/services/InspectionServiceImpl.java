@@ -3,6 +3,8 @@ package com.ensat.services;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
@@ -24,11 +26,14 @@ import com.ensat.category.repositories.GroceryRepository;
 import com.ensat.category.repositories.MeatAndPoultryRepository;
 import com.ensat.entities.Inspection_DTLS;
 import com.ensat.entities.Product;
+import com.ensat.entities.Quality;
+import com.ensat.entities.QualityMetric;
 import com.ensat.entities.Result;
 import com.ensat.model.InspectionDetails;
 import com.ensat.model.InspectionDetailsDTO;
 import com.ensat.model.ProductDetails;
 import com.ensat.model.ProductDetailsDTO;
+import com.ensat.model.ReportsDto;
 import com.ensat.repositories.InspectionDtlsRepository;
 import com.ensat.repositories.ProductRepository;
 import com.ensat.repositories.QualityMetricRepository;
@@ -103,6 +108,7 @@ public class InspectionServiceImpl implements InspectionService, Constants {
 
 					inspectionDtls.setProduct(product);
 					inspectionDtls.setInspector(AUTO_INSPECTED);
+					inspectionDtls.setComments(PRODUCT_INSPECTED);
 					inspectionDtls.setResult(FAIL);
 					inspectionDtlsRepository.save(inspectionDtls);
 
@@ -127,20 +133,34 @@ public class InspectionServiceImpl implements InspectionService, Constants {
 		}
 		return false;
 	}
-
+	
 	@Override
-	public InspectionDetails getProductInspection(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+	public ReportsDto getReportsDetails() {
+		ReportsDto dto = new ReportsDto();
+        try {
+            List<QualityMetric> qualityList = qualityMetricRepository.findAll();
+
+            // Count the occurrences of each Quality type
+            Map<com.ensat.entities.Quality, Long> qualityCount = qualityList.stream()
+                    .collect(Collectors.groupingBy(QualityMetric::getQuality, Collectors.counting()));
+
+            // Calculate percentages and set them in the ReportsDto
+            long totalEntries = qualityList.size();
+
+            // Calculate percentages
+            double lowPercentage = (double) qualityCount.getOrDefault(com.ensat.entities.Quality.LOW, 0L) / totalEntries * 100;
+            double mediumPercentage = (double) qualityCount.getOrDefault(com.ensat.entities.Quality.MEDIUM, 0L) / totalEntries * 100;
+            double highPercentage = (double) qualityCount.getOrDefault(com.ensat.entities.Quality.HIGH, 0L) / totalEntries * 100;
+
+            // Set the values in the ReportsDto
+            dto.setLow((int) lowPercentage);
+            dto.setMedium((int) mediumPercentage);
+            dto.setHigh((int) highPercentage);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println(ERROR_MESSAGE + e.getMessage());
+		}
+		return dto;
 	}
-
-
-	@Override
-	public InspectionDetails editProductInspection(InspectionDetails inspection) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-
 }

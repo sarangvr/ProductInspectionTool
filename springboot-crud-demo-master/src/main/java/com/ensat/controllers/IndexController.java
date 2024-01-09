@@ -3,6 +3,8 @@ package com.ensat.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -12,9 +14,14 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import com.ensat.model.ProductDetailsDTO;
+import com.ensat.model.ReportsDto;
+import com.ensat.category.entities.CategoryDtlsDto;
+import com.ensat.category.entities.CategoryDto;
+import com.ensat.config.CustomObjectMapper;
 import com.ensat.model.InspectionDetailsDTO;
 import com.ensat.services.InspectionService;
 import com.ensat.services.ProductService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Homepage controller.
@@ -40,7 +47,7 @@ public class IndexController {
 
 	@GetMapping("/home")
 	public String showHomePage() {
-		return "homeSideBar"; // homeSideBar.html
+		return "homeSideBar";
 	}
 
 	@GetMapping("/getProducts")
@@ -93,7 +100,19 @@ public class IndexController {
 
 	@GetMapping("/reports")
 	public String showReportsPage() {
-		return "reports"; // reports.html
+		return "reportsSideBar"; // reports.html
 	}
-
+	@GetMapping("/getReports")
+	public ResponseEntity<ReportsDto> showReportsDeatails(Model model) {
+		ReportsDto reportsDto = new ReportsDto();
+		try {
+			reportsDto = inspectionService.getReportsDetails();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("Error getCategoryDtls: " + e.getMessage());
+			return new ResponseEntity<ReportsDto>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<ReportsDto>(reportsDto, HttpStatus.OK);
+	}
 }
