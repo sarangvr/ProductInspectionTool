@@ -1,33 +1,25 @@
 package com.ensat.controllers;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.ensat.category.entities.CategoryDtlsDto;
 import com.ensat.category.entities.CategoryDto;
 import com.ensat.config.CustomObjectMapper;
 import com.ensat.entities.Product;
-import com.ensat.entities.Quality;
 import com.ensat.model.ProductDetails;
-import com.ensat.model.ProductDetailsDTO;
 import com.ensat.model.QualityInspectionDetailsDto;
 import com.ensat.services.ProductService;
+import com.ensat.utility.Constants;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
@@ -35,7 +27,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 @RestController("/")
 //@Controller
-public class ProductController {
+public class ProductController implements Constants{
+	private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
 	@Autowired
 	private ProductService productService;
 
@@ -61,6 +54,7 @@ public class ProductController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("Error createProductNew: " + e.getMessage());
+			logger.error(ERROR_MESSAGE, e);
 		}
 
 		return "redirect:/products";
@@ -77,6 +71,7 @@ public class ProductController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("Error getCategoryDtls: " + e.getMessage());
+			logger.error(ERROR_MESSAGE, e);
 			return new ResponseEntity<CategoryDtlsDto>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return new ResponseEntity<CategoryDtlsDto>(categoryDtlsDto, HttpStatus.OK);
@@ -94,6 +89,7 @@ public class ProductController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("Error getCategoryDtls: " + e.getMessage());
+			logger.error(ERROR_MESSAGE, e);
 			return new ResponseEntity<QualityInspectionDetailsDto>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return new ResponseEntity<QualityInspectionDetailsDto>(qualityInspectionDetailsDto, HttpStatus.OK);

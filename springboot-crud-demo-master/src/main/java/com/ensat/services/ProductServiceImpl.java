@@ -88,87 +88,6 @@ public class ProductServiceImpl implements ProductService, Constants {
 		return list;
 	}
 
-	@Override
-	public CategoryDtlsDto getAllCategoryDetails(CategoryDto categoryDto) {
-		CategoryDtlsDto categoryDtlsDto = new CategoryDtlsDto();
-		String category = categoryDto.getCategory();
-		long productId = categoryDto.getProductId();
-		if (category.equals(GROCERY)) {
-			List<Grocery> groceryList = groceryRepository.findAll();
-			long groceryId = Utility.findGroceryIdByProductId(groceryList, productId);
-			Grocery grocery = groceryRepository.findById(groceryId).get();
-			categoryDtlsDto.setOrganic(grocery.getOrganic());
-			categoryDtlsDto.setNonGmo(grocery.getNonGmo());
-			categoryDtlsDto.setWholeGrain(grocery.getWholeGrain());
-			categoryDtlsDto.setFreshnessGrocery(grocery.getFreshnessGrocery());
-			categoryDtlsDto.setNutrientContent(grocery.getNutrientContent());
-
-		} else if (category.equals(DAIRY)) {
-			List<Dairy> dairyList = dairyRepository.findAll();
-			long dairyId = Utility.findDairyIdByProductId(dairyList, productId);
-			Dairy dairy = dairyRepository.findById(dairyId).get();
-			categoryDtlsDto.setFreshnessDairy(dairy.getFreshnessDairy());
-			categoryDtlsDto.setPurity(dairy.getPurity());
-			categoryDtlsDto.setFatContent(dairy.getFatContent());
-			categoryDtlsDto.setHomogenization(dairy.getHomogenization());
-			categoryDtlsDto.setPasteurization(dairy.getPasteurization());
-
-		} else if (category.equals(BAKERY)) {
-			List<Bakery> bakeryList = bakeryRepository.findAll();
-			long bakeryId = Utility.getBakeryIdFromProductId(bakeryList, productId);
-			Bakery bakery = bakeryRepository.findById(bakeryId).get();
-			categoryDtlsDto.setFreshnessBakery(bakery.getFreshnessBakery());
-			categoryDtlsDto.setTexture(bakery.getTexture());
-			categoryDtlsDto.setMoistureContent(bakery.getMoistureContent());
-			categoryDtlsDto.setFlavorBakery(bakery.getFlavorBakery());
-			categoryDtlsDto.setUniSizeShape(bakery.getUniSizeShape());
-
-		} else if (category.equals(BEVERAGES)) {
-			List<Beverages> beveragesList = beveragesRepository.findAll();
-			long beveragesId = Utility.getBeveragesIdFromProductId(beveragesList, productId);
-			Beverages beverages = beveragesRepository.findById(beveragesId).get();
-			categoryDtlsDto.setNaturalIngredients(beverages.getNaturalIngredients());
-			categoryDtlsDto.setFlavorBeverages(beverages.getFlavorBeverages());
-			categoryDtlsDto.setColorBeverages(beverages.getColorBeverages());
-			categoryDtlsDto.setClarity(beverages.getClarity());
-			categoryDtlsDto.setShelfLife(beverages.getShelfLife());
-		} else if (category.equals(MEAT_AND_POULTRY)) {
-			List<MeatAndPoultry> meatAndPoultryList = meatAndPoultryRepository.findAll();
-			long meatAndPoultryId = Utility.getMeatAndPoulTryIdFromProductId(meatAndPoultryList, productId);
-			MeatAndPoultry meatAndPoultry = meatAndPoultryRepository.findById(meatAndPoultryId).get();
-			categoryDtlsDto.setFreshnessMeat(meatAndPoultry.getFreshnessMeat());
-			categoryDtlsDto.setMarbling(meatAndPoultry.getMarbling());
-			categoryDtlsDto.setColorMeat(meatAndPoultry.getColorMeat());
-			categoryDtlsDto.setOdor(meatAndPoultry.getOdor());
-			categoryDtlsDto.setTemperatureControl(meatAndPoultry.getTemperatureControl());
-		}
-		return categoryDtlsDto;
-	}
-
-	@Override
-	public ProductDetails getProductById(Long id) {
-		ProductDetails productDetails = new ProductDetails();
-		try {
-			Product product = productRepository.findById(id).get();
-			productDetails.setProductId(product.getProductId());
-			productDetails.setCategory(product.getCategory());
-			productDetails.setDescription(product.getDescription());
-			productDetails.setName(product.getName());
-			productDetails.setPrice(product.getPrice());
-			productDetails.setQuantity(product.getQuantity());
-			QualityMetric qualityMetric = qualityMetricRepository.findFirstByProduct_Id(product.getProductId()).get();
-			productDetails.setColour(qualityMetric.getColour());
-			productDetails.setExpiryDate(qualityMetric.getExpiryDate());
-			productDetails.setManufacturingDate(qualityMetric.getManufacturingDate());
-			productDetails.setQuality(qualityMetric.getQuality());
-			productDetails.setWeight(qualityMetric.getWeight());
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.out.println(ERROR_MESSAGE + e.getMessage());
-		}
-		return productDetails;
-	}
-
 	@SuppressWarnings(UNCHECKED)
 	@Override
 	public Product saveProduct(ProductDetails productDetails) {
@@ -282,50 +201,6 @@ public class ProductServiceImpl implements ProductService, Constants {
 			System.out.println(ERROR_MESSAGE + e.getMessage());
 		}
 		return product;
-	}
-
-	@Override
-	public boolean deleteProduct(Long id) {
-		try {
-			Product product = productRepository.findById(id).get();
-			String oldCategory = product.getCategory();
-			if (oldCategory.equals(GROCERY)) {
-				List<Grocery> groceryList = groceryRepository.findAll();
-				long groceryId = Utility.findGroceryIdByProductId(groceryList, id);
-				groceryRepository.deleteById(groceryId);
-			} else if (oldCategory.equals(DAIRY)) {
-				List<Dairy> dairyList = dairyRepository.findAll();
-				long dairyId = Utility.findDairyIdByProductId(dairyList, id);
-				dairyRepository.deleteById(dairyId);
-			} else if (oldCategory.equals(BAKERY)) {
-				List<Bakery> bakeryList = bakeryRepository.findAll();
-				long bakeryId = Utility.getBakeryIdFromProductId(bakeryList, id);
-				bakeryRepository.deleteById(bakeryId);
-			} else if (oldCategory.equals(BEVERAGES)) {
-				List<Beverages> beveragesList = beveragesRepository.findAll();
-				long beveragesId = Utility.getBeveragesIdFromProductId(beveragesList, id);
-				beveragesRepository.deleteById(beveragesId);
-			} else if (oldCategory.equals(MEAT_AND_POULTRY)) {
-				List<MeatAndPoultry> meatAndPoultryList = meatAndPoultryRepository.findAll();
-				long meatAndPoultryId = Utility.getMeatAndPoulTryIdFromProductId(meatAndPoultryList, id);
-				meatAndPoultryRepository.deleteById(meatAndPoultryId);
-			}
-			
-			List<Inspection_DTLS> inspDtlsList = inspectionDtlsRepository.findAll();
-			long inspectionId = Utility.findInspectionIdByProductId(inspDtlsList, id);
-			inspectionDtlsRepository.deleteById(inspectionId);
-
-			List<QualityMetric> qualityList = qualityMetricRepository.findAll();
-			long qualityId = Utility.findQualityMetricIdByProductId(qualityList, id);
-			qualityMetricRepository.deleteById(qualityId);
-
-			productRepository.deleteById(id);
-			System.out.println(DELETE_SUCCESSFUL);
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.out.println(ERROR_MESSAGE + e.getMessage());
-		}
-		return true;
 	}
 
 	@SuppressWarnings(UNCHECKED)
@@ -527,8 +402,121 @@ public class ProductServiceImpl implements ProductService, Constants {
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println(ERROR_MESSAGE + e.getMessage());
+			logger.error(ERROR_MESSAGE, e);
 		}
 		return productDetails;
+	}
+
+	@Override
+	public boolean deleteProduct(Long id) {
+		try {
+			Product product = productRepository.findById(id).get();
+			String oldCategory = product.getCategory();
+			if (oldCategory.equals(GROCERY)) {
+				List<Grocery> groceryList = groceryRepository.findAll();
+				long groceryId = Utility.findGroceryIdByProductId(groceryList, id);
+				groceryRepository.deleteById(groceryId);
+			} else if (oldCategory.equals(DAIRY)) {
+				List<Dairy> dairyList = dairyRepository.findAll();
+				long dairyId = Utility.findDairyIdByProductId(dairyList, id);
+				dairyRepository.deleteById(dairyId);
+			} else if (oldCategory.equals(BAKERY)) {
+				List<Bakery> bakeryList = bakeryRepository.findAll();
+				long bakeryId = Utility.getBakeryIdFromProductId(bakeryList, id);
+				bakeryRepository.deleteById(bakeryId);
+			} else if (oldCategory.equals(BEVERAGES)) {
+				List<Beverages> beveragesList = beveragesRepository.findAll();
+				long beveragesId = Utility.getBeveragesIdFromProductId(beveragesList, id);
+				beveragesRepository.deleteById(beveragesId);
+			} else if (oldCategory.equals(MEAT_AND_POULTRY)) {
+				List<MeatAndPoultry> meatAndPoultryList = meatAndPoultryRepository.findAll();
+				long meatAndPoultryId = Utility.getMeatAndPoulTryIdFromProductId(meatAndPoultryList, id);
+				meatAndPoultryRepository.deleteById(meatAndPoultryId);
+			}
+
+			List<Inspection_DTLS> inspDtlsList = inspectionDtlsRepository.findAll();
+			long inspectionId = Utility.findInspectionIdByProductId(inspDtlsList, id);
+			inspectionDtlsRepository.deleteById(inspectionId);
+
+			List<QualityMetric> qualityList = qualityMetricRepository.findAll();
+			long qualityId = Utility.findQualityMetricIdByProductId(qualityList, id);
+			qualityMetricRepository.deleteById(qualityId);
+
+			productRepository.deleteById(id);
+			System.out.println(DELETE_SUCCESSFUL);
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println(ERROR_MESSAGE + e.getMessage());
+			logger.error(ERROR_MESSAGE, e);
+		}
+		return true;
+	}
+
+	@Override
+	public CategoryDtlsDto getAllCategoryDetails(CategoryDto categoryDto) {
+		CategoryDtlsDto categoryDtlsDto = new CategoryDtlsDto();
+		try {
+			if (Utility.validateEmptyString(categoryDto.getCategory())
+					&& Utility.validateEmptyString(categoryDto.getCategory())) {
+				String category = categoryDto.getCategory();
+				long productId = categoryDto.getProductId();
+				if (category.equals(GROCERY)) {
+					List<Grocery> groceryList = groceryRepository.findAll();
+					long groceryId = Utility.findGroceryIdByProductId(groceryList, productId);
+					Grocery grocery = groceryRepository.findById(groceryId).get();
+					categoryDtlsDto.setOrganic(grocery.getOrganic());
+					categoryDtlsDto.setNonGmo(grocery.getNonGmo());
+					categoryDtlsDto.setWholeGrain(grocery.getWholeGrain());
+					categoryDtlsDto.setFreshnessGrocery(grocery.getFreshnessGrocery());
+					categoryDtlsDto.setNutrientContent(grocery.getNutrientContent());
+
+				} else if (category.equals(DAIRY)) {
+					List<Dairy> dairyList = dairyRepository.findAll();
+					long dairyId = Utility.findDairyIdByProductId(dairyList, productId);
+					Dairy dairy = dairyRepository.findById(dairyId).get();
+					categoryDtlsDto.setFreshnessDairy(dairy.getFreshnessDairy());
+					categoryDtlsDto.setPurity(dairy.getPurity());
+					categoryDtlsDto.setFatContent(dairy.getFatContent());
+					categoryDtlsDto.setHomogenization(dairy.getHomogenization());
+					categoryDtlsDto.setPasteurization(dairy.getPasteurization());
+
+				} else if (category.equals(BAKERY)) {
+					List<Bakery> bakeryList = bakeryRepository.findAll();
+					long bakeryId = Utility.getBakeryIdFromProductId(bakeryList, productId);
+					Bakery bakery = bakeryRepository.findById(bakeryId).get();
+					categoryDtlsDto.setFreshnessBakery(bakery.getFreshnessBakery());
+					categoryDtlsDto.setTexture(bakery.getTexture());
+					categoryDtlsDto.setMoistureContent(bakery.getMoistureContent());
+					categoryDtlsDto.setFlavorBakery(bakery.getFlavorBakery());
+					categoryDtlsDto.setUniSizeShape(bakery.getUniSizeShape());
+
+				} else if (category.equals(BEVERAGES)) {
+					List<Beverages> beveragesList = beveragesRepository.findAll();
+					long beveragesId = Utility.getBeveragesIdFromProductId(beveragesList, productId);
+					Beverages beverages = beveragesRepository.findById(beveragesId).get();
+					categoryDtlsDto.setNaturalIngredients(beverages.getNaturalIngredients());
+					categoryDtlsDto.setFlavorBeverages(beverages.getFlavorBeverages());
+					categoryDtlsDto.setColorBeverages(beverages.getColorBeverages());
+					categoryDtlsDto.setClarity(beverages.getClarity());
+					categoryDtlsDto.setShelfLife(beverages.getShelfLife());
+				} else if (category.equals(MEAT_AND_POULTRY)) {
+					List<MeatAndPoultry> meatAndPoultryList = meatAndPoultryRepository.findAll();
+					long meatAndPoultryId = Utility.getMeatAndPoulTryIdFromProductId(meatAndPoultryList, productId);
+					MeatAndPoultry meatAndPoultry = meatAndPoultryRepository.findById(meatAndPoultryId).get();
+					categoryDtlsDto.setFreshnessMeat(meatAndPoultry.getFreshnessMeat());
+					categoryDtlsDto.setMarbling(meatAndPoultry.getMarbling());
+					categoryDtlsDto.setColorMeat(meatAndPoultry.getColorMeat());
+					categoryDtlsDto.setOdor(meatAndPoultry.getOdor());
+					categoryDtlsDto.setTemperatureControl(meatAndPoultry.getTemperatureControl());
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println(ERROR_MESSAGE + e.getMessage());
+			logger.error(ERROR_MESSAGE, e);
+		}
+
+		return categoryDtlsDto;
 	}
 
 	@Override
@@ -545,11 +533,11 @@ public class ProductServiceImpl implements ProductService, Constants {
 			inspectionDtls.setProduct(product);
 			inspectionDtls.setDate(LocalDate.now());
 			inspectionDtls.setComments(qualityDto.getComments());
-			if(Utility.validateEmptyString(qualityDto.getInspectorName()))
-				if(qualityDto.getInspectorName().equals(AUTO_INSPECTED))
+			if (Utility.validateEmptyString(qualityDto.getInspectorName()))
+				if (qualityDto.getInspectorName().equals(AUTO_INSPECTED))
 					inspectionDtls.setInspector(SYSTEM);
 				else
-				inspectionDtls.setInspector(qualityDto.getInspectorName());
+					inspectionDtls.setInspector(qualityDto.getInspectorName());
 			else
 				inspectionDtls.setInspector(SYSTEM);
 			inspectionDtls.setResult(qualityDto.getResult());
@@ -569,6 +557,7 @@ public class ProductServiceImpl implements ProductService, Constants {
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println(ERROR_MESSAGE + e.getMessage());
+			logger.error(ERROR_MESSAGE, e);
 		}
 		return qualityInspDtlsDto;
 	}

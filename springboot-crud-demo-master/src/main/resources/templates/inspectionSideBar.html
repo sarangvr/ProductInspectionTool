@@ -912,11 +912,85 @@
 						document.getElementById('quality').value = selectedProduct.querySelector('td:nth-child(10)').innerText;
 						document.getElementById('result').value = selectedProduct.querySelector('td:nth-child(11)').innerText;
 						
-						var qq = document.getElementById('quality').value;
-						var rr = document.getElementById('result').value;
+						//var qq = document.getElementById('quality').value;
+						//var rr = document.getElementById('result').value;
 						var productIdInput = document.getElementById('productId');
-						// Disable Product Id input field
+						var nameInput = document.getElementById('name');
+						var categoryInput = document.getElementById('category');
+						var qualityInput = document.getElementById('quality');
+						var expiryDateInput = document.getElementById('expiryDate');
+						var manufacturingDateInput = document.getElementById('manufacturingDate');
+						
+						// Quality Parameters
+						//var productorganicInput = document.getElementById('organic').value;
+						//var productnonGmoInput = document.getElementById('nonGmo').value;
+						//var productwholeGrainInput = document.getElementById('wholeGrain').value;
+						//var productfreshnessGroceryInput = document.getElementById('freshnessGrocery').value;
+						//var productnutrientContentInput = document.getElementById('nutrientContent').value;
+						
+						//var productfreshnessDairyInput = document.getElementById('freshnessDairy').value;
+						//var productpurityInput = document.getElementById('purity').value;
+						//var productfatContentInput = document.getElementById('fatContent').value;
+						//var producthomogenizationInput = document.getElementById('homogenization').value;
+						//var productpasteurizationInput = document.getElementById('pasteurization').value;
+						
+						//var productfreshnessBakeryInput = document.getElementById('freshnessBakery').value;
+						//var producttextureInput = document.getElementById('texture').value;
+						//var productmoistureContentInput = document.getElementById('moistureContent').value;
+						//var productflavorBakeryInput = document.getElementById('flavorBakery').value;
+						//var productuniSizeShapeInput = document.getElementById('uniSizeShape').value;
+						
+						//var productnaturalIngredientsInput = document.getElementById('naturalIngredients').value;
+						//var productflavorBeveragesInput = document.getElementById('flavorBeverages').value;
+						//var productcolorBeveragesInput = document.getElementById('colorBeverages').value;
+						//var productclarityInput = document.getElementById('clarity').value;
+						//var productshelfLifeInput = document.getElementById('shelfLife').value;
+						
+						//var productfreshnessMeatInput = document.getElementById('freshnessMeat').value;
+						//var productmarblingInput = document.getElementById('marbling').value;
+						//var productcolorMeatInput = document.getElementById('colorMeat').value;
+						//var productodorInput = document.getElementById('odor').value;
+						//var producttemperatureControlInput = document.getElementById('temperatureControl').value;
+
+						
+						// Disable input field on Inpsection Screen
 						productIdInput.disabled = true;
+						nameInput.disabled = true;
+						categoryInput.disabled = true;
+						qualityInput.disabled = true;
+						expiryDateInput.disabled = true;
+						manufacturingDateInput.disabled = true;
+						// Quality Parameters
+						//productorganicInput.disabled = true;
+						//productnonGmoInput.disabled = true;
+						//productwholeGrainInput.disabled = true;
+						//productfreshnessGroceryInput.disabled = true;
+						//productnutrientContentInput.disabled = true;
+						
+						//productfreshnessDairyInput.disabled = true;
+						//productpurityInput.disabled = true;
+						//productfatContentInput.disabled = true;
+						//producthomogenizationInput.disabled = true;
+						//productpasteurizationInput.disabled = true;
+						
+						//productfreshnessBakeryInput.disabled = true;
+						//producttextureInput.disabled = true;
+						//productmoistureContentInput.disabled = true;
+						//productflavorBakeryInput.disabled = true;
+						//productuniSizeShapeInput.disabled = true;
+						
+						//productnaturalIngredientsInput.disabled = true;
+						//productflavorBeveragesInput.disabled = true;
+						//productcolorBeveragesInput.disabled = true;
+						//productclarityInput.disabled = true;
+						//productshelfLifeInput.disabled = true;
+						
+						//productfreshnessMeatInput.disabled = true;
+						//productmarblingInput.disabled = true;
+						//productcolorMeatInput.disabled = true;
+						//productodorInput.disabled = true;
+						//producttemperatureControlInput.disabled = true;
+						//end Diable fields on Inspection screen
 
 						var manufacturingDateCell = selectedProduct.querySelector('td:nth-child(5)');
 						var expiryDateCell = selectedProduct.querySelector('td:nth-child(6)');

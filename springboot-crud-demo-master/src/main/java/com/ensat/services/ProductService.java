@@ -13,8 +13,6 @@ public interface ProductService {
 
     List<ProductDetailsDTO> listAllProducts();
 
-    ProductDetails getProductById(Long id);
-    
     ProductDetails editProductById(ProductDetails productDetails);
 
     Product saveProduct(ProductDetails productDetails);

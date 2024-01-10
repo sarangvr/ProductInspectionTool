@@ -2,6 +2,9 @@ package com.ensat.utility;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.ensat.category.entities.Bakery;
 import com.ensat.category.entities.Beverages;
 import com.ensat.category.entities.Dairy;
@@ -11,8 +14,10 @@ import com.ensat.entities.Inspection_DTLS;
 import com.ensat.entities.Quality;
 import com.ensat.entities.QualityMetric;
 import com.ensat.model.ProductDetails;
+import com.ensat.services.InspectionServiceImpl;
 
 public class Utility implements Constants {
+	private static final Logger logger = LoggerFactory.getLogger(Utility.class);
 	public static long findInspectionIdByProductId(List<Inspection_DTLS> inspDtls, Long productId) {
 		for (Inspection_DTLS inspection : inspDtls) {
             if (inspection.getProduct().getProductId() == productId) {
@@ -217,6 +222,7 @@ public class Utility implements Constants {
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println(ERROR_DERIVE_QUALITY + e.getMessage());
+			logger.error(ERROR_MESSAGE, e);
 		}
 		return productDetails;
 	}

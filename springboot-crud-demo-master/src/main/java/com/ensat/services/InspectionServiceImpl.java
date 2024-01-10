@@ -42,7 +42,7 @@ import com.ensat.utility.Utility;
 
 @Service
 public class InspectionServiceImpl implements InspectionService, Constants {
-	private static final Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(InspectionServiceImpl.class);
     @Autowired
     private ProductRepository productRepository;
     
@@ -83,6 +83,7 @@ public class InspectionServiceImpl implements InspectionService, Constants {
 		} catch(InvalidDataAccessResourceUsageException e) {
 			e.printStackTrace();
 			System.out.println("Error listAllProducts: " + e.getMessage());
+			logger.error(ERROR_MESSAGE, e);
 		}
 		
 		
@@ -93,6 +94,7 @@ public class InspectionServiceImpl implements InspectionService, Constants {
 	public boolean autoInspectProducts() {
 		try {
 			List<ProductDetailsDTO> productList = productRepository.findAllProductDetails();
+			boolean inspectedAnyProduct = false;
 
 			for (ProductDetailsDTO productDto : productList) {
 				LocalDate currentDate = LocalDate.now();
@@ -112,9 +114,24 @@ public class InspectionServiceImpl implements InspectionService, Constants {
 					inspectionDtls.setResult(FAIL);
 					inspectionDtlsRepository.save(inspectionDtls);
 
-					return true;
+					inspectedAnyProduct = true; // Set the flag to true if any product is inspected
+				} else if (expiryDate != null && expiryDate.isAfter(currentDate)){
+					Product product = productRepository.findById(productId).get();
+
+					List<Inspection_DTLS> inspDtlsList = inspectionDtlsRepository.findAll();
+					long inspectionId = Utility.findInspectionIdByProductId(inspDtlsList, productId);
+					Inspection_DTLS inspectionDtls = inspectionDtlsRepository.findById(inspectionId).get();
+
+					inspectionDtls.setProduct(product);
+					inspectionDtls.setInspector(AUTO_INSPECTED);
+					inspectionDtls.setComments(PRODUCT_INSPECTED);
+					inspectionDtls.setResult(PASS);
+					inspectionDtlsRepository.save(inspectionDtls);
 				}
 			}
+
+			if (inspectedAnyProduct)
+				return true; // Return true if any product is inspected
 
 		} catch (NotReadablePropertyException e) {
 			logger.error(NOT_READABLE_PROPERTY_EXCEPTION, e);
@@ -130,6 +147,7 @@ public class InspectionServiceImpl implements InspectionService, Constants {
 		} catch (InvalidDataAccessResourceUsageException e) {
 			e.printStackTrace();
 			System.out.println(ERROR_LIST_ALL_PRODUCTS + e.getMessage());
+			logger.error(ERROR_MESSAGE, e);
 		}
 		return false;
 	}
@@ -160,6 +178,7 @@ public class InspectionServiceImpl implements InspectionService, Constants {
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println(ERROR_MESSAGE + e.getMessage());
+			logger.error(ERROR_MESSAGE, e);
 		}
 		return dto;
 	}

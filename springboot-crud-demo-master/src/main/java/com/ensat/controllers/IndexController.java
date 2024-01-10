@@ -2,6 +2,8 @@ package com.ensat.controllers;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,22 +15,20 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import com.ensat.model.InspectionDetailsDTO;
 import com.ensat.model.ProductDetailsDTO;
 import com.ensat.model.ReportsDto;
-import com.ensat.category.entities.CategoryDtlsDto;
-import com.ensat.category.entities.CategoryDto;
-import com.ensat.config.CustomObjectMapper;
-import com.ensat.model.InspectionDetailsDTO;
 import com.ensat.services.InspectionService;
 import com.ensat.services.ProductService;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ensat.utility.Constants;
 
 /**
  * Homepage controller.
  */
 @CrossOrigin
 @Controller
-public class IndexController {
+public class IndexController implements Constants{
+	private static final Logger logger = LoggerFactory.getLogger(IndexController.class);
 	@Autowired
 	private ProductService productService;
 
@@ -58,6 +58,7 @@ public class IndexController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("Error getProducts: " + e.getMessage());
+			logger.error(ERROR_MESSAGE, e);
 		}
 		return "productsSideBar";
 
@@ -71,6 +72,7 @@ public class IndexController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("Error getProducts: " + e.getMessage());
+			logger.error(ERROR_MESSAGE, e);
 		}
 		return "inspectionSideBar";
 	}
@@ -87,6 +89,7 @@ public class IndexController {
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	        System.out.println("Error during autoInspectProducts: " + e.getMessage());
+	        logger.error(ERROR_MESSAGE, e);
 	    }
 
 	    // If there's an error or auto inspection fails, return to "inspectionSideBar"
@@ -111,6 +114,7 @@ public class IndexController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("Error getCategoryDtls: " + e.getMessage());
+			logger.error(ERROR_MESSAGE, e);
 			return new ResponseEntity<ReportsDto>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return new ResponseEntity<ReportsDto>(reportsDto, HttpStatus.OK);
