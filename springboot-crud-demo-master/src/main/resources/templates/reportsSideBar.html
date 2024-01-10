@@ -227,6 +227,9 @@
         .h4style{
 			padding-left: 6px;
 		}
+		.pstyle{
+			padding-left: 6px;
+		}
     </style>
 </head>
 <body>
@@ -254,23 +257,12 @@
                     <span class="icon"><i class="fas fa-desktop"></i></span>
                     <span class="item">Products</span>
                 </a>
-                <!--<ul>
-                    <li><a href="#" >Add Product</a></li>
-                    <li><a href="#" >Edit Product</a></li>
-                    <li><a href="#" >Delete Product</a></li>
-                </ul>-->
             </li>
             <li>
                 <a th:href="@{/getProductInspection}">
                     <span class="icon"><i class="fas fa-check-circle"></i></span>
                     <span class="item">Quality Metric</span>
                 </a>
-                <ul>
-                    <!--<li><a th:href="@{/doAutoInspect}" onclick="autoInspect()">Auto Inspect</a></li>-->
-                    <li><a th:href="@{/doAutoInspect}" onclick="autoInspect('autoInspect')" id="autoInspectLink"><span class="icon"><i class="fas fa-sync"></i></span><span class="item">Auto Inspect</span></a></li>
-                    <!--<li><a href="#" onclick="showInspectionForm('manualInspect')">Manual Inspect</a></li>-->
-                    <li><a href="#" onclick="showInspectionForm('manualInspect')" id="manualInspectLink"><span class="icon"><i class="fas fa-hand-paper"></i></span><span class="item">Manual Inspect</span></a></li>
-                </ul>
             </li>
             <li>
                 <a th:href="@{/reports}">
@@ -321,7 +313,7 @@
 		<!-- breadcrumb END -->
 		
         <h4 class="h4style">Reports</h4>
-		<p>This webpage provides reports on Quality Metric</p>
+		<p class="pstyle">This webpage provides reports on Quality Metric</p>
 
         <!-- Pie Chart -->
         <div id="pieChartContainer" style="height: 300px;"></div>
@@ -331,6 +323,11 @@
     </div>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
+	var hamburger = document.querySelector(".hamburger");
+	    hamburger.addEventListener("click", function(){
+	        document.querySelector("body").classList.toggle("active");
+	    });
+	    
 axios.get('/getReports', {
     headers: {
         'Content-Type': 'application/json',
@@ -348,7 +345,7 @@ axios.get('/getReports', {
         var pieChartOptions = {
             series: [low, medium, high],
             labels: ['LOW QUALITY', 'MEDIUM QUALITY', 'HIGH QUALITY'],
-            colors: ['#28a745', '#FFFF00', '#dc3545'],
+            colors: ['#dc3545', '#FFFF00', '#28a745'],
             chart: {
                 type: 'donut',
                 width: 600,
