@@ -42,7 +42,7 @@ Ensure that the necessary dependencies and libraries are installed before runnin
 Database configuration and connection details can be modified in the application.properties file.
 
 Contributors:
-Sarang VR
+Sarang VR - sarangvr101@gmail.com
 
 License:
 This project is licensed under the MIT License.
