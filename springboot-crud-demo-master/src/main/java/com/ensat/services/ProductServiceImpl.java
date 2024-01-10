@@ -84,6 +84,7 @@ public class ProductServiceImpl implements ProductService, Constants {
 		} catch (InvalidDataAccessResourceUsageException e) {
 			e.printStackTrace();
 			System.out.println(ERROR_LIST_ALL_PRODUCTS + e.getMessage());
+			logger.error(ERROR_MESSAGE, e);
 		}
 		return list;
 	}
