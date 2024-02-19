@@ -153,28 +153,257 @@ public class InspectionServiceImpl implements InspectionService, Constants {
 	}
 	
 	@Override
-	public ReportsDto getReportsDetails() {
-		ReportsDto dto = new ReportsDto();
-        try {
-            List<QualityMetric> qualityList = qualityMetricRepository.findAll();
+	public CategoryGraphDto getReportsDetails() {
+		CategoryGraphDto dto = new CategoryGraphDto();
+		try {
+			List<ProductDetailsDTO> productList = productRepository.findAllProductDetails();
+			List<QualityMetric> qualityList = qualityMetricRepository.findAll();
+			List<Inspection_DTLS> inspDtlsList = inspectionDtlsRepository.findAll();
+			long productId = 0;
+			// Initialize counts for each category
+			long highCountGrocery = 0;
+			long mediumCountGrocery = 0;
+			long lowCountGrocery = 0;
+			long highPassGrocery = 0;
+			long mediumPassGrocery = 0;
+			long lowPassGrocery = 0;
+			long highFailGrocery = 0;
+			long mediumFailGrocery = 0;
+			long lowFailGrocery = 0;
+			// For Dairy
+			long highcountDairy = 0;
+			long mediumcountDairy = 0;
+			long lowcountDairy = 0;
+			long highpassDairy = 0;
+			long mediumpassDairy = 0;
+			long lowpassDairy = 0;
+			long highfailDairy = 0;
+			long mediumfailDairy = 0;
+			long lowfailDairy = 0;
 
-            // Count the occurrences of each Quality type
-            Map<com.ensat.entities.Quality, Long> qualityCount = qualityList.stream()
-                    .collect(Collectors.groupingBy(QualityMetric::getQuality, Collectors.counting()));
+			// For Bakery
+			long highCountBakery = 0;
+			long mediumCountBakery = 0;
+			long lowCountBakery = 0;
+			long highPassBakery = 0;
+			long mediumPassBakery = 0;
+			long lowPassBakery = 0;
+			long highFailBakery = 0;
+			long mediumFailBakery = 0;
+			long lowFailBakery = 0;
 
-            // Calculate percentages and set them in the ReportsDto
-            long totalEntries = qualityList.size();
+			// For Beverages
+			long highCountBeverages = 0;
+			long mediumCountBeverages = 0;
+			long lowCountBeverages = 0;
+			long highPassBeverages = 0;
+			long mediumPassBeverages = 0;
+			long lowPassBeverages = 0;
+			long highFailBeverages = 0;
+			long mediumFailBeverages = 0;
+			long lowFailBeverages = 0;
 
-            // Calculate percentages
-            double lowPercentage = (double) qualityCount.getOrDefault(com.ensat.entities.Quality.LOW, 0L) / totalEntries * 100;
-            double mediumPercentage = (double) qualityCount.getOrDefault(com.ensat.entities.Quality.MEDIUM, 0L) / totalEntries * 100;
-            double highPercentage = (double) qualityCount.getOrDefault(com.ensat.entities.Quality.HIGH, 0L) / totalEntries * 100;
+			// For Meat and Poultry
+			long highCountMeat = 0;
+			long mediumCountMeat = 0;
+			long lowCountMeat = 0;
+			long highPassMeat = 0;
+			long mediumPassMeat = 0;
+			long lowPassMeat = 0;
+			long highFailMeat = 0;
+			long mediumFailMeat = 0;
+			long lowFailMeat = 0;
 
-            // Set the values in the ReportsDto
-            dto.setLow((int) lowPercentage);
-            dto.setMedium((int) mediumPercentage);
-            dto.setHigh((int) highPercentage);
+			// Iterate through the inspection details
+			for (ProductDetailsDTO productsDto : productList) {
+				// Assuming there is a link between Inspection_DTLS and QualityMetric through
+				// productId
+				productId = productsDto.getProductId();
 
+				for (QualityMetric qualityDto : qualityList) {
+					for (Inspection_DTLS inspDtls : inspDtlsList) {
+						if (inspDtls.getCategory().equals(GROCERY)) {
+							if (qualityDto.getQuality() == Quality.HIGH) {
+								highCountGrocery++;
+								if (PASS.equalsIgnoreCase(inspDtls.getResult())) {
+									highPassGrocery++;
+								} else if (FAIL.equalsIgnoreCase(inspDtls.getResult())) {
+									highFailGrocery++;
+								}
+
+							} else if (qualityDto.getQuality() == Quality.MEDIUM) {
+								mediumCountGrocery++;
+								if (PASS.equalsIgnoreCase(inspDtls.getResult())) {
+									mediumPassGrocery++;
+								} else if (FAIL.equalsIgnoreCase(inspDtls.getResult())) {
+									mediumFailGrocery++;
+								}
+							} else if (qualityDto.getQuality() == Quality.LOW) {
+								lowcountDairy++;
+								if (PASS.equalsIgnoreCase(inspDtls.getResult())) {
+									lowPassGrocery++;
+								} else if (FAIL.equalsIgnoreCase(inspDtls.getResult())) {
+									lowFailGrocery++;
+								}
+							}
+
+						} else if (inspDtls.getCategory().equals(DAIRY)) {
+							if (qualityDto.getQuality() == Quality.HIGH) {
+								highcountDairy++;
+								if (PASS.equalsIgnoreCase(inspDtls.getResult())) {
+									highpassDairy++;
+								} else if (FAIL.equalsIgnoreCase(inspDtls.getResult())) {
+									highfailDairy++;
+								}
+
+							} else if (qualityDto.getQuality() == Quality.MEDIUM) {
+								mediumcountDairy++;
+								if (PASS.equalsIgnoreCase(inspDtls.getResult())) {
+									mediumpassDairy++;
+								} else if (FAIL.equalsIgnoreCase(inspDtls.getResult())) {
+									mediumfailDairy++;
+								}
+							} else if (qualityDto.getQuality() == Quality.LOW) {
+								lowcountDairy++;
+								if (PASS.equalsIgnoreCase(inspDtls.getResult())) {
+									lowpassDairy++;
+								} else if (FAIL.equalsIgnoreCase(inspDtls.getResult())) {
+									mediumfailDairy++;
+								}
+							}
+
+						} else if (inspDtls.getCategory().equals(BAKERY)) {
+							if (qualityDto.getQuality() == Quality.HIGH) {
+								highCountBakery++;
+								if (PASS.equalsIgnoreCase(inspDtls.getResult())) {
+									highPassBakery++;
+								} else if (FAIL.equalsIgnoreCase(inspDtls.getResult())) {
+									highFailBakery++;
+								}
+
+							} else if (qualityDto.getQuality() == Quality.MEDIUM) {
+								mediumCountBakery++;
+								if (PASS.equalsIgnoreCase(inspDtls.getResult())) {
+									mediumPassBakery++;
+								} else if (FAIL.equalsIgnoreCase(inspDtls.getResult())) {
+									mediumFailBakery++;
+								}
+							} else if (qualityDto.getQuality() == Quality.LOW) {
+								lowCountBakery++;
+								if (PASS.equalsIgnoreCase(inspDtls.getResult())) {
+									lowPassBakery++;
+								} else if (FAIL.equalsIgnoreCase(inspDtls.getResult())) {
+									lowFailBakery++;
+								}
+							}
+
+						} else if (inspDtls.getCategory().equals(BEVERAGES)) {
+							if (qualityDto.getQuality() == Quality.HIGH) {
+								highCountBeverages++;
+								if (PASS.equalsIgnoreCase(inspDtls.getResult())) {
+									highPassBeverages++;
+								} else if (FAIL.equalsIgnoreCase(inspDtls.getResult())) {
+									highFailBeverages++;
+								}
+
+							} else if (qualityDto.getQuality() == Quality.MEDIUM) {
+								mediumCountBeverages++;
+								if (PASS.equalsIgnoreCase(inspDtls.getResult())) {
+									mediumPassBeverages++;
+								} else if (FAIL.equalsIgnoreCase(inspDtls.getResult())) {
+									mediumFailBeverages++;
+								}
+							} else if (qualityDto.getQuality() == Quality.LOW) {
+								lowCountBeverages++;
+								if (PASS.equalsIgnoreCase(inspDtls.getResult())) {
+									lowPassBeverages++;
+								} else if (FAIL.equalsIgnoreCase(inspDtls.getResult())) {
+									lowFailBeverages++;
+								}
+							}
+
+						} else if (inspDtls.getCategory().equals(MEAT_AND_POULTRY)) {
+							if (qualityDto.getQuality() == Quality.HIGH) {
+								highCountMeat++;
+								if (PASS.equalsIgnoreCase(inspDtls.getResult())) {
+									highPassMeat++;
+								} else if (FAIL.equalsIgnoreCase(inspDtls.getResult())) {
+									highFailMeat++;
+								}
+
+							} else if (qualityDto.getQuality() == Quality.MEDIUM) {
+								mediumCountMeat++;
+								if (PASS.equalsIgnoreCase(inspDtls.getResult())) {
+									mediumPassMeat++;
+								} else if (FAIL.equalsIgnoreCase(inspDtls.getResult())) {
+									mediumFailMeat++;
+								}
+							} else if (qualityDto.getQuality() == Quality.LOW) {
+								lowCountMeat++;
+								if (PASS.equalsIgnoreCase(inspDtls.getResult())) {
+									lowPassMeat++;
+								} else if (FAIL.equalsIgnoreCase(inspDtls.getResult())) {
+									lowFailMeat++;
+								}
+							}
+						}
+
+					}
+				}
+				// Set values in the DTO
+				dto.setHighCountGrocery((int) highCountGrocery);
+				dto.setMediumCountGrocery((int) mediumCountGrocery);
+				dto.setLowCountGrocery((int) lowCountGrocery);
+				dto.setHighPassGrocery((int) highPassGrocery);
+				dto.setMediumPassGrocery((int) mediumPassGrocery);
+				dto.setLowPassGrocery((int) lowPassGrocery);
+				dto.setHighFailGrocery((int) highFailGrocery);
+				dto.setMediumFailGrocery((int) mediumFailGrocery);
+				dto.setLowFailGrocery((int) lowFailGrocery);
+
+				dto.setHighCountDairy((int) highcountDairy);
+				dto.setMediumCountDairy((int) mediumcountDairy);
+				dto.setLowCountDairy((int) lowcountDairy);
+				dto.setHighPassDairy((int) highpassDairy);
+				dto.setMediumPassDairy((int) mediumpassDairy);
+				dto.setLowPassDairy((int) lowpassDairy);
+				dto.setHighFailDairy((int) highfailDairy);
+				dto.setMediumFailDairy((int) mediumfailDairy);
+				dto.setLowFailDairy((int) lowfailDairy);
+
+				// For Beverages
+				dto.setHighCountBeverages((int) highCountBeverages);
+				dto.setMediumCountBeverages((int) mediumCountBeverages);
+				dto.setLowCountBeverages((int) lowCountBeverages);
+				dto.setHighPassBeverages((int) highPassBeverages);
+				dto.setMediumPassBeverages((int) mediumPassBeverages);
+				dto.setLowPassBeverages((int) lowPassBeverages);
+				dto.setHighFailBeverages((int) highFailBeverages);
+				dto.setMediumFailBeverages((int) mediumFailBeverages);
+				dto.setLowFailBeverages((int) lowFailBeverages);
+
+				// For Bakery
+				dto.setHighCountBakery((int) highCountBakery);
+				dto.setMediumCountBakery((int) mediumCountBakery);
+				dto.setLowCountBakery((int) lowCountBakery);
+				dto.setHighPassBakery((int) highPassBakery);
+				dto.setMediumPassBakery((int) mediumPassBakery);
+				dto.setLowPassBakery((int) lowPassBakery);
+				dto.setHighFailBakery((int) highFailBakery);
+				dto.setMediumFailBakery((int) mediumFailBakery);
+				dto.setLowFailBakery((int) lowFailBakery);
+
+				// For Meat and Poultry
+				dto.setHighCountMeat((int) highCountMeat);
+				dto.setMediumCountMeat((int) mediumCountMeat);
+				dto.setLowCountMeat((int) lowCountMeat);
+				dto.setHighPassMeat((int) highPassMeat);
+				dto.setMediumPassMeat((int) mediumPassMeat);
+				dto.setLowPassMeat((int) lowPassMeat);
+				dto.setHighFailMeat((int) highFailMeat);
+				dto.setMediumFailMeat((int) mediumFailMeat);
+				dto.setLowFailMeat((int) lowFailMeat);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println(ERROR_MESSAGE + e.getMessage());
