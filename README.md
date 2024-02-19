@@ -62,3 +62,6 @@ Quality Metric Screen(Here you can Inspect Auto, or manual)
 
 Reports Screen:(Shows the Pie Graph based on Quality of Products)
 ![reports](https://github.com/sarangvr/ProductInspectionTool/assets/84840340/ca5bc011-fe78-4474-bf01-a6f9d7e2cfd2)
+
+Reports Screen: (For all category)
+![reports](https://github.com/sarangvr/ProductInspectionTool/assets/84840340/6cb750eb-cfef-47ef-bed4-42f67b0f746f)
